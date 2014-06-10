@@ -43,12 +43,15 @@
 <div class="selected">
 
 	<span ng-init="loadStories()">
-		<ul class="unstyled">
-			<li ng-repeat="story in stories">
-				<input type="checkbox" value="{{story.text}}" check-list='checkedStories'>
-				<span class="done-{{story.done}}">{{story.text}}</span>
-			</li>
-		</ul>
+		<div ng-repeat="story in stories">
+			<input type="checkbox" value="{{story.text}}" check-list="checkedStories"><span>{{story.text}}</span></input>
+		   <div ng-repeat="scenario in story.scenarios" >
+		       <input type="checkbox" ><span>{{scenario.steps}}</span></input>
+		   </div>
+		</div>
+	</span>
+
+	
 	<div>The following stories are checked: {{checkedStories | json}}</div>
 	
 	<button ng-click='submitStories()'>Run All</button>

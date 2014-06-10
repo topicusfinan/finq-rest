@@ -2,7 +2,6 @@
 angular.module('jbehave').controller('StoryCtrl', ['$scope','$http', 'filterFilter', function StoryCtrl($scope,$http,filterFilter) {
   $scope.stories = [];
   $scope.checkedStories = [];
-  $scope.scenarios = [];
 
   $scope.loadStories = function() {    
    $http({method: 'GET', url: '/runner/api/stories'}).
@@ -12,31 +11,34 @@ angular.module('jbehave').controller('StoryCtrl', ['$scope','$http', 'filterFilt
         angular.forEach(storiesResult, function(story) {
           console.log('story = ' + story);
          $scope.stories.push({text:story.name});
+         $scope.stories.push({scenarios:story.scenarios});
+         
+         
+
         });
     }); 
   };
 
-  $scope.loadScenarios = function($story) {    
-   $http({method: 'GET', url: '/runner/api/stories/' + $story + '/scenarios'}).
-    success(function(data,status,header,config){
-      console.log(data);
-    var scenariosResult = data;
-        angular.forEach(scenariosResult, function(scenario) {
-          console.log('scenario = ' + scenario);
-         $scope.scenarios.push({text:scenario.name});
-        });
-    }); 
+
+  $scope.loadScenarios = function(story) {    
+   console.log('load scenarios for story = ' + story);
+      angular.forEach(story.scenarios, function(scenario) {
+        console.log('scenario = ' + scenario);
+       $scope.scenarios.push({text:scenario.name});
+      });
+
   };
- 
+
+
+
+
+
   $scope.submitStories = function() {
     // submit data
     console.log('Submitting scenarios ' + $scope.checkedStories);
   };
   
   $scope.selectStory = function(story) {
-  
-    if ($scope.checkedStories.indexOf(story) != -1) return;
-    $scope.checkedStories.push(story);
     console.log('Submitting story ' + story);
   }
 }]);
