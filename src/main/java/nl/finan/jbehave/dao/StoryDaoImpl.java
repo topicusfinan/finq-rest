@@ -1,6 +1,8 @@
-package nl.finan.jbehave.entities;
+package nl.finan.jbehave.dao;
 
 import java.util.List;
+
+import nl.finan.jbehave.entities.Story;
 
 import org.springframework.stereotype.Repository;
 

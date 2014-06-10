@@ -1,4 +1,4 @@
-package nl.finan.jbehave.entities;
+package nl.finan.jbehave.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

@@ -8,10 +8,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.Story;
-import nl.finan.jbehave.entities.StoryDao;
 import nl.finan.jbehave.rest.embeder.FinanEmbedder;
 import nl.finan.jbehave.rest.resources.ScenarioType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,9 @@ public class StoriesResources {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{storyName}/scenarios")
-    public List<ScenarioType> scenarios(@PathParam("storyName")String storyName ){
-    	LOGGER.info("Story name = {} ",storyName);
+    @Path("/{id}/scenarios")
+    public List<ScenarioType> scenarios(@PathParam("id") Long id){
+    	
     	
     	return null;
     }
