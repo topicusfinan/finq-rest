@@ -8,17 +8,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import nl.finan.jbehave.dao.ScenarioDao;
 import nl.finan.jbehave.dao.StoryDao;
+import nl.finan.jbehave.entities.Scenario;
 import nl.finan.jbehave.entities.Story;
 import nl.finan.jbehave.rest.embeder.FinanEmbedder;
-import nl.finan.jbehave.rest.resources.ScenarioType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Path("/stories")
+@Path("stories")
 @Repository
 public class StoriesResources {
 	
@@ -30,6 +31,9 @@ public class StoriesResources {
     @Autowired
     private StoryDao storyDao;
     
+    @Autowired
+    private ScenarioDao scenarioDao;
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Story> stories() {
@@ -40,11 +44,17 @@ public class StoriesResources {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Story story(@PathParam("id") Long id){
+    	return storyDao.find(id);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/scenarios")
-    public List<ScenarioType> scenarios(@PathParam("id") Long id){
-    	
-    	
-    	return null;
+    public List<Scenario> scenarios(@PathParam("id") Long id){
+    	Story story = storyDao.find(id);
+    	return story.getScenarios();    	
     }
     
 }

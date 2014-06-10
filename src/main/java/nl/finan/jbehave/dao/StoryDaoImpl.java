@@ -1,6 +1,5 @@
 package nl.finan.jbehave.dao;
 
-import java.util.List;
 
 import nl.finan.jbehave.entities.Story;
 
