@@ -65,4 +65,13 @@ public class Story {
 	public void setScenarios(List<Scenario> scenarios) {
 		this.scenarios = scenarios;
 	}
+	
+	public String toStory(){
+		StringBuilder builder = new StringBuilder();
+		for(Scenario scenario: getScenarios()){
+			builder.append(scenario.toStory());
+		}
+		
+		return builder.toString();
+	}
 }

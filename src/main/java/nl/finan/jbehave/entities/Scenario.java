@@ -26,6 +26,9 @@ public class Scenario {
 	@JsonIgnore
 	private Story story;
 	
+	@Column(name = "TITLE")
+	private String title;
+	
 	@Lob
 	@Column(name = "STEPS")
 	private String steps;
@@ -53,6 +56,22 @@ public class Scenario {
 	public void setSteps(String steps) {
 		this.steps = steps;
 	}
-	
-	
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String toStory() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Scenario: ");
+		builder.append(getTitle());
+		builder.append("\\n");
+		builder.append(getSteps());
+		builder.append("\\n");
+		return builder.toString();
+	}	
 }
