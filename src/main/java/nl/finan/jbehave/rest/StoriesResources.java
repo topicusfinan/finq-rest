@@ -47,7 +47,7 @@ public class StoriesResources {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{storyName}/scenarios")
-    public List<ScenarioType> scenarios(@QueryParam("storyName")String storyName ){
+    public List<ScenarioType> scenarios(@PathParam("storyName")String storyName ){
     	LOGGER.info("Story name = {} ",storyName);
     	
     	StoryManager manager = embedder.storyManager();
