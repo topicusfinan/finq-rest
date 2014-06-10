@@ -1,0 +1,59 @@
+.done-true {
+  color: green;
+}
+
+.header {
+	background-color: rgb(200,200,200);
+	min-height: 75px;
+	width: 100%;
+	display: block;
+	position: relative;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.module {
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+
+.module_header {
+	font-size: larger;
+	font-weight: bold;
+}
+
+.collection_label {
+	font-weight: bold;
+}
+
+.selector {
+	width: 25%;
+	float: left;
+	display: block;
+	position: relative;
+}
+
+.collection {
+	float:left;
+	width: 100%;
+}
+
+.environment {
+	float:left;
+	width: 100%;
+}
+
+.selected {
+	width: 50%;
+	float: left;
+	display: block;
+	position: relative;
+}
+
+.overview {
+	width: 25%;
+	float: left;
+	display: block;
+position: relative;
+}
+
