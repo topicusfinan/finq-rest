@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 @Table(name = "JBEHAVE_STORY")
 public class Story {
@@ -22,12 +25,13 @@ public class Story {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PROJECT_ID", nullable = false)
+	@JsonIgnore
 	private Project project;
 	
 	@Column(name = "NAME")
 	private String name;
 
-	@OneToMany(mappedBy = "story")
+	@OneToMany(mappedBy = "story",fetch = FetchType.EAGER)
 	private List<Scenario> scenarios;
 
 	public Long getId() {

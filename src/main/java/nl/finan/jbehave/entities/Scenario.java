@@ -10,6 +10,9 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 @Table(name="JBEHAVE_SCENARIO")
 public class Scenario {
@@ -18,8 +21,9 @@ public class Scenario {
 	@GeneratedValue
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "STORY_ID", nullable = false)
+	@JsonIgnore
 	private Story story;
 	
 	@Lob
