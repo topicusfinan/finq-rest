@@ -10,7 +10,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity(name = "Scenario")
+@Entity
 @Table(name="JBEHAVE_SCENARIO")
 public class Scenario {
 

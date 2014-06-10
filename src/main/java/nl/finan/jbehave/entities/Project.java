@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@Entity(name = "Project")
+@Entity
 @Table(name = "JBEHAVE_PROJECT")
 public class Project {
 	
