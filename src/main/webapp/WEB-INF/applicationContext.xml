@@ -34,7 +34,7 @@
 		<property name="jpaVendorAdapter" ref="vendorAdapter" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="finan-jbehave" />
-		<property name="persistenceXmlLocation" value="classpath:WEB-INF/classes/META-INF/persistence.xml" />
+		<property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
 	</bean>
 
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
