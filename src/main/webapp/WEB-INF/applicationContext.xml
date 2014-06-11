@@ -15,7 +15,7 @@
 	<context:annotation-config />        
 
 	<!-- This is here to enable the @Component annotation, so we don't have to specify every bean in this file -->
-	<context:component-scan base-package="nl.finan"/>
+	<context:component-scan base-package="nl.finan.jbehave"/>
 
 	<import resource="beans.xml" />
 

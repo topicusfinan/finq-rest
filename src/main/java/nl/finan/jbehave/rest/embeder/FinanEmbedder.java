@@ -1,7 +1,10 @@
 package nl.finan.jbehave.rest.embeder;
 
+import nl.finan.jbehave.RunnerStepMonitor;
+
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
+import org.jbehave.core.embedder.StoryRunner;
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -19,11 +22,14 @@ import java.util.List;
 
 @Repository
 public class FinanEmbedder extends Embedder implements ApplicationContextAware {
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(FinanEmbedder.class);
+    
     private ApplicationContext ctx;
 
     public FinanEmbedder() {
-        super.useConfiguration(new MostUsefulConfiguration().useStepMonitor(new PrintStreamStepMonitor(System.err)));
+        super.useConfiguration(new MostUsefulConfiguration().useStepMonitor(new RunnerStepMonitor()));
+        useStoryRunner(new StoryRunner()); // this could maybe be session specific
     }
 
     public List<String> storyPaths() {

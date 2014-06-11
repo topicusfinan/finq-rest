@@ -10,7 +10,7 @@
     <description>Simple CXF JAX-RS webapp service using spring configuration</description>
     <properties>
         <jackson.version>1.8.6</jackson.version>
-        <jbehave.core.version>4.0-beta-6</jbehave.core.version>
+        <jbehave.core.version>4.0-beta-7</jbehave.core.version>
     </properties>
     <dependencies>
     	<dependency>
