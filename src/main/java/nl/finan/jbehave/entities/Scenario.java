@@ -69,9 +69,9 @@ public class Scenario {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Scenario: ");
 		builder.append(getTitle());
-		builder.append("\\n");
+		builder.append("\n");
 		builder.append(getSteps());
-		builder.append("\\n");
+		builder.append("\n");
 		return builder.toString();
 	}	
 }

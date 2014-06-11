@@ -12,8 +12,6 @@ angular.module('jbehave').controller('StoryCtrl', ['$scope','$http', 'filterFilt
           console.log('story = ' + story);
          $scope.stories.push({text:story.name});
          $scope.stories.push({scenarios:story.scenarios});
-         
-         
 
         });
     }); 
