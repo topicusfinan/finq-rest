@@ -1,5 +1,7 @@
 package nl.finan.jbehave.dao;
 
+import nl.finan.jbehave.entities.GenericEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
  * @param <T>
  *            The type of persistent object that will be inserted / updated / retrieved.
  */
-public interface Dao<T>
+public interface Dao<T extends GenericEntity>
 {
 	/**
 	 * Return a single persistent object that matches with query created by name with named parameters set.

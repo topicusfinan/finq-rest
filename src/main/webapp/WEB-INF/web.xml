@@ -24,5 +24,13 @@
         <servlet-name>CXFServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
-    
+    <filter>
+        <filter-name>SessionContext</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SessionContext</filter-name>
+        <servlet-name>CXFServlet</servlet-name>
+    </filter-mapping>
+
 </web-app>

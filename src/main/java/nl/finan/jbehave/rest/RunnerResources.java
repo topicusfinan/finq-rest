@@ -5,16 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
+import nl.finan.jbehave.entities.RunningStories;
+import nl.finan.jbehave.entities.RunningStorysStatus;
 import nl.finan.jbehave.entities.Story;
 import nl.finan.jbehave.rest.embeder.FinanEmbedder;
 
@@ -29,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
+import org.springframework.transaction.annotation.Transactional;
 
 @Path("runner")
 @Repository
@@ -41,27 +41,43 @@ public class RunnerResources {
     
     @Autowired
     private FinanEmbedder embedder;
+
+    @Autowired
+    private RunningStoriesDao runningStoriesDao;
     
 	
 	@POST
 	@Path("/story")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void runStory( Long id)
+    @Transactional
+	public Long runStory( Long id)
 	{
-		Story story = storyDao.find(id);
+
+        Story story = storyDao.find(id);
 		
-		org.jbehave.core.model.Story jbehaveStory =embedder.storyManager().storyOfText(story.toStory(), story.getName());
-		//jbehaveStory = new org.jbehave.core.model.Story("", jbehaveStory.getDescription(),jbehaveStory.getNarrative(),jbehaveStory.getScenarios());
-		
-		
+		org.jbehave.core.model.Story jbehaveStory = embedder.storyManager().storyOfText(story.toStory(), "db/"+story.getId());
+
+        RunningStories runningStories = new RunningStories();
+        runningStories.setStatus(RunningStorysStatus.RUNNING);
+        runningStoriesDao.persist(runningStories);
+        embedder.getRunningContext().get().setRunningStoriesId(runningStories.getId());
+
+        LOGGER.info("Story is = {}", jbehaveStory.toString());
 		try {
-			embedder.storyRunner().run(embedder.configuration(), embedder.stepsFactory().createCandidateSteps(), jbehaveStory);
-			
+            embedder.runStories(Arrays.asList(jbehaveStory, jbehaveStory));
 		} catch (Throwable e) {
 			LOGGER.error("error in het runnen! {}", e.getMessage());
 			e.printStackTrace();
 		}
-		
+		return runningStories.getId();
 	}
+
+    @GET
+    @Path("status/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RunningStories getStatus(@PathParam("id") Long id){
+        return runningStoriesDao.find(id);
+    }
+
 }

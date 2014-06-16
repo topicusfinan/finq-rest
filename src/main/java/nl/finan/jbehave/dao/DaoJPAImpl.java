@@ -14,10 +14,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import nl.finan.jbehave.entities.GenericEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class DaoJPAImpl<T> implements Dao<T>
+public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T>
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DaoJPAImpl.class);
 

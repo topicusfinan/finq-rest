@@ -17,11 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "JBEHAVE_STORY")
-public class Story {
-
-	@Id
-	@GeneratedValue
-	private Long id;
+public class Story extends GenericEntity{
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PROJECT_ID", nullable = false)
@@ -33,14 +29,6 @@ public class Story {
 
 	@OneToMany(mappedBy = "story",fetch = FetchType.EAGER)
 	private List<Scenario> scenarios;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Project getProject() {
 		return project;

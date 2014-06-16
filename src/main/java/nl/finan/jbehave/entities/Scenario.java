@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="JBEHAVE_SCENARIO")
-public class Scenario {
+public class Scenario extends GenericEntity{
 
 	@Id
 	@GeneratedValue
@@ -32,14 +32,6 @@ public class Scenario {
 	@Lob
 	@Column(name = "STEPS")
 	private String steps;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Story getStory() {
 		return story;

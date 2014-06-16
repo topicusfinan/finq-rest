@@ -12,11 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "JBEHAVE_PROJECT")
-public class Project {
-	
-	@Id
-	@GeneratedValue
-	private Long id;
+public class Project extends GenericEntity{
 
 	@Column(name = "NAME")
 	private String name;
@@ -26,14 +22,6 @@ public class Project {
 	
 	@OneToMany(mappedBy = "project",fetch=FetchType.LAZY)
 	private List<Story> stories;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
