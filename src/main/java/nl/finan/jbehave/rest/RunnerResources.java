@@ -60,7 +60,8 @@ public class RunnerResources implements ApplicationContextAware {
         RunStories runStories = context.getBean(RunStories.class);
         runStories.init(Arrays.asList(story),runningStories.getId());
 
-        runExecutor.execute(runStories);
+        runExecutor.execute(runStories); //TODO: take a look at callable<T>. Maybe we can use this to pause a thread!
+
 
 		return runningStories.getId();
 	}

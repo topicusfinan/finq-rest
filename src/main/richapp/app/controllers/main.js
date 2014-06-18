@@ -4,7 +4,7 @@ angular.module('jbehave').controller('StoryCtrl', ['$scope','$http', 'filterFilt
   $scope.checkedStories = [];
 
   $scope.loadStories = function() {    
-   $http({method: 'GET', url: '/runner/api/stories'}).
+   $http({method: 'GET', url: '/api/stories'}).
     success(function(data,status,header,config){
       console.log(data);
     var storiesResult = data;

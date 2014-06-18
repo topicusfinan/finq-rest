@@ -11,8 +11,8 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css({.tmp,app}) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
+        <!-- build:css css/main.css -->
+        <link rel="stylesheet" href="app/css/main.css">
         <!-- endbuild -->
 </head>
   <body ng-app="jbehave">
@@ -28,15 +28,15 @@
     <!-- Add your site or application content here -->
     <div class="container" ng-view=""></div>
 
-
+ddd
     <!-- build:js scripts/modules.js -->
-    <script src="libs/angular.js"></script>
-    <script src="libs/angular-route.js"></script>
+    <script src="app/components/angular/angular.js"></script>
+    <script src="app/components/angular-route/angular-route.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/main.js"></script>
+    <!-- build:js scripts/scripts.js -->
+    <script src="app/app.js"></script>
+    <script src="app/controllers/main.js"></script>
     <!-- endbuild -->
 </body>
 </html>
