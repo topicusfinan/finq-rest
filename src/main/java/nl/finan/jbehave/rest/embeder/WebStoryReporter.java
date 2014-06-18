@@ -9,6 +9,7 @@ import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -16,15 +17,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-@Component
-@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class WebStoryReporter implements StoryReporter {
 
-    @Autowired
-    private RunningContextLocal runningContext;
-
-    @Autowired
     private RunningStoriesDao runningStoriesDao;
+    private Long reportId;
+
+    public WebStoryReporter(ApplicationContext ctx, Long reportId) {
+        this.reportId = reportId;
+        runningStoriesDao = ctx.getBean(RunningStoriesDao.class);
+    }
 
     @Override
     public void storyNotAllowed(Story story, String filter) {
@@ -39,7 +40,9 @@ public class WebStoryReporter implements StoryReporter {
     @Override
     public void beforeStory(Story story, boolean givenStory) {
         if(!givenStory){
-            getRunningStories().getLogs().add("Starting story :" +story.getPath()+story.getName());
+
+            RunningStories runningStories = getRunningStories();
+            runningStories.addToLog("Starting story :" +story.getPath()+story.getName());
         }
     }
 
@@ -65,7 +68,7 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void beforeScenario(String scenarioTitle) {
-        getRunningStories().getLogs().add("Starting scenario : "+scenarioTitle);
+        getRunningStories().addToLog("Starting scenario : "+scenarioTitle);
     }
 
     @Override
@@ -110,7 +113,7 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void successful(String step) {
-        getRunningStories().getLogs().add("Successful ran "+step);
+        getRunningStories().addToLog("Successful ran "+step);
     }
 
     @Override
@@ -120,7 +123,7 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void pending(String step) {
-        getRunningStories().getLogs().add("Pending "+step);
+        getRunningStories().addToLog("Pending "+step);
     }
 
     @Override
@@ -154,7 +157,6 @@ public class WebStoryReporter implements StoryReporter {
     }
 
     private RunningStories getRunningStories(){
-        Long id = runningContext.get().getRunningStoriesId();
-        return runningStoriesDao.find(id);
+        return runningStoriesDao.find(reportId);
     }
 }

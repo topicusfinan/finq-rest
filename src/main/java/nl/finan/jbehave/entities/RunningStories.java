@@ -1,6 +1,7 @@
 package nl.finan.jbehave.entities;
 
 
+
 import org.hibernate.annotations.CollectionOfElements;
 
 import javax.persistence.*;
@@ -15,10 +16,8 @@ public class RunningStories extends GenericEntity{
     @Column
     private RunningStorysStatus status;
 
-    @CollectionOfElements
-    @CollectionTable(name="RUNNING_LOGS", joinColumns=@JoinColumn(name="RUNNING_STORY_ID"))
-    @Column(name="LOGS")
-    private List<String> logs;
+    @Column
+    private String logs;
 
     public RunningStorysStatus getStatus() {
         return status;
@@ -28,14 +27,19 @@ public class RunningStories extends GenericEntity{
         this.status = status;
     }
 
-    public List<String> getLogs() {
+    public String getLogs() {
         if(logs == null){
-            logs = new ArrayList<String>();
+            logs = new String();
         }
         return logs;
     }
 
-    public void setLogs(List<String> logs) {
+    public void addToLog(String log){
+        this.logs = getLogs();
+        this.logs.concat(log);
+    }
+
+    public void setLogs(String logs) {
         this.logs = logs;
     }
 }
