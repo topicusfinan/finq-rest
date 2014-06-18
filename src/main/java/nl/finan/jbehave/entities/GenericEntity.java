@@ -3,9 +3,10 @@ package nl.finan.jbehave.entities;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 @MappedSuperclass
-public class GenericEntity {
+public abstract class GenericEntity implements Serializable {
 
     @Id
     @GeneratedValue

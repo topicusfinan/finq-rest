@@ -25,34 +25,34 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 
 @Component
-@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope("prototype")
 public class FinanEmbedder extends Embedder implements ApplicationContextAware {
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(FinanEmbedder.class);
     
     private ApplicationContext ctx;
 
-    @Autowired
-    private RunningContextLocal runningContext = new RunningContextLocal();
 
-    @Autowired
-    private WebStoryReporter webStoryReporter;
-
-    @Autowired
-    private WebFormat format;
-
-    @PostConstruct
-    public void init(){
+    public FinanEmbedder(){
         configuration().useStoryControls(new StoryControls().doSkipScenariosAfterFailure(false).doDryRun(false));
         configuration().storyReporterBuilder()
                 .withFailureTrace(true)
-                .withCodeLocation(CodeLocations.codeLocationFromClass(FinanEmbedder.class))
-                .withFormats(format);
+                .withCodeLocation(CodeLocations.codeLocationFromClass(FinanEmbedder.class));
         useStepsFactory(stepsFactory());
         this.embedderMonitor = new PrintStreamEmbedderMonitor();
 
         this.storyManager =  new StoryManager(configuration(), stepsFactory(), embedderControls(), embedderMonitor(), executorService(), performableTree());
     }
+
+    public void setReportId(final Long id){
+        configuration().storyReporterBuilder().withFormats(new Format("webformat") {
+            @Override
+            public StoryReporter createStoryReporter(FilePrintStreamFactory factory, StoryReporterBuilder storyReporterBuilder) {
+                return new WebStoryReporter(ctx,id);
+            }
+        });
+    }
+
 
     public InjectableStepsFactory stepsFactory() {
         return new SpringStepsFactory(configuration(), ctx);
@@ -62,11 +62,6 @@ public class FinanEmbedder extends Embedder implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.ctx = applicationContext;
     }
-
-    public RunningContextLocal getRunningContext() {
-        return runningContext;
-    }
-
 }
 
 
