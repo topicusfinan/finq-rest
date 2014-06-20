@@ -1,12 +1,7 @@
 package nl.finan.jbehave.entities;
 
 
-
-import org.hibernate.annotations.CollectionOfElements;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "RUNNING_STORIES")

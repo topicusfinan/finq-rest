@@ -1,21 +1,20 @@
 package nl.finan.jbehave.rest;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
 import nl.finan.jbehave.dao.ProjectDao;
 import nl.finan.jbehave.dao.ScenarioDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.Project;
 import nl.finan.jbehave.entities.Scenario;
 import nl.finan.jbehave.entities.Story;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 @Path("testdata")
 @Repository

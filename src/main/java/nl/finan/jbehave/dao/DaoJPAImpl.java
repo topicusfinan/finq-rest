@@ -1,22 +1,16 @@
 package nl.finan.jbehave.dao;
 
+import nl.finan.jbehave.entities.GenericEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import nl.finan.jbehave.entities.GenericEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T>
 {

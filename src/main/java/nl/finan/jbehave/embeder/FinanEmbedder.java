@@ -1,28 +1,24 @@
-package nl.finan.jbehave.rest.embeder;
+package nl.finan.jbehave.embeder;
 
-import nl.finan.jbehave.rest.RunningContextLocal;
-import org.jbehave.core.configuration.MostUsefulConfiguration;
-import org.jbehave.core.embedder.*;
+
+import org.jbehave.core.embedder.Embedder;
+import org.jbehave.core.embedder.PrintStreamEmbedderMonitor;
+import org.jbehave.core.embedder.StoryControls;
+import org.jbehave.core.embedder.StoryManager;
 import org.jbehave.core.io.CodeLocations;
-import org.jbehave.core.reporters.*;
+import org.jbehave.core.reporters.FilePrintStreamFactory;
+import org.jbehave.core.reporters.Format;
+import org.jbehave.core.reporters.StoryReporter;
+import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.annotation.PostConstruct;
 
 @Component
 @Scope("prototype")

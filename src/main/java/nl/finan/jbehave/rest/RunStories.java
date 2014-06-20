@@ -1,14 +1,12 @@
 package nl.finan.jbehave.rest;
 
 import nl.finan.jbehave.entities.Story;
-import nl.finan.jbehave.rest.embeder.FinanEmbedder;
+import nl.finan.jbehave.embeder.FinanEmbedder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

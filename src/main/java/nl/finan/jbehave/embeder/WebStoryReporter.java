@@ -1,18 +1,12 @@
-package nl.finan.jbehave.rest.embeder;
+package nl.finan.jbehave.embeder;
 
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.entities.RunningStories;
-import nl.finan.jbehave.rest.RunningContextLocal;
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
-import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
