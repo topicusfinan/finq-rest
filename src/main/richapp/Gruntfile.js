@@ -58,6 +58,13 @@ module.exports = function(grunt) {
                 files: ['<%= gruntMavenProperties.filesToWatch %>'],
                 tasks: ['default']
             }
+        },
+        bower:{
+            install:{
+                options:{
+                    targetDir: './app/components'
+                }
+            }
         }
     });
 
@@ -70,9 +77,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-maven');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy')
+    grunt.loadNpmTasks('grunt-npm-install');
+    grunt.loadNpmTasks('grunt-bower-task')
 
-    grunt.registerTask('default',['mavenPrepare','clean','copy:main','mavenDist'])
+    grunt.registerTask('default',['mavenPrepare','clean','npm-install','bower','copy:main','mavenDist'])
 
-    grunt.registerTask('dist', ['mavenPrepare','clean','copy:dist', 'useminPrepare', 'concat', 'uglify', 'cssmin', 'rev','usemin','mavenDist']);
+    grunt.registerTask('dist', ['mavenPrepare','clean','npm-install','bower','copy:dist', 'useminPrepare', 'concat', 'uglify', 'cssmin', 'rev','usemin','mavenDist']);
 
 };
