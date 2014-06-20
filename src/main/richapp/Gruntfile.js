@@ -73,12 +73,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-rev')
+    grunt.loadNpmTasks('grunt-rev');
     grunt.loadNpmTasks('grunt-maven');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-copy')
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-npm-install');
-    grunt.loadNpmTasks('grunt-bower-task')
+    grunt.loadNpmTasks('grunt-bower-task');
 
     grunt.registerTask('default',['mavenPrepare','clean','npm-install','bower','copy:main','mavenDist'])
 
