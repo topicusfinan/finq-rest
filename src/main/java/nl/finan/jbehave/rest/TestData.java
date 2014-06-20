@@ -47,9 +47,10 @@ public class TestData {
 			LOGGER.info("Story: {}",s.getName());
 			for(int x = 0; x<10; x++){
 				Scenario sc = new Scenario();
-				sc.setSteps("Given this is a given step \n"
-						   +"When a When step has been run \n"
-						   +"Then a result must been shown");
+                sc.setTitle("Scenario Title");
+                sc.getSteps().add("Given this is a given step");
+                sc.getSteps().add("When a When step has been run");
+                sc.getSteps().add("Then a result must been shown");
 				sc.setStory(s);
 				scenarioDao.persist(sc);
 			}

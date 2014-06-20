@@ -3,6 +3,8 @@ package nl.finan.jbehave.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -17,11 +19,19 @@ public class Scenario extends GenericEntity{
 	@Column(name = "TITLE")
 	private String title;
 	
-	@Lob
-	@Column(name = "STEPS")
-	private String steps;
 
-	public Story getStory() {
+    @ElementCollection()
+    @CollectionTable(name="JBEHAVE_STEPS", joinColumns = @JoinColumn(name="SCENARIO_ID"))
+    @Column(name = "STEPS")
+	private List<String> steps;
+
+    public Scenario() {
+        if(steps==null){
+            steps = new ArrayList<String>();
+        }
+    }
+
+    public Story getStory() {
 		return story;
 	}
 
@@ -29,15 +39,15 @@ public class Scenario extends GenericEntity{
 		this.story = story;
 	}
 
-	public String getSteps() {
-		return steps;
-	}
+    public List<String> getSteps() {
+        return steps;
+    }
 
-	public void setSteps(String steps) {
-		this.steps = steps;
-	}
+    public void setSteps(List<String> steps) {
+        this.steps = steps;
+    }
 
-	public String getTitle() {
+    public String getTitle() {
 		return title;
 	}
 
@@ -50,8 +60,10 @@ public class Scenario extends GenericEntity{
 		builder.append("Scenario: ");
 		builder.append(getTitle());
 		builder.append("\n");
-		builder.append(getSteps());
-		builder.append("\n");
+		for(String step: steps){
+            builder.append(step);
+            builder.append("\n");
+        }
 		return builder.toString();
 	}	
 }
