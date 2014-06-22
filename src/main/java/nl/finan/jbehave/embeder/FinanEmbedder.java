@@ -15,10 +15,14 @@ import org.jbehave.core.steps.spring.SpringStepsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Component
 @Scope("prototype")
@@ -27,7 +31,6 @@ public class FinanEmbedder extends Embedder implements ApplicationContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(FinanEmbedder.class);
     
     private ApplicationContext ctx;
-
 
     public FinanEmbedder(){
         configuration().useStoryControls(new StoryControls().doSkipScenariosAfterFailure(false).doDryRun(false));
@@ -44,7 +47,9 @@ public class FinanEmbedder extends Embedder implements ApplicationContextAware {
         configuration().storyReporterBuilder().withFormats(new Format("webformat") {
             @Override
             public StoryReporter createStoryReporter(FilePrintStreamFactory factory, StoryReporterBuilder storyReporterBuilder) {
-                return new WebStoryReporter(ctx,id);
+                WebStoryReporter reporter = ctx.getBean(WebStoryReporter.class);
+                reporter.init(id);
+                return reporter;
             }
         });
     }

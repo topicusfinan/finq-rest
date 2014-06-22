@@ -6,44 +6,65 @@ import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
+@Scope("prototype")
+@Transactional
 public class WebStoryReporter implements StoryReporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebStoryReporter.class);
 
+    @Autowired
     private RunningStoriesDao runningStoriesDao;
+
     private Long reportId;
 
-    public WebStoryReporter(ApplicationContext ctx, Long reportId) {
+
+    public void init(Long reportId) {
         this.reportId = reportId;
-        runningStoriesDao = ctx.getBean(RunningStoriesDao.class);
     }
 
     @Override
     public void storyNotAllowed(Story story, String filter) {
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + story);
+        runningStoriesDao.merge(runningStories);
 
     }
 
     @Override
     public void storyCancelled(Story story, StoryDuration storyDuration) {
-
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + story);
+        runningStoriesDao.merge(runningStories);
     }
 
     @Override
+    @Transactional
     public void beforeStory(Story story, boolean givenStory) {
         if(!givenStory){
-
-            RunningStories runningStories = getRunningStories();
-            runningStories.addToLog("Starting story :" +story.getPath()+story.getName());
-            LOGGER.info("Log : {}" ,runningStories.getLogs());
+            RunningStories runningStories = runningStoriesDao.find(reportId);
+            runningStories.addToLog("Starting story :" + story.getPath());
+            LOGGER.info("Log : {}", runningStories.getLogs());
+            runningStoriesDao.merge(runningStories);
         }
     }
 
     @Override
     public void afterStory(boolean givenStory) {
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + givenStory);
+        runningStoriesDao.merge(runningStories);
 
     }
 
@@ -64,7 +85,9 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void beforeScenario(String scenarioTitle) {
-        getRunningStories().addToLog("Starting scenario : "+scenarioTitle);
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Starting scenario : " + scenarioTitle);
+        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -84,6 +107,9 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void givenStories(List<String> storyPaths) {
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + storyPaths);
+        runningStoriesDao.merge(runningStories);
 
     }
 
@@ -94,7 +120,9 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void example(Map<String, String> tableRow) {
-
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + tableRow);
+        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -104,41 +132,52 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void beforeStep(String step) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
     @Override
     public void successful(String step) {
-        getRunningStories().addToLog("Successful ran "+step);
+        LOGGER.info("Succesful ran {}", step);
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Successful ran " + step);
+        runningStoriesDao.merge(runningStories);
     }
 
     @Override
     public void ignorable(String step) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
     @Override
     public void pending(String step) {
-        getRunningStories().addToLog("Pending "+step);
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("Pending " + step);
+        runningStoriesDao.merge(runningStories);
     }
 
     @Override
     public void notPerformed(String step) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
     @Override
     public void failed(String step, Throwable cause) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
     @Override
     public void failedOutcomes(String step, OutcomesTable table) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
     @Override
     public void restarted(String step, Throwable cause) {
+        LOGGER.info("Succesful ran {}", step);
 
     }
 
@@ -149,10 +188,8 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void pendingMethods(List<String> methods) {
+        LOGGER.info("Succesful ran {}", methods);
 
     }
 
-    private RunningStories getRunningStories(){
-        return runningStoriesDao.find(reportId);
-    }
 }

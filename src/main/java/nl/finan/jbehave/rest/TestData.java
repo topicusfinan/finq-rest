@@ -39,13 +39,13 @@ public class TestData {
 		p.setName("Test projectuh");
 		projectDao.persist(p);
 		
-		for(int i = 0; i<5; i++){
+		for(int i = 0; i<2; i++){
 			Story s = new Story();
 			s.setName("story "+i);
 			s.setProject(p);
 			storyDao.persist(s);
 			LOGGER.info("Story: {}",s.getName());
-			for(int x = 0; x<10; x++){
+			for(int x = 0; x<2; x++){
 				Scenario sc = new Scenario();
                 sc.setTitle("Scenario Title");
                 sc.getSteps().add("Given this is a given step");
