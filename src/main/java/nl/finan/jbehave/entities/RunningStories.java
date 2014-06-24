@@ -1,6 +1,9 @@
 package nl.finan.jbehave.entities;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,7 @@ public class RunningStories extends GenericEntity{
     private RunningStoriesStatus status;
 
     @OneToMany(mappedBy = "runningStory")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<StoryLog> logs = new ArrayList<StoryLog>();
 
     public RunningStoriesStatus getStatus() {

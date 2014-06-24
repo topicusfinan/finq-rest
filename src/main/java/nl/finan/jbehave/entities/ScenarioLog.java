@@ -1,16 +1,28 @@
 package nl.finan.jbehave.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="JBEHAVE_LOG_SCENARIO")
 public class ScenarioLog  extends Log{
 
     @ManyToOne
+    @JoinColumn
+    @JsonIgnore
+    private StoryLog storyLog;
+
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
     private Scenario scenario;
 
+    @OneToMany
+    @JsonIgnore
     private List<StepLog> stepLogs;
 
     public Scenario getScenario() {
@@ -27,5 +39,13 @@ public class ScenarioLog  extends Log{
 
     public void setStepLogs(List<StepLog> stepLogs) {
         this.stepLogs = stepLogs;
+    }
+
+    public StoryLog getStoryLog() {
+        return storyLog;
+    }
+
+    public void setStoryLog(StoryLog storyLog) {
+        this.storyLog = storyLog;
     }
 }

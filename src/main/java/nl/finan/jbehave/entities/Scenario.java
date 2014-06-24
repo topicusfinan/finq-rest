@@ -1,6 +1,8 @@
 package nl.finan.jbehave.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class Scenario extends GenericEntity{
     @ElementCollection()
     @CollectionTable(name="JBEHAVE_STEPS", joinColumns = @JoinColumn(name="SCENARIO_ID"))
     @Column(name = "STEPS")
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> steps;
 
     public Scenario() {
