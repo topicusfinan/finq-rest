@@ -1,10 +1,9 @@
-package nl.finan.jbehave.rest;
+package nl.finan.jbehave.embeder;
 
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
-import nl.finan.jbehave.embeder.FinanEmbedder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class RunStories implements Runnable{
         try{
             embedder.runStories(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
-            runningStories.setStatus(RunningStoriesStatus.SUCESS);
+            runningStories.setStatus(RunningStoriesStatus.SUCCESS);
 
         }catch (Exception e){
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);

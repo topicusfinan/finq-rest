@@ -3,6 +3,7 @@ package nl.finan.jbehave.rest;
 
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
+import nl.finan.jbehave.embeder.RunStories;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
