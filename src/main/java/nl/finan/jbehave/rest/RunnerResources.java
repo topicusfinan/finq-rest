@@ -4,7 +4,7 @@ package nl.finan.jbehave.rest;
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.RunningStories;
-import nl.finan.jbehave.entities.RunningStorysStatus;
+import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class RunnerResources implements ApplicationContextAware {
         Story story = storyDao.find(id);
 
         RunningStories runningStories = new RunningStories();
-        runningStories.setStatus(RunningStorysStatus.RUNNING);
+        runningStories.setStatus(RunningStoriesStatus.RUNNING);
         runningStoriesDao.persist(runningStories);
 
         RunStories runStories = context.getBean(RunStories.class);

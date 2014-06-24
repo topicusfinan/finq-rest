@@ -38,15 +38,12 @@ public class WebStoryReporter implements StoryReporter {
     public void storyNotAllowed(Story story, String filter) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + story);
-        runningStoriesDao.merge(runningStories);
-
     }
 
     @Override
     public void storyCancelled(Story story, StoryDuration storyDuration) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + story);
-        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -56,7 +53,6 @@ public class WebStoryReporter implements StoryReporter {
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.addToLog("Starting story :" + story.getPath());
             LOGGER.info("Log : {}", runningStories.getLogs());
-            runningStoriesDao.merge(runningStories);
         }
     }
 
@@ -64,7 +60,6 @@ public class WebStoryReporter implements StoryReporter {
     public void afterStory(boolean givenStory) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + givenStory);
-        runningStoriesDao.merge(runningStories);
 
     }
 
@@ -87,7 +82,6 @@ public class WebStoryReporter implements StoryReporter {
     public void beforeScenario(String scenarioTitle) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Starting scenario : " + scenarioTitle);
-        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -109,7 +103,6 @@ public class WebStoryReporter implements StoryReporter {
     public void givenStories(List<String> storyPaths) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + storyPaths);
-        runningStoriesDao.merge(runningStories);
 
     }
 
@@ -122,7 +115,6 @@ public class WebStoryReporter implements StoryReporter {
     public void example(Map<String, String> tableRow) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + tableRow);
-        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -141,7 +133,6 @@ public class WebStoryReporter implements StoryReporter {
         LOGGER.info("Succesful ran {}", step);
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Successful ran " + step);
-        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -154,7 +145,6 @@ public class WebStoryReporter implements StoryReporter {
     public void pending(String step) {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         runningStories.addToLog("Pending " + step);
-        runningStoriesDao.merge(runningStories);
     }
 
     @Override
@@ -165,7 +155,8 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void failed(String step, Throwable cause) {
-        LOGGER.info("Succesful ran {}", step);
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        runningStories.addToLog("error in step:  " + step + " cause: "+cause.getMessage());
 
     }
 

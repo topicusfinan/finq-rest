@@ -1,20 +1,25 @@
 package nl.finan.jbehave.entities;
 
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "JBEHAVE_RUNNING_STORIES")
-public class RunningStories extends GenericEntity{
+@MappedSuperclass
+public abstract class Log extends GenericEntity{
+
+
+    @Column
+    private String log;
 
     @Enumerated(EnumType.STRING)
     @Column
     private RunningStoriesStatus status;
 
-    @OneToMany(mappedBy = "runningStory")
-    private List<StoryLog> logs = new ArrayList<StoryLog>();
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
+    }
 
     public RunningStoriesStatus getStatus() {
         return status;
@@ -23,11 +28,4 @@ public class RunningStories extends GenericEntity{
     public void setStatus(RunningStoriesStatus status) {
         this.status = status;
     }
-
-    public List<StoryLog> getLogs() {
-        return logs;
-    }
-
-
-
 }
