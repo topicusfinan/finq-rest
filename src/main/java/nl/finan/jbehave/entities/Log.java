@@ -5,7 +5,6 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class Log extends GenericEntity{
 
-
     @Column
     private String log;
 

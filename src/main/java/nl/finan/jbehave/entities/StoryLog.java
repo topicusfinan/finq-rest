@@ -1,5 +1,6 @@
 package nl.finan.jbehave.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -11,18 +12,16 @@ import java.util.List;
 @Table(name="JBEHAVE_LOG_STORY")
 public class StoryLog extends Log{
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn
-    @JsonIgnore
     private Story story;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn
-    @JsonIgnore
+    @JsonBackReference
     private RunningStories runningStory;
 
-    @OneToMany
-    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "storyLog")
     private List<ScenarioLog> scenarioLogs;
 
     public Story getStory() {

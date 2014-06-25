@@ -1,6 +1,9 @@
 package nl.finan.jbehave.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,15 +13,16 @@ import java.util.List;
 @Table(name = "JBEHAVE_STORY")
 public class Story extends GenericEntity{
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PROJECT_ID", nullable = false)
-	@JsonIgnore
+    @JsonBackReference
 	private Project project;
 	
 	@Column(name = "NAME")
 	private String name;
 
-	@OneToMany(mappedBy = "story",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "story")
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private List<Scenario> scenarios;
 
 	public Project getProject() {

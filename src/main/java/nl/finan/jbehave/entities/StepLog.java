@@ -1,5 +1,6 @@
 package nl.finan.jbehave.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.finan.jbehave.steps.Step;
 
@@ -11,7 +12,7 @@ public class StepLog extends Log{
 
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
+    @JsonBackReference
     private ScenarioLog scenarioLog;
 
     @Column
