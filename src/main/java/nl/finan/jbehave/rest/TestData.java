@@ -47,7 +47,7 @@ public class TestData {
 			LOGGER.info("Story: {}",s.getName());
 			for(int x = 0; x<2; x++){
 				Scenario sc = new Scenario();
-                sc.setTitle("Scenario Title");
+                sc.setTitle("Scenario Title "+i+"-"+x);
                 sc.getSteps().add("Given this is a given step");
                 sc.getSteps().add("When a When step has been run");
                 sc.getSteps().add("Then a result must been shown");

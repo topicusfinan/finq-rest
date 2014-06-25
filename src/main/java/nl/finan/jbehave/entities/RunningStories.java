@@ -1,6 +1,9 @@
 package nl.finan.jbehave.entities;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,27 +14,24 @@ public class RunningStories extends GenericEntity{
 
     @Enumerated(EnumType.STRING)
     @Column
-    private RunningStorysStatus status;
+    private RunningStoriesStatus status;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="JBEHAVE_LOGS", joinColumns = @JoinColumn(name="RUNNING_STORIES_ID"))
-    @Column(name = "LOGS")
-    private List<String> logs = new ArrayList<String>();
+    @OneToMany(mappedBy = "runningStory")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<StoryLog> logs = new ArrayList<StoryLog>();
 
-    public RunningStorysStatus getStatus() {
+    public RunningStoriesStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RunningStorysStatus status) {
+    public void setStatus(RunningStoriesStatus status) {
         this.status = status;
     }
 
-    public List<String> getLogs() {
+    public List<StoryLog> getLogs() {
         return logs;
     }
 
-    public void addToLog(String log){
-        this.logs.add(log);
-    }
+
 
 }

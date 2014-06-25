@@ -1,6 +1,9 @@
 package nl.finan.jbehave.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,9 +14,9 @@ import java.util.List;
 @Table(name="JBEHAVE_SCENARIO")
 public class Scenario extends GenericEntity{
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "STORY_ID", nullable = false)
-	@JsonIgnore
+    @JsonBackReference
 	private Story story;
 	
 	@Column(name = "TITLE")
@@ -23,6 +26,7 @@ public class Scenario extends GenericEntity{
     @ElementCollection()
     @CollectionTable(name="JBEHAVE_STEPS", joinColumns = @JoinColumn(name="SCENARIO_ID"))
     @Column(name = "STEPS")
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> steps;
 
     public Scenario() {

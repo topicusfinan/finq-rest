@@ -12,6 +12,7 @@
         <jaxrs:serviceBeans>
             <bean class="nl.finan.jbehave.rest.StoriesResources"/>
             <bean class="nl.finan.jbehave.rest.RunnerResources"/>
+            <bean class="nl.finan.jbehave.rest.StatusResources"/>
             <bean class="nl.finan.jbehave.rest.TestData"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
