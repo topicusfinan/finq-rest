@@ -1,4 +1,4 @@
-package nl.finan.jbehave.dao;
+package nl.finan.jbehave.dao.impl;
 
 public class NamedParameter
 {

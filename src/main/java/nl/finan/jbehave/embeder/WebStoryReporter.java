@@ -251,7 +251,5 @@ public class WebStoryReporter implements StoryReporter {
     @Override
     public void pendingMethods(List<String> methods) {
         LOGGER.info("Succesful ran {}", methods);
-
     }
-
 }

@@ -1,6 +1,6 @@
-package nl.finan.jbehave.dao;
+package nl.finan.jbehave.dao.impl;
 
-import nl.finan.jbehave.entities.Scenario;
+import nl.finan.jbehave.dao.ScenarioLogDao;
 import nl.finan.jbehave.entities.ScenarioLog;
 import org.springframework.stereotype.Repository;
 
