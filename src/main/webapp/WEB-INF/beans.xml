@@ -14,6 +14,7 @@
             <bean class="nl.finan.jbehave.rest.RunnerResources"/>
             <bean class="nl.finan.jbehave.rest.StatusResources"/>
             <bean class="nl.finan.jbehave.rest.TestData"/>
+            <bean class="nl.finan.jbehave.rest.CorsResources"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
