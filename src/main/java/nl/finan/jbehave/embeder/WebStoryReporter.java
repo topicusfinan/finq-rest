@@ -21,7 +21,6 @@ import java.util.Map;
 @Scope("prototype")
 @Transactional
 public class WebStoryReporter implements StoryReporter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebStoryReporter.class);
 
     @Autowired
     private RunningStoriesDao runningStoriesDao;
@@ -35,6 +34,7 @@ public class WebStoryReporter implements StoryReporter {
     private Long reportId;
 
     private Long currentStoryLog;
+
     private Long currentScenarioLog;
 
     public void init(Long reportId) {
@@ -125,8 +125,6 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void givenStories(List<String> storyPaths) {
-        RunningStories runningStories = runningStoriesDao.find(reportId);
-        //runningStories.addToLog("Successful ran " + storyPaths);
 
     }
 
@@ -137,8 +135,6 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void example(Map<String, String> tableRow) {
-        RunningStories runningStories = runningStoriesDao.find(reportId);
-        //runningStories.addToLog("Successful ran " + tableRow);
     }
 
     @Override
@@ -167,8 +163,6 @@ public class WebStoryReporter implements StoryReporter {
     @Override
     @Transactional
     public void ignorable(String step) {
-        LOGGER.info("Succesful ran {}", step);
-
     }
 
     @Override
@@ -185,8 +179,6 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void notPerformed(String step) {
-        LOGGER.info("Succesful ran {}", step);
-
     }
 
     @Override
@@ -206,14 +198,10 @@ public class WebStoryReporter implements StoryReporter {
 
     @Override
     public void failedOutcomes(String step, OutcomesTable table) {
-        LOGGER.info("Succesful ran {}", step);
-
     }
 
     @Override
     public void restarted(String step, Throwable cause) {
-        LOGGER.info("Succesful ran {}", step);
-
     }
 
     @Override
@@ -222,7 +210,6 @@ public class WebStoryReporter implements StoryReporter {
     }
 
     @Override
-    public void pendingMethods(List<String> methods) {
-        LOGGER.info("Succesful ran {}", methods);
+    public void pendingMethods(List<String> methods){
     }
 }
