@@ -3,6 +3,7 @@ package nl.finan.jbehave.embeder;
 import nl.finan.jbehave.dao.*;
 import nl.finan.jbehave.entities.*;
 import nl.finan.jbehave.service.ReportService;
+
 import org.jbehave.core.model.*;
 import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
@@ -187,7 +188,8 @@ public class WebStoryReporter implements StoryReporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for(String step: scenarioLog.getScenario().getSteps()){
                 if(step.equals(runningStep)){
-                    reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED);
+                    StepLog stepLog = reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED);
+                    stepLog.setLog(cause.getMessage());
                     scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
                     scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
                     
