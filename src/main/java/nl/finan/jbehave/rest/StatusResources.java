@@ -2,10 +2,10 @@ package nl.finan.jbehave.rest;
 
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.entities.RunningStories;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,10 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("status")
-@Repository
+@Stateless
 public class StatusResources {
 
-    @Autowired
+    @EJB
     private RunningStoriesDao runningStoriesDao;
 
     @GET

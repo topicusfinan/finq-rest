@@ -9,36 +9,33 @@ import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
 
 @Path("runner")
-@Repository
-public class RunnerResources implements ApplicationContextAware {
+@Stateless
+public class RunnerResources  {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RunnerResources.class);
 	
-    @Autowired
+    @EJB
     private StoryDao storyDao;
 
 
-    @Autowired
+    @EJB
     private RunningStoriesDao runningStoriesDao;
 
-    private ApplicationContext context;
-
     @Resource
-    private ThreadPoolTaskExecutor runExecutor;
+    private ManagedExecutorService runExecutor;
 
 	
 	@POST
@@ -46,8 +43,7 @@ public class RunnerResources implements ApplicationContextAware {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @Transactional
-	public Long runStory(Long id)
-	{
+	public Long runStory(Long id) throws NamingException {
 
         Story story = storyDao.find(id);
 
@@ -55,7 +51,8 @@ public class RunnerResources implements ApplicationContextAware {
         runningStories.setStatus(RunningStoriesStatus.RUNNING);
         runningStoriesDao.persist(runningStories);
 
-        RunStories runStories = context.getBean(RunStories.class);
+        Object rs =  new InitialContext().lookup("java:module/RunStories");
+        RunStories runStories = (RunStories) rs;
         runStories.init(Arrays.asList(story),runningStories.getId());
 
         runExecutor.execute(runStories); //TODO: take a look at callable<T>. Maybe we can use this to pause a thread!
@@ -71,8 +68,4 @@ public class RunnerResources implements ApplicationContextAware {
         return runningStoriesDao.find(id);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
-    }
 }

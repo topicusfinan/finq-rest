@@ -1,40 +1,21 @@
 package nl.finan.jbehave.rest;
 
-import org.apache.cxf.rs.security.cors.CorsHeaderConstants;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
-import org.apache.cxf.rs.security.cors.LocalPreflight;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
+import java.io.IOException;
 
-@CrossOriginResourceSharing(
-        allowAllOrigins = true
-)
+@Provider
+public class CorsResources implements ContainerResponseFilter {
 
 
-@Repository
-public class CorsResources {
-
-    @Context
-    private HttpHeaders headers;
-
-    // This method will do a preflight check itself
-    @OPTIONS
-    @Path("/")
-    @LocalPreflight
-    public Response options() {
-
-        return Response.ok()
-                .header(CorsHeaderConstants.HEADER_AC_ALLOW_METHODS, "DELETE PUT")
-                .header(CorsHeaderConstants.HEADER_AC_ALLOW_CREDENTIALS, "false")
-                .header(CorsHeaderConstants.HEADER_AC_ALLOW_ORIGIN, "*")
-                .build();
-
+    @Override
+    public void filter(ContainerRequestContext containerRequestContext, ContainerResponseContext containerResponseContext) throws IOException {
+        containerResponseContext.getHeaders().add("Access-Control-Allow-Origin","*");
+        containerResponseContext.getHeaders().add("Access-Control-Allow-Headers","origin, content-type, accept, authorization");
+        containerResponseContext.getHeaders().add("Access-Control-Allow-Credentials","true");
+        containerResponseContext.getHeaders().add("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS, HEAD");
     }
-
 }

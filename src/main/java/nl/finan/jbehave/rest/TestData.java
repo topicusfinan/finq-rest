@@ -8,27 +8,27 @@ import nl.finan.jbehave.entities.Scenario;
 import nl.finan.jbehave.entities.Story;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 @Path("testdata")
-@Repository
+@Stateless
 public class TestData {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestData.class);
 	
-	@Autowired
+	@EJB
 	private StoryDao storyDao;
 	
-	@Autowired
+	@EJB
 	private ProjectDao projectDao;
 	
-	@Autowired
+	@EJB
 	private ScenarioDao scenarioDao;
 	
 	@GET

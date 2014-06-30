@@ -6,17 +6,14 @@ import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateful;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Scope("prototype")
+@Stateful
 public class RunStories implements Runnable{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RunStories.class);
@@ -24,10 +21,10 @@ public class RunStories implements Runnable{
     private List<org.jbehave.core.model.Story> stories;
     private Long reportId;
 
-    @Autowired
+    @EJB
     private FinanEmbedder embedder;
 
-    @Autowired
+    @EJB
     private RunningStoriesDao runningStoriesDao;
 
     public RunStories() {
@@ -42,7 +39,7 @@ public class RunStories implements Runnable{
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void run() {
         embedder.setReportId(reportId);
 
