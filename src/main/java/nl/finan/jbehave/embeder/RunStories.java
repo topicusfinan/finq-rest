@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.Stateful;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Local(RunStories.class)
 @Stateful
 public class RunStories implements Runnable{
 
