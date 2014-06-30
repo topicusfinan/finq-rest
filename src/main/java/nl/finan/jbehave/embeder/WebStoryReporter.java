@@ -10,11 +10,13 @@ import org.jbehave.core.model.Story;
 import org.jbehave.core.reporters.StoryReporter;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.Stateful;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
+@Local(WebStoryReporter.class)
 @Stateful
 @Transactional
 public class WebStoryReporter implements StoryReporter {
