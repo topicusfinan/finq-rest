@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "JBEHAVE_PROJECT")
-public class Project extends GenericEntity{
+@Table(name = "JBEHAVE_BUNDLE")
+public class Bundle extends GenericEntity{
 
 	@Column(name = "NAME")
 	private String name;
@@ -13,8 +13,11 @@ public class Project extends GenericEntity{
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@OneToMany(mappedBy = "project",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "bundle",fetch=FetchType.LAZY)
 	private List<Story> stories;
+	
+	@ManyToMany(mappedBy="bundles")
+	private List<Collection> collections;
 
 	public String getName() {
 		return name;
@@ -38,5 +41,13 @@ public class Project extends GenericEntity{
 
 	public void setStories(List<Story> stories) {
 		this.stories = stories;
+	}
+
+	public List<Collection> getCollections() {
+		return collections;
+	}
+
+	public void setCollections(List<Collection> collections) {
+		this.collections = collections;
 	}
 }

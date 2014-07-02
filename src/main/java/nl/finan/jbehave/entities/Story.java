@@ -14,9 +14,9 @@ import java.util.List;
 public class Story extends GenericEntity{
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "PROJECT_ID", nullable = false)
+	@JoinColumn(name = "BUNDLE_ID", nullable = false)
     @JsonBackReference
-	private Project project;
+	private Bundle bundle;
 	
 	@Column(name = "NAME")
 	private String name;
@@ -25,12 +25,12 @@ public class Story extends GenericEntity{
     @LazyCollection(LazyCollectionOption.FALSE)
 	private List<Scenario> scenarios;
 
-	public Project getProject() {
-		return project;
+	public Bundle getBundle() {
+		return bundle;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setBundle(Bundle bundle) {
+		this.bundle = bundle;
 	}
 
 	public String getName() {
