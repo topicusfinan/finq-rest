@@ -29,10 +29,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
-@CrossOriginResourceSharing(
-        allowAllOrigins = true
-)
-
 @Path("stories")
 @Repository
 @Transactional
@@ -43,10 +39,6 @@ public class StoriesResources {
 
     @Autowired
     private StoryDao storyDao;
-
-
-    @Context
-    private HttpHeaders headers;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,20 +69,7 @@ public class StoriesResources {
     	return story.getScenarios();    	
     }
 
-    // This method will do a preflight check itself
-    @OPTIONS
-    @Path("/")
-    @LocalPreflight
-    public Response options() {
-        String origin = headers.getRequestHeader("Origin").get(0);
 
-            return Response.ok()
-                    .header(CorsHeaderConstants.HEADER_AC_ALLOW_METHODS, "DELETE PUT")
-                    .header(CorsHeaderConstants.HEADER_AC_ALLOW_CREDENTIALS, "false")
-                    .header(CorsHeaderConstants.HEADER_AC_ALLOW_ORIGIN, "http://area51.mil:3333")
-                    .build();
-
-    }
     
 }
 

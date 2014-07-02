@@ -11,6 +11,7 @@
     <properties>
         <jackson.version>1.8.6</jackson.version>
         <jbehave.core.version>4.0-beta-7</jbehave.core.version>
+        <powermock.version>1.5.5</powermock.version>
     </properties>
     <dependencies>
     	<dependency>
@@ -99,6 +100,18 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-security-cors</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
