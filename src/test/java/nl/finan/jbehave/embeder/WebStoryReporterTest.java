@@ -120,26 +120,28 @@ public class WebStoryReporterTest {
 
     @Test
     public void testSuccessful() throws Exception {
-    	ScenarioLog scenarioLog = this.mockStep();
+    	String runningStep = "Then this is a step";
+    	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-    	webStoryReporter.successful("Then this is a step");
+    	webStoryReporter.successful(runningStep);
     	
-    	Mockito.verify(reportService).createStepLog("Then this is a step", scenarioLog, RunningStoriesStatus.SUCCESS);
+    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
     }
 
     @Test
     public void testPending() throws Exception {
-    	ScenarioLog scenarioLog = this.mockStep();
+    	String runningStep = "Then this is a step";
+    	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-    	webStoryReporter.pending("Then this is a step");
+    	webStoryReporter.pending(runningStep);
     	
-    	Mockito.verify(reportService).createStepLog("Then this is a step", scenarioLog, RunningStoriesStatus.PENDING);
+    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
     }
 
     @Test
     public void testFailed() throws Exception {
     	String runningStep = "Then this is a step";
-    	ScenarioLog scenarioLog = this.mockStep();
+    	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	Throwable throwable = PowerMockito.mock(Throwable.class);
     	RunningStories runningStories = PowerMockito.mock(RunningStories.class);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
@@ -157,11 +159,11 @@ public class WebStoryReporterTest {
     	Mockito.verify(runningStories).setStatus(RunningStoriesStatus.FAILED);
     }
     
-    private ScenarioLog mockStep(){
+    private ScenarioLog mockStep(String step){
     	Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
     	ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
     	Scenario scenario = PowerMockito.mock(Scenario.class);
-        List<String> steps = Arrays.asList("Then this is a step");
+        List<String> steps = Arrays.asList(step);
     	
         when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
     	when(scenarioLog.getScenario()).thenReturn(scenario);
