@@ -17,17 +17,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.powermock.api.mockito.PowerMockito.when; 
 
 @RunWith(PowerMockRunner.class)
 public class ReportServiceTest {
 	
-	private static final String STORY_NAME = "storyName";
 	
 	@Mock
     private StoryLogDao storyLogDao;
