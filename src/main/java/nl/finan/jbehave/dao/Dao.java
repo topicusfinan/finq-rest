@@ -1,5 +1,6 @@
 package nl.finan.jbehave.dao;
 
+import nl.finan.jbehave.dao.impl.NamedParameter;
 import nl.finan.jbehave.entities.GenericEntity;
 
 import java.io.Serializable;

@@ -1,5 +1,6 @@
-package nl.finan.jbehave.dao;
+package nl.finan.jbehave.dao.impl;
 
+import nl.finan.jbehave.dao.Dao;
 import nl.finan.jbehave.entities.GenericEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
