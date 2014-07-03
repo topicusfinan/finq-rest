@@ -1,6 +1,9 @@
 package nl.finan.jbehave.entities;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
 
 @Entity
@@ -13,10 +16,11 @@ public class Bundle extends GenericEntity{
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@OneToMany(mappedBy = "bundle",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "bundle",fetch=FetchType.EAGER)
 	private List<Story> stories;
 	
 	@ManyToMany(mappedBy="bundles")
+	@JsonBackReference
 	private List<Collection> collections;
 
 	public String getName() {
