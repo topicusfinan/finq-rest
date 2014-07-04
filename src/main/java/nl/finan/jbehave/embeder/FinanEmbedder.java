@@ -34,6 +34,7 @@ public class FinanEmbedder extends Embedder {
                 .withCodeLocation(CodeLocations.codeLocationFromClass(FinanEmbedder.class));
         useStepsFactory(stepsFactory());
         this.embedderMonitor = new PrintStreamEmbedderMonitor();
+        this.embedderControls.doGenerateViewAfterStories(false);
 
         this.storyManager =  new StoryManager(configuration(), stepsFactory(), embedderControls(), embedderMonitor(), executorService(), performableTree());
     }
@@ -44,7 +45,7 @@ public class FinanEmbedder extends Embedder {
             public StoryReporter createStoryReporter(FilePrintStreamFactory factory, StoryReporterBuilder storyReporterBuilder) {
                 WebStoryReporter reporter = null;
                 try {
-                    reporter = (WebStoryReporter) new InitialContext().lookup("java:module/WebStoryReporter");
+                    reporter = (WebStoryReporter) new InitialContext().lookup("java:global/runner/WebStoryReporter!nl.finan.jbehave.embeder.WebStoryReporter");
                 } catch (NamingException e) {
                     e.printStackTrace();
                 }
