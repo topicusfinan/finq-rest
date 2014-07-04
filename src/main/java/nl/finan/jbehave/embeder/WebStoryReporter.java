@@ -1,35 +1,33 @@
 package nl.finan.jbehave.embeder;
 
-import nl.finan.jbehave.dao.*;
+import nl.finan.jbehave.dao.RunningStoriesDao;
+import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.*;
 import nl.finan.jbehave.service.ReportService;
-
 import org.jbehave.core.model.*;
 import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
 import org.jbehave.core.reporters.StoryReporter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateful;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
-@Component
-@Scope("prototype")
+@Local(WebStoryReporter.class)
+@Stateful
 @Transactional
 public class WebStoryReporter implements StoryReporter {
 
-    @Autowired
+    @EJB
     private RunningStoriesDao runningStoriesDao;
 
-    @Autowired
+    @EJB
     private StoryDao storyDao;
 
-    @Autowired
+    @EJB
     private ReportService reportService;
 
     private Long reportId;

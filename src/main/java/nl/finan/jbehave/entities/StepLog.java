@@ -1,8 +1,6 @@
 package nl.finan.jbehave.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import nl.finan.jbehave.steps.Step;
 
 import javax.persistence.*;
 

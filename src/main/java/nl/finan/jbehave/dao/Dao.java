@@ -3,6 +3,7 @@ package nl.finan.jbehave.dao;
 import nl.finan.jbehave.dao.impl.NamedParameter;
 import nl.finan.jbehave.entities.GenericEntity;
 
+import javax.ejb.Local;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @param <T>
  *            The type of persistent object that will be inserted / updated / retrieved.
  */
+@Local
 public interface Dao<T extends GenericEntity>
 {
 	/**

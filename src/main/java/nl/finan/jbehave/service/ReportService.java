@@ -5,19 +5,20 @@ import nl.finan.jbehave.dao.ScenarioLogDao;
 import nl.finan.jbehave.dao.StepLogDao;
 import nl.finan.jbehave.dao.StoryLogDao;
 import nl.finan.jbehave.entities.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+@Stateless
 public class ReportService {
 
-    @Autowired
+    @EJB
     private StoryLogDao storyLogDao;
 
-    @Autowired
+    @EJB
     private ScenarioLogDao scenarioLogDao;
 
-    @Autowired
+    @EJB
     private StepLogDao stepLogDao;
 
     public StoryLog createStoryLog(Story story, RunningStories runningStories) {
