@@ -4,7 +4,8 @@
     <jta-data-source>java:/finQuality</jta-data-source>
         <class>nl.finan.jbehave.entities.Story</class>
 		<class>nl.finan.jbehave.entities.Scenario</class>
-		<class>nl.finan.jbehave.entities.Project</class>
+		<class>nl.finan.jbehave.entities.Bundle</class>
+		<class>nl.finan.jbehave.entities.Collection</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		
 		<properties>

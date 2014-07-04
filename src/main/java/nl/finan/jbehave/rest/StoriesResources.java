@@ -28,7 +28,7 @@ public class StoriesResources {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //TODO: please refactor me, I want to return a List of Stories but this isn't posible because of the List<String> in the scenario... Dangit
+    //TODO: please refactor me, I want to return a List of Stories but this isn't possible because of the List<String> in the scenario... Dangit
     public String stories() throws IOException {
 
         List<Story> storiesList = storyDao.listAll();
