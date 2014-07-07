@@ -7,6 +7,7 @@ import nl.finan.jbehave.embeder.RunStories;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
+import nl.finan.jbehave.factory.BeanFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public class RunnerResources  {
         runningStoriesDao.persist(runningStories);
 
         Object rs =  new InitialContext().lookup("java:module/RunStories");
-        RunStories runStories = (RunStories) rs;
+        RunStories runStories = BeanFactory.getBean(RunStories.class);
         runStories.init(Arrays.asList(story),runningStories.getId());
 
         runExecutor.execute(runStories); //TODO: take a look at callable<T>. Maybe we can use this to pause a thread!

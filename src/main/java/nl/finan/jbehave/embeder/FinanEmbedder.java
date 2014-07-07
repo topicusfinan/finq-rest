@@ -1,6 +1,7 @@
 package nl.finan.jbehave.embeder;
 
 
+import nl.finan.jbehave.factory.BeanFactory;
 import nl.finan.jbehave.steps.Step;
 import org.jbehave.core.embedder.Embedder;
 import org.jbehave.core.embedder.PrintStreamEmbedderMonitor;
@@ -43,12 +44,7 @@ public class FinanEmbedder extends Embedder {
         configuration().storyReporterBuilder().withFormats(new Format("webformat") {
             @Override
             public StoryReporter createStoryReporter(FilePrintStreamFactory factory, StoryReporterBuilder storyReporterBuilder) {
-                WebStoryReporter reporter = null;
-                try {
-                    reporter = (WebStoryReporter) new InitialContext().lookup("java:global/runner/WebStoryReporter!nl.finan.jbehave.embeder.WebStoryReporter");
-                } catch (NamingException e) {
-                    e.printStackTrace();
-                }
+                WebStoryReporter reporter = BeanFactory.getBean(WebStoryReporter.class);
                 reporter.init(id);
                 return reporter;
             }
