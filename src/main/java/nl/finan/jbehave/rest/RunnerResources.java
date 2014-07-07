@@ -52,7 +52,6 @@ public class RunnerResources  {
         runningStories.setStatus(RunningStoriesStatus.RUNNING);
         runningStoriesDao.persist(runningStories);
 
-        Object rs =  new InitialContext().lookup("java:module/RunStories");
         RunStories runStories = BeanFactory.getBean(RunStories.class);
         runStories.init(Arrays.asList(story),runningStories.getId());
 

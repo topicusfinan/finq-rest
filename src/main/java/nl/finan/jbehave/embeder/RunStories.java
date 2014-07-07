@@ -33,7 +33,7 @@ public class RunStories implements Runnable{
     }
 
     public void init(List<Story> stories, Long reportId){
-        this.stories = new ArrayList<org.jbehave.core.model.Story>();
+        this.stories = new ArrayList<>();
         for(Story story: stories) {
             this.stories.add(embedder.storyManager().storyOfText(story.toStory(), String.valueOf(story.getId())));
         }
