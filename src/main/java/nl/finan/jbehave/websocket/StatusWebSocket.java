@@ -1,33 +1,34 @@
 package nl.finan.jbehave.websocket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.entities.Log;
 import nl.finan.jbehave.entities.RunningStories;
 
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ServerEndpoint(value="/api/statusws")
-@Singleton
+@Stateless
 public class StatusWebSocket {
 
     private static final String SUBSCRIBE = "subscribe";
     private static final String UNSUBSCRIBE = "unsubscribe";
 
-    private static final Map<Long,List<Session>> CONNECTION_MAP = new HashMap<>();
-
     @EJB
     private RunningStoriesDao runningStoriesDao;
+    
+    @EJB
+    private OpenConnections openConnections;
 
     @OnMessage
     public void message(Session session, String message) throws IOException {
@@ -37,22 +38,16 @@ public class StatusWebSocket {
         if(message.startsWith(UNSUBSCRIBE)){
             unsubscribe(session,message);
         }
-
     }
 
     @OnClose
     public void close(Session session){
-        for (Map.Entry<Long, List<Session>> entry : CONNECTION_MAP.entrySet()) {
-            entry.getValue().remove(session);
-            if(entry.getValue().isEmpty()){
-                CONNECTION_MAP.remove(entry.getKey());
-            }
-        }
+        openConnections.removeSession(session);
     }
 
     public void sendStatus(Long reportId, Log log){
-        if(CONNECTION_MAP.containsKey(reportId)) {
-            for (Session session : CONNECTION_MAP.get(reportId)) {
+        if(openConnections.containsKey(reportId)) {
+            for (Session session : openConnections.get(reportId)) {
                 session.getAsyncRemote().sendText(toJson(log));
             }
         }
@@ -60,33 +55,17 @@ public class StatusWebSocket {
 
     private void unsubscribe(Session session, String message) throws IOException{
         Long reportId = getReportId(message);
-        removeFromConnectionMap(reportId,session);
+        openConnections.removeFromConnectionMap(reportId,session);
     }
 
     private void subscribe(Session session, String message) throws IOException {
         Long reportId = getReportId(message);
         RunningStories runningStories = runningStoriesDao.find(reportId);
         if(runningStories !=null) {
-            addToConnectionMap(reportId, session);
+        	openConnections.add(reportId, session);
             session.getAsyncRemote().sendText(toJson(runningStories));
         }else{
             session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
-        }
-    }
-
-    private void addToConnectionMap(Long reportId, Session remote) {
-        if(!CONNECTION_MAP.containsKey(reportId)){
-            CONNECTION_MAP.put(reportId,new ArrayList<Session>());
-        }
-        CONNECTION_MAP.get(reportId).add(remote);
-    }
-
-    private void removeFromConnectionMap(Long reportId, Session session){
-        if(CONNECTION_MAP.containsKey(reportId)){
-            CONNECTION_MAP.get(reportId).remove(session);
-            if(CONNECTION_MAP.get(reportId).isEmpty()){
-                CONNECTION_MAP.remove(reportId);
-            }
         }
     }
 
