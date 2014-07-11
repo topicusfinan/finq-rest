@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Lock;
 import javax.ejb.Singleton;
 import javax.websocket.Session;
 
@@ -37,10 +38,6 @@ public class OpenConnections {
 
 	public List<Session> get(Long reportId) {
 		return CONNECTION_MAP.get(reportId);
-	}
-
-	public void put(Long reportId, ArrayList<Session> arrayList) {
-		CONNECTION_MAP.put(reportId, arrayList);
 	}
 	
     public void add(Long reportId, Session remote) {

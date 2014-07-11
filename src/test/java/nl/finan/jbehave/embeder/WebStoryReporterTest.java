@@ -12,6 +12,7 @@ import nl.finan.jbehave.entities.ScenarioLog;
 import nl.finan.jbehave.entities.StepLog;
 import nl.finan.jbehave.entities.StoryLog;
 import nl.finan.jbehave.service.ReportService;
+import nl.finan.jbehave.websocket.StatusWebSocket;
 
 import org.jbehave.core.model.Story;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
+
 
 
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -39,8 +41,12 @@ public class WebStoryReporterTest {
     @Mock
     private ReportService reportService;
 
+    @Mock
+    private StatusWebSocket statusWebSocket;
+    
     @InjectMocks
     private WebStoryReporter webStoryReporter;
+    
 
     @Test
     public void testBeforeStory() throws Exception {
