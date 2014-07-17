@@ -1,1 +1,5 @@
 language: java
+
+before_install:
+  - wget https://github.com/Eernie/jbehave-core/releases/download/jbehave-4.0-SNAPSHOT/jbehave-core-4.0-SNAPSHOT.jar
+  - mvn install:install-file -Dfile=jbehave-core-4.0-SNAPSHOT.jar -DgroupId=org.jbehave -DartifactId=jbehave-core -Dversion=4.0-SNAPSHOT -Dpackaging=jar
