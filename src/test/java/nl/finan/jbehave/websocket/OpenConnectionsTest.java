@@ -24,13 +24,13 @@ public class OpenConnectionsTest {
 	public void setUp() throws IllegalArgumentException, IllegalAccessException{
 		openConnections = new OpenConnections();
 		Field field = Whitebox.getField(OpenConnections.class, "CONNECTION_MAP");
-		field.setAccessible(true);
-		field.set(null, new HashMap<Long,List<Session>>());
+		@SuppressWarnings("unchecked")
+		Map<Long,List<Session>> connectionMap = (Map<Long, List<Session>>) field.get(null);
+		connectionMap.clear();
 	}
 	
 	@Test
 	public void testAdd() throws IllegalArgumentException, IllegalAccessException{
-		openConnections = new OpenConnections();
 		Long reportId = 100L;
 		Session session = PowerMockito.mock(Session.class);
 		openConnections.add(reportId, session);
@@ -51,12 +51,12 @@ public class OpenConnectionsTest {
 	
 	@Test
 	public void testGet(){
-		Long reportId = 100L;
+		Long reportId = 101L;
 		Session session = PowerMockito.mock(Session.class);
 		openConnections.add(reportId, session);
 		
 		List<Session> sessions = openConnections.get(reportId);
-		Assert.assertTrue(sessions.contains(session));;
+		Assert.assertTrue(sessions.contains(session));
 	}
 
 }
