@@ -1,13 +1,17 @@
 package nl.finan.jbehave.rest;
 
 
+import nl.finan.jbehave.dao.BundleDao;
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.embeder.RunStories;
+import nl.finan.jbehave.entities.Bundle;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
 import nl.finan.jbehave.factory.BeanFactory;
+import nl.finan.jbehave.service.RunnerService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +24,9 @@ import javax.naming.NamingException;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import java.util.Arrays;
 
 @Path("runner")
@@ -30,42 +37,42 @@ public class RunnerResources  {
 	
     @EJB
     private StoryDao storyDao;
-
+    
+    @EJB
+    private BundleDao bundleDao;
 
     @EJB
-    private RunningStoriesDao runningStoriesDao;
-
-    @Resource
-    private ManagedExecutorService runExecutor;
-
+    private RunnerService runnerService;
 	
 	@POST
 	@Path("/story")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @Transactional
-	public Long runStory(Long id) throws NamingException {
-
+	public Response runStory(Long id) throws NamingException {
         Story story = storyDao.find(id);
+		if(story == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
 
-        RunningStories runningStories = new RunningStories();
-        runningStories.setStatus(RunningStoriesStatus.RUNNING);
-        runningStoriesDao.persist(runningStories);
-
-        RunStories runStories = BeanFactory.getBean(RunStories.class);
-        runStories.init(Arrays.asList(story),runningStories.getId());
-
-        runExecutor.execute(runStories); //TODO: take a look at callable<T>. Maybe we can use this to pause a thread!
-
-
-		return runningStories.getId();
+        RunningStories runningStories=  runnerService.run(story);
+       
+        return Response.ok(runningStories).build();
 	}
-
-    @GET
-    @Path("status/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RunningStories getStatus(@PathParam("id") Long id){
-        return runningStoriesDao.find(id);
-    }
-
+	
+	@POST
+	@Path("/bundle")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public Response runBundle(Long id){
+		Bundle bundle = bundleDao.find(id);
+		if(bundle == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		
+		RunningStories runningStories = runnerService.run(bundle);
+		
+		return Response.ok(runningStories).build();
+	}
 }
