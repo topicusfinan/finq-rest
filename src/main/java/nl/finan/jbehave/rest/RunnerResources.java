@@ -24,12 +24,12 @@ import javax.naming.NamingException;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import java.util.Arrays;
 
 @Path("runner")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @Stateless
 public class RunnerResources  {
 	
@@ -46,23 +46,33 @@ public class RunnerResources  {
 	
 	@POST
 	@Path("/story")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
     @Transactional
-	public Long runStory(Long id) throws NamingException {
+	public Response runStory(Long id) throws NamingException {
         Story story = storyDao.find(id);
+		if(story == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
 
         RunningStories runningStories=  runnerService.run(story);
        
-		return runningStories.getId();
+        return Response.ok(runningStories).build();
 	}
 	
 	@POST
 	@Path("/bundle")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public Long runBundle(Long id){
+	public Response runBundle(Long id){
 		Bundle bundle = bundleDao.find(id);
+		if(bundle == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
 		
 		RunningStories runningStories = runnerService.run(bundle);
 		
-		return runningStories.getId();
+		return Response.ok(runningStories).build();
 	}
 }
