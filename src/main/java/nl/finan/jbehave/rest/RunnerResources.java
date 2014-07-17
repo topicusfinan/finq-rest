@@ -3,11 +3,13 @@ package nl.finan.jbehave.rest;
 
 import nl.finan.jbehave.dao.BundleDao;
 import nl.finan.jbehave.dao.RunningStoriesDao;
+import nl.finan.jbehave.dao.ScenarioDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.embeder.RunStories;
 import nl.finan.jbehave.entities.Bundle;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
+import nl.finan.jbehave.entities.Scenario;
 import nl.finan.jbehave.entities.Story;
 import nl.finan.jbehave.factory.BeanFactory;
 import nl.finan.jbehave.service.RunnerService;
@@ -30,6 +32,8 @@ import javax.ws.rs.core.Response.Status;
 import java.util.Arrays;
 
 @Path("runner")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Stateless
 public class RunnerResources  {
 	
@@ -40,14 +44,15 @@ public class RunnerResources  {
     
     @EJB
     private BundleDao bundleDao;
+    
+    @EJB
+    private ScenarioDao scenarioDao;
 
     @EJB
     private RunnerService runnerService;
 	
 	@POST
 	@Path("/story")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
     @Transactional
 	public Response runStory(Long id) throws NamingException {
         Story story = storyDao.find(id);
@@ -55,15 +60,13 @@ public class RunnerResources  {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
-        RunningStories runningStories=  runnerService.run(story);
+        RunningStories runningStories = runnerService.run(story);
        
         return Response.ok(runningStories).build();
 	}
 	
 	@POST
 	@Path("/bundle")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	public Response runBundle(Long id){
 		Bundle bundle = bundleDao.find(id);
@@ -72,6 +75,20 @@ public class RunnerResources  {
 		}
 		
 		RunningStories runningStories = runnerService.run(bundle);
+		
+		return Response.ok(runningStories).build();
+	}
+	
+	@POST
+	@Path("/scenario")
+	@Transactional
+	public Response runScenario(Long id){
+		Scenario scenario = scenarioDao.find(id);
+		if(scenario ==null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		
+		RunningStories runningStories = runnerService.run(scenario);
 		
 		return Response.ok(runningStories).build();
 	}
