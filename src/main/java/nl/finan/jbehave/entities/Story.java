@@ -1,10 +1,14 @@
 package nl.finan.jbehave.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,8 +16,8 @@ import java.util.List;
 @Table(name = "JBEHAVE_STORY")
 public class Story extends GenericEntity{
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "BUNDLE_ID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "BUNDLE_ID", nullable = true)
     @JsonBackReference
 	private Bundle bundle;
 	
@@ -23,6 +27,10 @@ public class Story extends GenericEntity{
 	@OneToMany(mappedBy = "story")
     @LazyCollection(LazyCollectionOption.FALSE)
 	private List<Scenario> scenarios;
+	
+	@Column(name="DUMMY")
+	@JsonIgnore
+	private Boolean dummy = false;
 
 	public Bundle getBundle() {
 		return bundle;
@@ -41,6 +49,9 @@ public class Story extends GenericEntity{
 	}
 
 	public List<Scenario> getScenarios() {
+		if(scenarios ==null){
+			scenarios = new ArrayList<Scenario>();
+		}
 		return scenarios;
 	}
 
@@ -48,6 +59,14 @@ public class Story extends GenericEntity{
 		this.scenarios = scenarios;
 	}
 	
+	public Boolean isDummy() {
+		return dummy;
+	}
+
+	public void setDummy(Boolean dummy) {
+		this.dummy = dummy;
+	}
+
 	public String toStory(){
 		StringBuilder builder = new StringBuilder();
 		for(Scenario scenario: getScenarios()){
