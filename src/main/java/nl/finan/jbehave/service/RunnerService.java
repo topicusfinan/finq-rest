@@ -40,6 +40,7 @@ public class RunnerService {
 	}
 	
 	public RunningStories run(Scenario scenario) {
+		//We have to create a new "dummy" story so jbehave has a story to run.
 		Story story = new Story();
 		story.setName("Dummy Story " + new Date().getTime());
 		story.setDummy(true);
