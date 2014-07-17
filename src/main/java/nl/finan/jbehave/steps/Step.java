@@ -12,7 +12,9 @@ public class Step {
     private static final Logger LOGGER = LoggerFactory.getLogger(Step.class);
 
     @Given("this is a given step")
-    public void test(){
+    public void test() throws InterruptedException {
+        Thread.sleep(5000);
+
         LOGGER.info("Log! ");
     }
 
