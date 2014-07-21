@@ -4,7 +4,9 @@ import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.*;
 import nl.finan.jbehave.service.ReportService;
+import nl.finan.jbehave.websocket.StatusType;
 import nl.finan.jbehave.websocket.StatusWebSocket;
+
 import org.jbehave.core.model.*;
 import org.jbehave.core.model.Scenario;
 import org.jbehave.core.model.Story;
@@ -14,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateful;
 import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +66,7 @@ public class WebStoryReporter implements StoryReporter {
 
             StoryLog storyLog = reportService.createStoryLog(storyModel,runningStories);
             currentStoryLog = storyLog.getId();
-            statusWebSocket.sendStatus(reportId,storyLog);
+            statusWebSocket.sendStatus(reportId,storyLog,StatusType.BEFORE_STORY);
         }
     }
 
@@ -74,7 +77,7 @@ public class WebStoryReporter implements StoryReporter {
             StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
             if (storyLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 storyLog.setStatus(RunningStoriesStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId, storyLog);
+                statusWebSocket.sendStatus(reportId, storyLog,StatusType.AFTER_STORY);
             }
         }
     }
@@ -104,7 +107,7 @@ public class WebStoryReporter implements StoryReporter {
                     ScenarioLog scenarioLog = reportService.createScenarioLog(scenario,storyLog);
                     currentScenarioLog = scenarioLog.getId();
 
-                    statusWebSocket.sendStatus(reportId,scenarioLog);
+                    statusWebSocket.sendStatus(reportId,scenarioLog,StatusType.BEFORE_SCENARIO);
                 }
             }
 
@@ -122,7 +125,7 @@ public class WebStoryReporter implements StoryReporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             if (scenarioLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 scenarioLog.setStatus(RunningStoriesStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId, scenarioLog);
+                statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.AFTER_SCENARIO);
             }
         }
     }
@@ -165,7 +168,7 @@ public class WebStoryReporter implements StoryReporter {
                 if(step.equals(runningStep)){
                     StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
 
-                    statusWebSocket.sendStatus(reportId,stepLog);
+                    statusWebSocket.sendStatus(reportId,stepLog,StatusType.SUCCESSFUL_STEP);
                 }
             }
         }
@@ -184,7 +187,7 @@ public class WebStoryReporter implements StoryReporter {
                 if(step.equals(runningStep)){
                     StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
 
-                    statusWebSocket.sendStatus(reportId,stepLog);
+                    statusWebSocket.sendStatus(reportId,stepLog,StatusType.PENDING_STEP);
                 }
             }
         }
@@ -205,7 +208,7 @@ public class WebStoryReporter implements StoryReporter {
                     scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
                     scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
 
-                    statusWebSocket.sendStatus(reportId,stepLog);
+                    statusWebSocket.sendStatus(reportId,stepLog, StatusType.FAILED_STEP);
                 }
             }
         }
