@@ -4,6 +4,7 @@ import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.entities.RunningStories;
 import nl.finan.jbehave.entities.RunningStoriesStatus;
 import nl.finan.jbehave.entities.Story;
+import nl.finan.jbehave.websocket.StatusWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,9 @@ public class RunStories implements Runnable{
     @EJB
     private RunningStoriesDao runningStoriesDao;
 
+    @EJB
+    private StatusWebSocket statusWebSocket;
+
     public RunStories() {
     }
 
@@ -49,13 +53,14 @@ public class RunStories implements Runnable{
             embedder.runStories(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(RunningStoriesStatus.SUCCESS);
+            statusWebSocket.sendStatus(reportId,runningStories);
 
         }catch (Exception e){
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(RunningStoriesStatus.FAILED);
+            statusWebSocket.sendStatus(reportId,runningStories);
         }
-
     }
 }

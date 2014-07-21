@@ -53,6 +53,14 @@ public class StatusWebSocket {
         }
     }
 
+    public void sendStatus(Long reportId, RunningStories runningStories){
+        if(openConnections.containsKey(reportId)) {
+            for (Session session : openConnections.get(reportId)) {
+                session.getAsyncRemote().sendText(toJson(runningStories));
+            }
+        }
+    }
+
     private void unsubscribe(Session session, String message) throws IOException{
         Long reportId = getReportId(message);
         openConnections.removeFromConnectionMap(reportId,session);

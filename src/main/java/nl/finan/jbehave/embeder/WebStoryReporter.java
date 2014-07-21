@@ -201,7 +201,7 @@ public class WebStoryReporter implements StoryReporter {
             for(String step: scenarioLog.getScenario().getSteps()){
                 if(step.equals(runningStep)){
                     StepLog stepLog = reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED);
-                    stepLog.setLog(cause.getMessage());
+                    stepLog.setLog(cause.getCause().getMessage());
                     scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
                     scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
 
