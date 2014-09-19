@@ -3,6 +3,7 @@ package nl.finan.jbehave.embeder;
 import java.util.Arrays;
 import java.util.List;
 
+import nl.eernie.jmoribus.model.Story;
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.RunningStories;
@@ -14,7 +15,6 @@ import nl.finan.jbehave.entities.StoryLog;
 import nl.finan.jbehave.service.ReportService;
 import nl.finan.jbehave.websocket.StatusWebSocket;
 
-import org.jbehave.core.model.Story;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class WebStoryReporterTest {
         nl.finan.jbehave.entities.Story storyModel = PowerMockito.mock(nl.finan.jbehave.entities.Story.class);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
 
-        when(story.getPath()).thenReturn("100");
+        when(story.getUniqueIdentifier()).thenReturn("100");
         when(runningStoriesDao.find(1l)).thenReturn(runningStories);
         when(storyDao.find(100l)).thenReturn(storyModel);
         when(reportService.createStoryLog(storyModel,runningStories)).thenReturn(storyLog);
