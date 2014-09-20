@@ -1,5 +1,8 @@
 package nl.finan.jbehave.service;
 
+import nl.eernie.jmoribus.model.Line;
+import nl.eernie.jmoribus.model.Step;
+import nl.eernie.jmoribus.model.StepType;
 import nl.finan.jbehave.dao.ScenarioLogDao;
 import nl.finan.jbehave.dao.StepLogDao;
 import nl.finan.jbehave.dao.StoryLogDao;
@@ -64,13 +67,14 @@ public class ReportServiceTest {
 	
 	@Test
 	public void testCreateStepLog(){
-		String step = "Then this is happening";
+		Step step = new Step(StepType.WHEN);
+        step.getStepLines().add(new Line("Test step"));
 		ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
 		
 		StepLog stepLog = reportService.createStepLog(step,scenarioLog,RunningStoriesStatus.PENDING);
 		
 		Mockito.verify(stepLogDao).persist(stepLog);
-		Assert.assertSame(step, stepLog.getStep());
+		Assert.assertEquals(step.getCombinedStepLines(), stepLog.getStep());
 		Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
 		Assert.assertEquals(RunningStoriesStatus.PENDING, stepLog.getStatus());		
 	}

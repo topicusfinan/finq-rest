@@ -2,15 +2,16 @@ package nl.finan.jbehave.embeder;
 
 
 import nl.eernie.jmoribus.model.*;
+import nl.eernie.jmoribus.model.Scenario;
+import nl.eernie.jmoribus.model.Story;
 import nl.eernie.jmoribus.reporter.Reporter;
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
-import nl.finan.jbehave.entities.RunningStories;
-import nl.finan.jbehave.entities.RunningStoriesStatus;
-import nl.finan.jbehave.entities.ScenarioLog;
-import nl.finan.jbehave.entities.StoryLog;
+import nl.finan.jbehave.entities.*;
 import nl.finan.jbehave.service.ReportService;
 import nl.finan.jbehave.websocket.StatusWebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -23,6 +24,8 @@ import java.util.Map;
 @Stateful
 @Transactional
 public class WebStoryReporter implements Reporter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebStoryReporter.class);
 
     @EJB
     private RunningStoriesDao runningStoriesDao;
@@ -74,14 +77,6 @@ public class WebStoryReporter implements Reporter {
 
     @Override
     public void beforeStep(Step runningStep) {
-        if(currentScenarioLog != null) {
-            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equals(runningStep.getCombinedStepLines())){
-                    reportService.createStepLog(runningStep.toString(),scenarioLog,RunningStoriesStatus.PENDING);
-                }
-            }
-        }
 
     }
 
@@ -90,8 +85,10 @@ public class WebStoryReporter implements Reporter {
         if(currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equals(runningStep.getCombinedStepLines())){
-                    reportService.createStepLog(runningStep.toString(),scenarioLog,RunningStoriesStatus.SUCCESS);
+                if(step.equalsIgnoreCase(completeStep(runningStep))){
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
+                    statusWebSocket.sendStatus(reportId,stepLog);
+
                 }
             }
         }
@@ -102,8 +99,9 @@ public class WebStoryReporter implements Reporter {
         if(currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equals(runningStep.getCombinedStepLines())){
-                    reportService.createStepLog(runningStep.toString(),scenarioLog,RunningStoriesStatus.PENDING);
+                if(step.equalsIgnoreCase(completeStep(runningStep))){
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
+                    statusWebSocket.sendStatus(reportId,stepLog);
                 }
             }
         }
@@ -115,6 +113,7 @@ public class WebStoryReporter implements Reporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             if (scenarioLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 scenarioLog.setStatus(RunningStoriesStatus.SUCCESS);
+                statusWebSocket.sendStatus(reportId,scenarioLog);
             }
         }
     }
@@ -125,13 +124,22 @@ public class WebStoryReporter implements Reporter {
             StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
             if (storyLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 storyLog.setStatus(RunningStoriesStatus.SUCCESS);
+                statusWebSocket.sendStatus(reportId,storyLog);
             }
         }
     }
 
     @Override
-    public void failedStep(Step step, AssertionError e) {
-
+    public void failedStep(Step runningStep, AssertionError e) {
+        if(currentScenarioLog != null) {
+            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
+            for(String step: scenarioLog.getScenario().getSteps()){
+                if(step.equalsIgnoreCase(completeStep(runningStep))){
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
+                    statusWebSocket.sendStatus(reportId,stepLog);
+                }
+            }
+        }
     }
 
     @Override
@@ -167,5 +175,9 @@ public class WebStoryReporter implements Reporter {
     @Override
     public void afterReferringScenario(StepContainer stepContainer, Scenario scenario) {
 
+    }
+
+    private String completeStep(Step runningStep) {
+        return runningStep.getStepType().name() + " "+ runningStep.getCombinedStepLines();
     }
 }

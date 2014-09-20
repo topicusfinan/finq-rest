@@ -3,6 +3,8 @@ package nl.finan.jbehave.factory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.FileInputStream;
