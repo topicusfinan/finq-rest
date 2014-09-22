@@ -45,18 +45,10 @@ public class StatusWebSocket {
         openConnections.removeSession(session);
     }
 
-    public void sendStatus(Long reportId, Log log){
+    public void sendStatus(Long reportId, Object log, StatusType type){
         if(openConnections.containsKey(reportId)) {
             for (Session session : openConnections.get(reportId)) {
-                session.getAsyncRemote().sendText(toJson(log));
-            }
-        }
-    }
-
-    public void sendStatus(Long reportId, RunningStories runningStories){
-        if(openConnections.containsKey(reportId)) {
-            for (Session session : openConnections.get(reportId)) {
-                session.getAsyncRemote().sendText(toJson(runningStories));
+                session.getAsyncRemote().sendText(toJson(new StatusTO(reportId, log, type)));
             }
         }
     }
@@ -71,7 +63,7 @@ public class StatusWebSocket {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         if(runningStories !=null) {
         	openConnections.add(reportId, session);
-            session.getAsyncRemote().sendText(toJson(runningStories));
+            session.getAsyncRemote().sendText(toJson(new StatusTO(reportId, runningStories, StatusType.INITIAL_STATUS)));
         }else{
             session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
         }
