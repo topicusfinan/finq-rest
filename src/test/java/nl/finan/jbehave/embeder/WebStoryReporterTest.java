@@ -115,53 +115,52 @@ public class WebStoryReporterTest {
     }
 
     @Test
-    @Ignore
     public void testAfterScenario() throws Exception {
     	Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
     	ScenarioLog scenarioLog = new ScenarioLog();
+        nl.eernie.jmoribus.model.Scenario scenario = PowerMockito.mock(nl.eernie.jmoribus.model.Scenario.class);
         
         scenarioLog.setStatus(RunningStoriesStatus.RUNNING);
     	when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
     	
-//    	webStoryReporter.afterScenario();
+    	webStoryReporter.afterScenario(scenario);
     	Assert.assertEquals(RunningStoriesStatus.SUCCESS, scenarioLog.getStatus());
     	
     	scenarioLog.setStatus(RunningStoriesStatus.FAILED);
-//    	webStoryReporter.afterScenario();
+    	webStoryReporter.afterScenario(scenario);
     	Assert.assertEquals(RunningStoriesStatus.FAILED, scenarioLog.getStatus());
     	
     }
 
     @Test
-    @Ignore
     public void testSuccessful() throws Exception {
         Step runningStep = new Step(StepType.THEN);
         runningStep.getStepLines().add(new Line("this is a step"));
 
-//    	ScenarioLog scenarioLog = this.mockStep(runningStep);
+       	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-//    	webStoryReporter.successful(runningStep);
+    	webStoryReporter.successStep(runningStep);
     	
-//    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
+    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
     }
 
     @Test
-    @Ignore
     public void testPending() throws Exception {
-    	String runningStep = "Then this is a step";
+        Step runningStep = new Step(StepType.THEN);
+        runningStep.getStepLines().add(new Line("this is a step"));
     	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-//    	webStoryReporter.pending(runningStep);
+    	webStoryReporter.pendingStep(runningStep);
     	
-//    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
+    	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
     }
 
     @Test
-    @Ignore
     public void testFailed() throws Exception {
-    	String runningStep = "Then this is a step";
+        Step runningStep = new Step(StepType.THEN);
+        runningStep.getStepLines().add(new Line("this is a step"));
     	ScenarioLog scenarioLog = this.mockStep(runningStep);
-    	Throwable throwable = PowerMockito.mock(Throwable.class);
+    	AssertionError throwable = PowerMockito.mock(AssertionError.class);
     	RunningStories runningStories = PowerMockito.mock(RunningStories.class);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
         StepLog steplog = PowerMockito.mock(StepLog.class);
@@ -169,20 +168,20 @@ public class WebStoryReporterTest {
     	when(throwable.getMessage()).thenReturn("Assertion Failed!");
     	when(scenarioLog.getStoryLog()).thenReturn(storyLog);
     	when(storyLog.getRunningStory()).thenReturn(runningStories);
-//		when(reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED)).thenReturn(steplog);
+		when(reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED)).thenReturn(steplog);
 
-//    	webStoryReporter.failed(runningStep,throwable);
+       	webStoryReporter.failedStep(runningStep,throwable);
 
     	Mockito.verify(steplog).setLog("Assertion Failed!");
     	Mockito.verify(storyLog).setStatus(RunningStoriesStatus.FAILED);
     	Mockito.verify(runningStories).setStatus(RunningStoriesStatus.FAILED);
     }
     
-    private ScenarioLog mockStep(String step){
+    private ScenarioLog mockStep(Step step){
     	Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
     	ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
     	Scenario scenario = PowerMockito.mock(Scenario.class);
-        List<String> steps = Arrays.asList(step);
+        List<String> steps = Arrays.asList(step.getStepType().name()+" "+step.getCombinedStepLines());
     	
         when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
     	when(scenarioLog.getScenario()).thenReturn(scenario);

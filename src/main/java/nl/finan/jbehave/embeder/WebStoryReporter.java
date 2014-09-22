@@ -135,7 +135,11 @@ public class WebStoryReporter implements Reporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for(String step: scenarioLog.getScenario().getSteps()){
                 if(step.equalsIgnoreCase(completeStep(runningStep))){
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.FAILED);
+                    stepLog.setLog(e.getMessage());
+                    scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
+                    scenarioLog.setStatus(RunningStoriesStatus.FAILED);
+                    scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
                     statusWebSocket.sendStatus(reportId,stepLog);
                 }
             }
