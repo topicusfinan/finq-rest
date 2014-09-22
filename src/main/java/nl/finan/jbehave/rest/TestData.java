@@ -1,22 +1,20 @@
 package nl.finan.jbehave.rest;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-
 import nl.finan.jbehave.dao.BundleDao;
 import nl.finan.jbehave.dao.ScenarioDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.Bundle;
 import nl.finan.jbehave.entities.Scenario;
 import nl.finan.jbehave.entities.Story;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 @Path("testdata")
 @Stateless
 public class TestData {

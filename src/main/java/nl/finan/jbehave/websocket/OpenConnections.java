@@ -1,13 +1,11 @@
 package nl.finan.jbehave.websocket;
 
+import javax.ejb.Singleton;
+import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.ejb.Lock;
-import javax.ejb.Singleton;
-import javax.websocket.Session;
 
 @Singleton
 public class OpenConnections {

@@ -17,8 +17,6 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateful;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Map;
 
 @Local(WebStoryReporter.class)
 @Stateful

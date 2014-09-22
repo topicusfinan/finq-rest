@@ -1,23 +1,18 @@
 package nl.finan.jbehave.service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import nl.finan.jbehave.dao.RunningStoriesDao;
+import nl.finan.jbehave.dao.StoryDao;
+import nl.finan.jbehave.embeder.StoryRunner;
+import nl.finan.jbehave.entities.*;
+import nl.finan.jbehave.factory.BeanFactory;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedExecutorService;
-
-import nl.finan.jbehave.dao.RunningStoriesDao;
-import nl.finan.jbehave.dao.StoryDao;
-import nl.finan.jbehave.embeder.StoryRunner;
-import nl.finan.jbehave.entities.Bundle;
-import nl.finan.jbehave.entities.RunningStories;
-import nl.finan.jbehave.entities.RunningStoriesStatus;
-import nl.finan.jbehave.entities.Scenario;
-import nl.finan.jbehave.entities.Story;
-import nl.finan.jbehave.factory.BeanFactory;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class RunnerService {
