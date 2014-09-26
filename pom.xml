@@ -12,6 +12,7 @@
         <jackson.version>1.8.6</jackson.version>
         <jbehave.core.version>4.0-beta-7</jbehave.core.version>
         <powermock.version>1.5.5</powermock.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
       <dependency>
