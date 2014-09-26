@@ -1,6 +1,7 @@
 package nl.finan.jbehave.service;
 
 
+import nl.eernie.jmoribus.model.Step;
 import nl.finan.jbehave.dao.ScenarioLogDao;
 import nl.finan.jbehave.dao.StepLogDao;
 import nl.finan.jbehave.dao.StoryLogDao;
@@ -47,10 +48,10 @@ public class ReportService {
         return scenarioLogDao.find(id);
     }
 
-    public StepLog createStepLog(String runningStep, ScenarioLog scenarioLog, RunningStoriesStatus status) {
+    public StepLog createStepLog(Step runningStep, ScenarioLog scenarioLog, RunningStoriesStatus status) {
         StepLog stepLog = new StepLog();
         stepLog.setStatus(status);
-        stepLog.setStep(runningStep);
+        stepLog.setStep(runningStep.getCombinedStepLines());
         stepLog.setScenarioLog(scenarioLog);
         stepLogDao.persist(stepLog);
         return stepLog;

@@ -58,14 +58,14 @@ public class Scenario extends GenericEntity{
 		this.title = title;
 	}
 
+
 	public String toStory() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Scenario: ");
 		builder.append(getTitle());
-		builder.append("\n");
 		for(String step: steps){
+            builder.append(System.lineSeparator());
             builder.append(step);
-            builder.append("\n");
         }
 		return builder.toString();
 	}	

@@ -2,12 +2,10 @@ package nl.finan.jbehave.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +68,7 @@ public class Story extends GenericEntity{
 	public String toStory(){
 		StringBuilder builder = new StringBuilder();
 		for(Scenario scenario: getScenarios()){
+            builder.append(System.lineSeparator());
 			builder.append(scenario.toStory());
 		}
 		

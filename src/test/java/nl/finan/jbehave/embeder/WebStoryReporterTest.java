@@ -3,6 +3,10 @@ package nl.finan.jbehave.embeder;
 import java.util.Arrays;
 import java.util.List;
 
+import nl.eernie.jmoribus.model.Line;
+import nl.eernie.jmoribus.model.Step;
+import nl.eernie.jmoribus.model.StepType;
+import nl.eernie.jmoribus.model.Story;
 import nl.finan.jbehave.dao.RunningStoriesDao;
 import nl.finan.jbehave.dao.StoryDao;
 import nl.finan.jbehave.entities.RunningStories;
@@ -14,8 +18,8 @@ import nl.finan.jbehave.entities.StoryLog;
 import nl.finan.jbehave.service.ReportService;
 import nl.finan.jbehave.websocket.StatusWebSocket;
 
-import org.jbehave.core.model.Story;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -56,13 +60,13 @@ public class WebStoryReporterTest {
         nl.finan.jbehave.entities.Story storyModel = PowerMockito.mock(nl.finan.jbehave.entities.Story.class);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
 
-        when(story.getPath()).thenReturn("100");
+        when(story.getUniqueIdentifier()).thenReturn("100");
         when(runningStoriesDao.find(1l)).thenReturn(runningStories);
         when(storyDao.find(100l)).thenReturn(storyModel);
         when(reportService.createStoryLog(storyModel,runningStories)).thenReturn(storyLog);
         when(storyLog.getId()).thenReturn(20l);
 
-        webStoryReporter.beforeStory(story, false);
+        webStoryReporter.beforeStory(story);
 
         Long currentStoryLog = (Long) Whitebox.getInternalState(webStoryReporter,"currentStoryLog");
         Assert.assertEquals(new Long(20), currentStoryLog);
@@ -72,15 +76,16 @@ public class WebStoryReporterTest {
     public void testAfterStory() throws Exception {
     	Whitebox.setInternalState(webStoryReporter, "currentStoryLog", 20l);
         StoryLog storyLog = new StoryLog();
+        Story story = PowerMockito.mock(Story.class);
         
         storyLog.setStatus(RunningStoriesStatus.RUNNING);
     	when(reportService.findStoryLog(20l)).thenReturn(storyLog);
     	
-    	webStoryReporter.afterStory(false);
+    	webStoryReporter.afterStory(story);
     	Assert.assertEquals(RunningStoriesStatus.SUCCESS, storyLog.getStatus());
     	
     	storyLog.setStatus(RunningStoriesStatus.FAILED);
-    	webStoryReporter.afterStory(false);
+    	webStoryReporter.afterStory(story);
     	Assert.assertEquals(RunningStoriesStatus.FAILED, storyLog.getStatus());
     	
     }
@@ -93,15 +98,17 @@ public class WebStoryReporterTest {
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
         ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
         nl.finan.jbehave.entities.Story story = PowerMockito.mock(nl.finan.jbehave.entities.Story.class);
+        nl.eernie.jmoribus.model.Scenario jmScenario = PowerMockito.mock(nl.eernie.jmoribus.model.Scenario.class);
         
-        when(scenario.getTitle()).thenReturn("Story Title");
+        when(scenario.getTitle()).thenReturn("Scenario Title");
+        when(jmScenario.getTitle()).thenReturn("Scenario Title");
     	when(reportService.findStoryLog(20l)).thenReturn(storyLog);
     	when(storyLog.getStory()).thenReturn(story);
     	when(story.getScenarios()).thenReturn(scenarios);
     	when(scenarioLog.getId()).thenReturn(100l);
     	when(reportService.createScenarioLog(scenario, storyLog)).thenReturn(scenarioLog);
     	
-    	webStoryReporter.beforeScenario("Story Title");
+       	webStoryReporter.beforeScenario(jmScenario);
     	
     	Object internalState = Whitebox.getInternalState(webStoryReporter, "currentScenarioLog");
     	Assert.assertEquals(new Long(100),internalState);
@@ -111,44 +118,49 @@ public class WebStoryReporterTest {
     public void testAfterScenario() throws Exception {
     	Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
     	ScenarioLog scenarioLog = new ScenarioLog();
+        nl.eernie.jmoribus.model.Scenario scenario = PowerMockito.mock(nl.eernie.jmoribus.model.Scenario.class);
         
         scenarioLog.setStatus(RunningStoriesStatus.RUNNING);
     	when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
     	
-    	webStoryReporter.afterScenario();
+    	webStoryReporter.afterScenario(scenario);
     	Assert.assertEquals(RunningStoriesStatus.SUCCESS, scenarioLog.getStatus());
     	
     	scenarioLog.setStatus(RunningStoriesStatus.FAILED);
-    	webStoryReporter.afterScenario();
+    	webStoryReporter.afterScenario(scenario);
     	Assert.assertEquals(RunningStoriesStatus.FAILED, scenarioLog.getStatus());
     	
     }
 
     @Test
     public void testSuccessful() throws Exception {
-    	String runningStep = "Then this is a step";
-    	ScenarioLog scenarioLog = this.mockStep(runningStep);
+        Step runningStep = new Step(StepType.THEN);
+        runningStep.getStepLines().add(new Line("this is a step"));
+
+       	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-    	webStoryReporter.successful(runningStep);
+    	webStoryReporter.successStep(runningStep);
     	
     	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
     }
 
     @Test
     public void testPending() throws Exception {
-    	String runningStep = "Then this is a step";
+        Step runningStep = new Step(StepType.THEN);
+        runningStep.getStepLines().add(new Line("this is a step"));
     	ScenarioLog scenarioLog = this.mockStep(runningStep);
     	
-    	webStoryReporter.pending(runningStep);
+    	webStoryReporter.pendingStep(runningStep);
     	
     	Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
     }
 
     @Test
     public void testFailed() throws Exception {
-    	String runningStep = "Then this is a step";
+        Step runningStep = new Step(StepType.THEN);
+        runningStep.getStepLines().add(new Line("this is a step"));
     	ScenarioLog scenarioLog = this.mockStep(runningStep);
-    	Throwable throwable = PowerMockito.mock(Throwable.class);
+    	AssertionError throwable = PowerMockito.mock(AssertionError.class);
     	RunningStories runningStories = PowerMockito.mock(RunningStories.class);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
         StepLog steplog = PowerMockito.mock(StepLog.class);
@@ -157,19 +169,19 @@ public class WebStoryReporterTest {
     	when(scenarioLog.getStoryLog()).thenReturn(storyLog);
     	when(storyLog.getRunningStory()).thenReturn(runningStories);
 		when(reportService.createStepLog(runningStep,scenarioLog,RunningStoriesStatus.FAILED)).thenReturn(steplog);
-    	
-    	webStoryReporter.failed(runningStep,throwable);
+
+       	webStoryReporter.failedStep(runningStep,throwable);
 
     	Mockito.verify(steplog).setLog("Assertion Failed!");
     	Mockito.verify(storyLog).setStatus(RunningStoriesStatus.FAILED);
     	Mockito.verify(runningStories).setStatus(RunningStoriesStatus.FAILED);
     }
     
-    private ScenarioLog mockStep(String step){
+    private ScenarioLog mockStep(Step step){
     	Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
     	ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
     	Scenario scenario = PowerMockito.mock(Scenario.class);
-        List<String> steps = Arrays.asList(step);
+        List<String> steps = Arrays.asList(step.getStepType().name()+" "+step.getCombinedStepLines());
     	
         when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
     	when(scenarioLog.getScenario()).thenReturn(scenario);

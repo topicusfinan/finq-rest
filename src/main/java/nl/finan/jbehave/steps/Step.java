@@ -1,7 +1,7 @@
 package nl.finan.jbehave.steps;
 
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.When;
+import nl.eernie.jmoribus.annotation.Given;
+import nl.eernie.jmoribus.annotation.When;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

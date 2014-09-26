@@ -1,8 +1,8 @@
 package nl.finan.jbehave.dao;
 
-import javax.ejb.Local;
-
 import nl.finan.jbehave.entities.Bundle;
+
+import javax.ejb.Local;
 
 @Local
 public interface BundleDao extends Dao<Bundle> {

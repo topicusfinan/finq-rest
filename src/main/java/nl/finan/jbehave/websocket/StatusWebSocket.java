@@ -1,8 +1,9 @@
 package nl.finan.jbehave.websocket;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.finan.jbehave.dao.RunningStoriesDao;
+import nl.finan.jbehave.entities.Log;
+import nl.finan.jbehave.entities.RunningStories;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -10,12 +11,9 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-
-import nl.finan.jbehave.dao.RunningStoriesDao;
-import nl.finan.jbehave.entities.Log;
-import nl.finan.jbehave.entities.RunningStories;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
 @ServerEndpoint(value="/api/statusws")
 @Stateless

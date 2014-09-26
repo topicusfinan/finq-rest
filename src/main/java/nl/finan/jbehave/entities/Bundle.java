@@ -1,9 +1,8 @@
 package nl.finan.jbehave.entities;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
