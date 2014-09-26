@@ -1,7 +1,7 @@
-jbehave-rest-runner
+finq-rest
 ===================
 
-[![Build Status](https://travis-ci.org/topicusfinan/jbehave-rest-runner.svg?branch=develop)](https://travis-ci.org/topicusfinan/jbehave-rest-runner)
+[![Build Status](https://travis-ci.org/topicusfinan/finq-rest.svg?branch=develop)](https://travis-ci.org/topicusfinan/finq-rest)
 
 To start with develop you have to do the following things: 
 Add a DataSource to your Wildfly Application Server named: `java:/finQuality`
