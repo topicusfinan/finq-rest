@@ -1,16 +1,12 @@
 package nl.finan.finq.embeder;
 
 import nl.eernie.jmoribus.JMoribus;
-import nl.eernie.jmoribus.configuration.Configuration;
-import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.eernie.jmoribus.parser.ParseableStory;
 import nl.eernie.jmoribus.parser.StoryParser;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.RunningStoriesStatus;
 import nl.finan.finq.entities.Story;
-import nl.finan.finq.factory.BeanFactory;
-import nl.finan.finq.steps.Step;
 import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.slf4j.Logger;
@@ -21,7 +17,6 @@ import javax.ejb.Stateful;
 import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Stateful
@@ -38,6 +33,9 @@ public class StatefulStoryRunner implements StoryRunner{
     @EJB
     private StatusWebSocket statusWebSocket;
 
+    @EJB
+    private ConfigurationFactory configurationFactory;
+
     public void init(List<Story> stories, Long reportId){
         List<ParseableStory> parseableStories = new ArrayList<>(stories.size());
         for (Story story : stories) {
@@ -51,12 +49,8 @@ public class StatefulStoryRunner implements StoryRunner{
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void run() {
 
-        Configuration configuration = new DefaultConfiguration();
-        configuration.addSteps(Arrays.<Object>asList(new Step()));
-        WebStoryReporter reporter = BeanFactory.getBean(WebStoryReporter.class);
-        reporter.init(reportId);
-        configuration.addReporter(reporter);
-        JMoribus jMoribus = new JMoribus(configuration);
+
+        JMoribus jMoribus = new JMoribus(configurationFactory.getConfiguration(reportId));
 
         try{
             jMoribus.playAct(this.stories);
