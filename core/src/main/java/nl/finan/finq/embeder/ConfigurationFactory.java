@@ -7,5 +7,7 @@ import javax.ejb.Local;
 @Local
 public interface ConfigurationFactory {
 
-    Configuration getConfiguration(Long reportId);
+    Configuration getConfiguration();
+
+    Configuration getConfigurationWithReporter(Long reportId);
 }
