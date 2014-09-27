@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+
 @Path("testdata")
 @Stateless
 public class TestData {
@@ -54,6 +56,6 @@ public class TestData {
 				scenarioDao.persist(sc);
 			}
 		}
-		return Response.ok().build();
+		return Response.temporaryRedirect(URI.create("bundles")).build();
 	}
 }

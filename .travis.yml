@@ -1,4 +1,4 @@
 language: java
 
 after_success:
-  - mvn clean test cobertura:cobertura coveralls:cobertura
+  - mvn -f core/pom.xml clean test cobertura:cobertura coveralls:cobertura
