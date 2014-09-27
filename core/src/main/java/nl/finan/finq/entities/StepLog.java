@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "JBEHAVE_LOG_STEP")
-public class StepLog extends Log{
+public class StepLog extends Log {
 
     @ManyToOne
     @JoinColumn

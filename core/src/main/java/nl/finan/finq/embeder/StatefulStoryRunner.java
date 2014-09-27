@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Stateful
-public class StatefulStoryRunner implements StoryRunner{
+public class StatefulStoryRunner implements StoryRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatefulStoryRunner.class);
 
@@ -36,10 +36,10 @@ public class StatefulStoryRunner implements StoryRunner{
     @EJB
     private ConfigurationFactory configurationFactory;
 
-    public void init(List<Story> stories, Long reportId){
+    public void init(List<Story> stories, Long reportId) {
         List<ParseableStory> parseableStories = new ArrayList<>(stories.size());
         for (Story story : stories) {
-            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()),story.getId().toString()));
+            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()));
         }
         this.stories = StoryParser.parseStories(parseableStories);
         this.reportId = reportId;
@@ -52,18 +52,18 @@ public class StatefulStoryRunner implements StoryRunner{
 
         JMoribus jMoribus = new JMoribus(configurationFactory.getConfiguration(reportId));
 
-        try{
+        try {
             jMoribus.playAct(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(RunningStoriesStatus.SUCCESS);
-            statusWebSocket.sendStatus(reportId,runningStories, StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(RunningStoriesStatus.FAILED);
-            statusWebSocket.sendStatus(reportId,runningStories,StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
         }
     }
 }

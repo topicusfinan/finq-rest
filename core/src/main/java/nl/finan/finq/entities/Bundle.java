@@ -7,50 +7,50 @@ import java.util.List;
 
 @Entity
 @Table(name = "JBEHAVE_BUNDLE")
-public class Bundle extends GenericEntity{
+public class Bundle extends GenericEntity {
 
-	@Column(name = "NAME")
-	private String name;
-	
-	@Column(name = "DESCRIPTION")
-	private String description;
-	
-	@OneToMany(mappedBy = "bundle",fetch=FetchType.EAGER)
-	private List<Story> stories;
-	
-	@ManyToMany(mappedBy="bundles")
-	@JsonBackReference
-	private List<Collection> collections;
+    @Column(name = "NAME")
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @OneToMany(mappedBy = "bundle", fetch = FetchType.EAGER)
+    private List<Story> stories;
 
-	public String getDescription() {
-		return description;
-	}
+    @ManyToMany(mappedBy = "bundles")
+    @JsonBackReference
+    private List<Collection> collections;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<Story> getStories() {
-		return stories;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setStories(List<Story> stories) {
-		this.stories = stories;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public List<Collection> getCollections() {
-		return collections;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setCollections(List<Collection> collections) {
-		this.collections = collections;
-	}
+    public List<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(List<Story> stories) {
+        this.stories = stories;
+    }
+
+    public List<Collection> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(List<Collection> collections) {
+        this.collections = collections;
+    }
 }

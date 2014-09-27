@@ -4,32 +4,32 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="JBEHAVE_COLLECTION")
+@Table(name = "JBEHAVE_COLLECTION")
 public class Collection extends GenericEntity {
 
-	@Column(name="NAME")
-	private String name;
-	
-	@ManyToMany
-	@JoinTable(
-		      name="JBEHAVE_COLLECTION_SET",
-		      joinColumns={@JoinColumn(name="BUNDLE_ID", referencedColumnName="ID")},
-		      inverseJoinColumns={@JoinColumn(name="COLLECTION_ID", referencedColumnName="ID")})
-	private List<Bundle> bundles;
+    @Column(name = "NAME")
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    @ManyToMany
+    @JoinTable(
+            name = "JBEHAVE_COLLECTION_SET",
+            joinColumns = {@JoinColumn(name = "BUNDLE_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "COLLECTION_ID", referencedColumnName = "ID")})
+    private List<Bundle> bundles;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<Bundle> getBundles() {
-		return bundles;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setBundles(List<Bundle> bundles) {
-		this.bundles = bundles;
-	}	
+    public List<Bundle> getBundles() {
+        return bundles;
+    }
+
+    public void setBundles(List<Bundle> bundles) {
+        this.bundles = bundles;
+    }
 }

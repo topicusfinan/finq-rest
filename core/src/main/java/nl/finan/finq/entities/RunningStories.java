@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "JBEHAVE_RUNNING_STORIES")
-public class RunningStories extends GenericEntity{
+public class RunningStories extends GenericEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -31,7 +31,6 @@ public class RunningStories extends GenericEntity{
     public List<StoryLog> getLogs() {
         return logs;
     }
-
 
 
 }

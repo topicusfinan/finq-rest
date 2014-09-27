@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="JBEHAVE_LOG_STORY")
-public class StoryLog extends Log{
+@Table(name = "JBEHAVE_LOG_STORY")
+public class StoryLog extends Log {
 
     @ManyToOne
     @JoinColumn
@@ -18,7 +18,7 @@ public class StoryLog extends Log{
     @JsonBackReference
     private RunningStories runningStory;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "storyLog")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "storyLog")
     private List<ScenarioLog> scenarioLogs;
 
     public Story getStory() {

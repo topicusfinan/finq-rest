@@ -8,5 +8,5 @@ import java.util.List;
 @Local
 public interface StoryRunner extends Runnable {
 
-  void init(List<Story> stories, Long reportId);
+    void init(List<Story> stories, Long reportId);
 }

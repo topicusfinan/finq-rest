@@ -23,7 +23,7 @@ public class StatusResources {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public RunningStories getStatus(@PathParam("id") Long statusId){
+    public RunningStories getStatus(@PathParam("id") Long statusId) {
         RunningStories runningStories = runningStoriesDao.find(statusId);
         return runningStories;
     }

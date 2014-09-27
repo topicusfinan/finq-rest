@@ -56,20 +56,20 @@ public class WebStoryReporter implements Reporter {
 
         nl.finan.finq.entities.Story storyModel = storyDao.find(Long.valueOf(story.getUniqueIdentifier()));
 
-        StoryLog storyLog = reportService.createStoryLog(storyModel,runningStories);
+        StoryLog storyLog = reportService.createStoryLog(storyModel, runningStories);
         currentStoryLog = storyLog.getId();
-        statusWebSocket.sendStatus(reportId,storyLog, StatusType.BEFORE_STORY);
+        statusWebSocket.sendStatus(reportId, storyLog, StatusType.BEFORE_STORY);
     }
 
     @Override
     public void beforeScenario(Scenario beforeScenario) {
-        if(currentStoryLog != null) {
+        if (currentStoryLog != null) {
             StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
-            for(nl.finan.finq.entities.Scenario scenario: storyLog.getStory().getScenarios()){
-                if(scenario.getTitle().equals(beforeScenario.getTitle())){
-                    ScenarioLog scenarioLog = reportService.createScenarioLog(scenario,storyLog);
+            for (nl.finan.finq.entities.Scenario scenario : storyLog.getStory().getScenarios()) {
+                if (scenario.getTitle().equals(beforeScenario.getTitle())) {
+                    ScenarioLog scenarioLog = reportService.createScenarioLog(scenario, storyLog);
                     currentScenarioLog = scenarioLog.getId();
-                    statusWebSocket.sendStatus(reportId,scenarioLog,StatusType.BEFORE_SCENARIO);
+                    statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.BEFORE_SCENARIO);
                 }
             }
         }
@@ -82,12 +82,12 @@ public class WebStoryReporter implements Reporter {
 
     @Override
     public void successStep(Step runningStep) {
-        if(currentScenarioLog != null) {
+        if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equalsIgnoreCase(completeStep(runningStep))){
+            for (String step : scenarioLog.getScenario().getSteps()) {
+                if (step.equalsIgnoreCase(completeStep(runningStep))) {
                     StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
-                    statusWebSocket.sendStatus(reportId,stepLog, StatusType.SUCCESSFUL_STEP);
+                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
 
                 }
             }
@@ -96,12 +96,12 @@ public class WebStoryReporter implements Reporter {
 
     @Override
     public void pendingStep(Step runningStep) {
-        if(currentScenarioLog != null) {
+        if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equalsIgnoreCase(completeStep(runningStep))){
+            for (String step : scenarioLog.getScenario().getSteps()) {
+                if (step.equalsIgnoreCase(completeStep(runningStep))) {
                     StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
-                    statusWebSocket.sendStatus(reportId,stepLog, StatusType.PENDING_STEP);
+                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
                 }
             }
         }
@@ -109,38 +109,38 @@ public class WebStoryReporter implements Reporter {
 
     @Override
     public void afterScenario(Scenario scenario) {
-        if(currentScenarioLog != null) {
+        if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             if (scenarioLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 scenarioLog.setStatus(RunningStoriesStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId,scenarioLog, StatusType.AFTER_SCENARIO);
+                statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.AFTER_SCENARIO);
             }
         }
     }
 
     @Override
     public void afterStory(Story story) {
-        if(currentStoryLog != null) {
+        if (currentStoryLog != null) {
             StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
             if (storyLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
                 storyLog.setStatus(RunningStoriesStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId,storyLog,StatusType.AFTER_STORY);
+                statusWebSocket.sendStatus(reportId, storyLog, StatusType.AFTER_STORY);
             }
         }
     }
 
     @Override
     public void failedStep(Step runningStep, AssertionError e) {
-        if(currentScenarioLog != null) {
+        if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for(String step: scenarioLog.getScenario().getSteps()){
-                if(step.equalsIgnoreCase(completeStep(runningStep))){
+            for (String step : scenarioLog.getScenario().getSteps()) {
+                if (step.equalsIgnoreCase(completeStep(runningStep))) {
                     StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.FAILED);
                     stepLog.setLog(e.getMessage());
                     scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
                     scenarioLog.setStatus(RunningStoriesStatus.FAILED);
                     scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
-                    statusWebSocket.sendStatus(reportId,stepLog,StatusType.FAILED_STEP);
+                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
                 }
             }
         }
@@ -182,6 +182,6 @@ public class WebStoryReporter implements Reporter {
     }
 
     private String completeStep(Step runningStep) {
-        return runningStep.getStepType().name() + " "+ runningStep.getCombinedStepLines();
+        return runningStep.getStepType().name() + " " + runningStep.getCombinedStepLines();
     }
 }

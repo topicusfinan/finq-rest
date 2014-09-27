@@ -26,7 +26,7 @@ import javax.ws.rs.core.Response.Status;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
-public class RunnerResources  {
+public class RunnerResources {
 
     @EJB
     private StoryDao storyDao;
@@ -40,41 +40,41 @@ public class RunnerResources  {
     @EJB
     private RunnerService runnerService;
 
-	  @POST
-	  @Path("/story")
+    @POST
+    @Path("/story")
     @Transactional
-	  public Response runStory(Long id) throws NamingException {
+    public Response runStory(Long id) throws NamingException {
 
         Story story = storyDao.find(id);
-		    if(story == null){
-			      return Response.status(Status.NOT_FOUND).build();
-		    }
+        if (story == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
         RunningStories runningStories = runnerService.run(story);
 
         return Response.ok(runningStories).build();
-	  }
+    }
 
-	  @POST
-	  @Path("/bundle")
-	  @Transactional
-	  public Response runBundle(Long id){
-		    Bundle bundle = bundleDao.find(id);
-		    if(bundle == null){
-			      return Response.status(Status.NOT_FOUND).build();
-		    }
+    @POST
+    @Path("/bundle")
+    @Transactional
+    public Response runBundle(Long id) {
+        Bundle bundle = bundleDao.find(id);
+        if (bundle == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
 
-		    RunningStories runningStories = runnerService.run(bundle);
+        RunningStories runningStories = runnerService.run(bundle);
 
-		    return Response.ok(runningStories).build();
-	  }
+        return Response.ok(runningStories).build();
+    }
 
     @POST
     @Path("/scenario")
     @Transactional
-    public Response runScenario(Long id){
+    public Response runScenario(Long id) {
         Scenario scenario = scenarioDao.find(id);
-        if(scenario ==null){
+        if (scenario == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
 

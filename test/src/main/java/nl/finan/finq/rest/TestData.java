@@ -20,42 +20,42 @@ import java.net.URI;
 @Path("testdata")
 @Stateless
 public class TestData {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestData.class);
-	
-	@EJB
-	private StoryDao storyDao;
-	
-	@EJB
-	private BundleDao projectDao;
-	
-	@EJB
-	private ScenarioDao scenarioDao;
-	
-	@GET
-	@Transactional
-	public Response generateTestDate(){
-		Bundle b = new Bundle();
-		b.setDescription("Test Bundle");
-		b.setName("Test Bundle");
-		projectDao.persist(b);
-		
-		for(int i = 0; i<2; i++){
-			Story s = new Story();
-			s.setName("story "+i);
-			s.setBundle(b);
-			storyDao.persist(s);
-			LOGGER.info("Story: {}",s.getName());
-			for(int x = 0; x<2; x++){
-				Scenario sc = new Scenario();
-                sc.setTitle("Scenario Title "+i+"-"+x);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestData.class);
+
+    @EJB
+    private StoryDao storyDao;
+
+    @EJB
+    private BundleDao projectDao;
+
+    @EJB
+    private ScenarioDao scenarioDao;
+
+    @GET
+    @Transactional
+    public Response generateTestDate() {
+        Bundle b = new Bundle();
+        b.setDescription("Test Bundle");
+        b.setName("Test Bundle");
+        projectDao.persist(b);
+
+        for (int i = 0; i < 2; i++) {
+            Story s = new Story();
+            s.setName("story " + i);
+            s.setBundle(b);
+            storyDao.persist(s);
+            LOGGER.info("Story: {}", s.getName());
+            for (int x = 0; x < 2; x++) {
+                Scenario sc = new Scenario();
+                sc.setTitle("Scenario Title " + i + "-" + x);
                 sc.getSteps().add("Given this is a given step");
                 sc.getSteps().add("When a When step has been run");
                 sc.getSteps().add("Then a result must been shown");
-				sc.setStory(s);
-				scenarioDao.persist(sc);
-			}
-		}
-		return Response.temporaryRedirect(URI.create("bundles")).build();
-	}
+                sc.setStory(s);
+                scenarioDao.persist(sc);
+            }
+        }
+        return Response.temporaryRedirect(URI.create("bundles")).build();
+    }
 }

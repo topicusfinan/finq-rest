@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="JBEHAVE_LOG_SCENARIO")
-public class ScenarioLog  extends Log{
+@Table(name = "JBEHAVE_LOG_SCENARIO")
+public class ScenarioLog extends Log {
 
     @ManyToOne
     @JoinColumn

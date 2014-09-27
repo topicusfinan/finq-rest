@@ -1,43 +1,36 @@
 package nl.finan.finq.dao.impl;
 
-public class NamedParameter
-{
-	private String name;
+public class NamedParameter {
+    private String name;
 
-	private Object value;
+    private Object value;
 
-	public void setValue(Object value)
-	{
-		this.value = value;
-	}
+    public static NamedParameter np(String name, Object value) {
+        NamedParameter np = new NamedParameter();
+        np.setName(name);
+        np.setValue(value);
 
-	public Object getValue()
-	{
-		return value;
-	}
+        return np;
+    }
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public void setValue(Object value) {
+        this.value = value;
+    }
 
-	public static NamedParameter np(String name, Object value)
-	{
-		NamedParameter np = new NamedParameter();
-		np.setName(name);
-		np.setValue(value);
+    public String getName() {
+        return name;
+    }
 
-		return np;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString()
-	{
-		return String.format("%s = %s", name, value);
-	}
+    @Override
+    public String toString() {
+        return String.format("%s = %s", name, value);
+    }
 }

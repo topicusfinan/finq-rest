@@ -11,7 +11,7 @@ import javax.ejb.Stateless;
 import java.util.Arrays;
 
 @Stateless
-public class ConfigurationFactoryImpl implements ConfigurationFactory{
+public class ConfigurationFactoryImpl implements ConfigurationFactory {
     @Override
     public Configuration getConfiguration(Long reportId) {
         Configuration configuration = new DefaultConfiguration();

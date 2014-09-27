@@ -45,7 +45,7 @@ public class RunnerService {
         return doRun(Arrays.asList(story));
     }
 
-    private RunningStories doRun(List<Story> stories){
+    private RunningStories doRun(List<Story> stories) {
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(RunningStoriesStatus.RUNNING);
         runningStoriesDao.persist(runningStories);

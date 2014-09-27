@@ -19,8 +19,8 @@ public class Step {
     }
 
     @When("a When step has been run")
-    public void fail(){
-        Assert.assertEquals("unequal",1,0);
+    public void fail() {
+        Assert.assertEquals("unequal", 1, 0);
     }
 
 }

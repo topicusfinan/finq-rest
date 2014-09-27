@@ -18,14 +18,14 @@ import java.util.List;
 @Stateless
 public class BundleResources {
 
-	
-	@EJB
-	private BundleDao bundleDao;
-	
-	@GET
-	public List<Bundle> getBundles(){
-		List<Bundle> all = bundleDao.listAll();
-		
-		return all;
-	}
+
+    @EJB
+    private BundleDao bundleDao;
+
+    @GET
+    public List<Bundle> getBundles() {
+        List<Bundle> all = bundleDao.listAll();
+
+        return all;
+    }
 }

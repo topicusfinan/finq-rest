@@ -10,37 +10,37 @@ import java.util.List;
 
 
 @Entity
-@Table(name="JBEHAVE_SCENARIO")
-public class Scenario extends GenericEntity{
+@Table(name = "JBEHAVE_SCENARIO")
+public class Scenario extends GenericEntity {
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "STORY_ID", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "STORY_ID", nullable = false)
     @JsonBackReference
-	private Story story;
-	
-	@Column(name = "TITLE")
-	private String title;
-	
+    private Story story;
+
+    @Column(name = "TITLE")
+    private String title;
+
 
     @ElementCollection()
-    @CollectionTable(name="JBEHAVE_STEPS", joinColumns = @JoinColumn(name="SCENARIO_ID"))
+    @CollectionTable(name = "JBEHAVE_STEPS", joinColumns = @JoinColumn(name = "SCENARIO_ID"))
     @Column(name = "STEPS")
     @LazyCollection(LazyCollectionOption.FALSE)
-	private List<String> steps;
+    private List<String> steps;
 
     public Scenario() {
-        if(steps==null){
+        if (steps == null) {
             steps = new ArrayList<String>();
         }
     }
 
     public Story getStory() {
-		return story;
-	}
+        return story;
+    }
 
-	public void setStory(Story story) {
-		this.story = story;
-	}
+    public void setStory(Story story) {
+        this.story = story;
+    }
 
     public List<String> getSteps() {
         return steps;
@@ -51,22 +51,22 @@ public class Scenario extends GenericEntity{
     }
 
     public String getTitle() {
-		return title;
-	}
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 
-	public String toStory() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Scenario: ");
-		builder.append(getTitle());
-		for(String step: steps){
+    public String toStory() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Scenario: ");
+        builder.append(getTitle());
+        for (String step : steps) {
             builder.append(System.lineSeparator());
             builder.append(step);
         }
-		return builder.toString();
-	}	
+        return builder.toString();
+    }
 }

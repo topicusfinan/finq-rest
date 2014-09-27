@@ -6,7 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class Log extends GenericEntity{
+public abstract class Log extends GenericEntity {
 
     @Column
     private String log;

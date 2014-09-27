@@ -31,7 +31,7 @@ public class ReportService {
         return storyLog;
     }
 
-    public StoryLog findStoryLog(Long id){
+    public StoryLog findStoryLog(Long id) {
         return storyLogDao.find(id);
     }
 
