@@ -35,7 +35,7 @@ public class RunnerService {
     }
 
     public RunningStories run(Scenario scenario) {
-        //We have to create a new "dummy" story so jbehave has a story to run.
+        //We have to create a new "dummy" story so jmoribus has a story to run.
         Story story = new Story();
         story.setName("Dummy Story " + new Date().getTime());
         story.setDummy(true);
@@ -53,7 +53,7 @@ public class RunnerService {
         StoryRunner statefulStoryRunner = BeanFactory.getBean(StoryRunner.class);
         statefulStoryRunner.init(stories, runningStories.getId());
 
-        runExecutor.execute(statefulStoryRunner); //TODO: take a look at callable<T>. Maybe we can use this to pause a thread!
+        runExecutor.execute(statefulStoryRunner);
         return runningStories;
     }
 }
