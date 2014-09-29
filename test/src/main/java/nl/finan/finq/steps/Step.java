@@ -1,5 +1,6 @@
 package nl.finan.finq.steps;
 
+import nl.eernie.jmoribus.annotation.Category;
 import nl.eernie.jmoribus.annotation.Given;
 import nl.eernie.jmoribus.annotation.When;
 import org.junit.Assert;
@@ -19,6 +20,7 @@ public class Step {
     }
 
     @When("a When step has been run")
+    @Category({"Test", "Failing"})
     public void fail() {
         Assert.assertEquals("unequal", 1, 0);
     }

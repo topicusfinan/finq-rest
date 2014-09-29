@@ -50,7 +50,7 @@ public class StatefulStoryRunner implements StoryRunner {
     public void run() {
 
 
-        JMoribus jMoribus = new JMoribus(configurationFactory.getConfiguration(reportId));
+        JMoribus jMoribus = new JMoribus(configurationFactory.getConfigurationWithReporter(reportId));
 
         try {
             jMoribus.playAct(this.stories);

@@ -13,7 +13,14 @@ import java.util.Arrays;
 @Stateless
 public class ConfigurationFactoryImpl implements ConfigurationFactory {
     @Override
-    public Configuration getConfiguration(Long reportId) {
+    public Configuration getConfiguration() {
+        Configuration configuration = new DefaultConfiguration();
+        configuration.addSteps(Arrays.<Object>asList(new Step()));
+        return configuration;
+    }
+
+    @Override
+    public Configuration getConfigurationWithReporter(Long reportId) {
         Configuration configuration = new DefaultConfiguration();
         configuration.addSteps(Arrays.<Object>asList(new Step()));
         WebStoryReporter reporter = BeanFactory.getBean(WebStoryReporter.class);
