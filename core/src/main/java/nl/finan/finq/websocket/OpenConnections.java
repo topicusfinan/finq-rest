@@ -13,19 +13,27 @@ public class OpenConnections {
     private static final Map<Long, List<Session>> CONNECTION_MAP = new HashMap<>();
 
     public void removeFromConnectionMap(Long reportId, Session session) {
-        if (CONNECTION_MAP.containsKey(reportId)) {
-            CONNECTION_MAP.get(reportId).remove(session);
-            if (CONNECTION_MAP.get(reportId).isEmpty()) {
-                CONNECTION_MAP.remove(reportId);
+        synchronized (CONNECTION_MAP) {
+            if (CONNECTION_MAP.containsKey(reportId)) {
+                CONNECTION_MAP.get(reportId).remove(session);
+                if (CONNECTION_MAP.get(reportId).isEmpty()) {
+                    CONNECTION_MAP.remove(reportId);
+                }
             }
         }
     }
 
     public void removeSession(Session session) {
-        for (Map.Entry<Long, List<Session>> entry : CONNECTION_MAP.entrySet()) {
-            entry.getValue().remove(session);
-            if (entry.getValue().isEmpty()) {
-                CONNECTION_MAP.remove(entry.getKey());
+        synchronized (CONNECTION_MAP) {
+            List<Long> toRemove = new ArrayList<>();
+            for (Map.Entry<Long, List<Session>> entry : CONNECTION_MAP.entrySet()) {
+                entry.getValue().remove(session);
+                if (entry.getValue().isEmpty()) {
+                    toRemove.add(entry.getKey());
+                }
+            }
+            for (Long id : toRemove) {
+                CONNECTION_MAP.remove(id);
             }
         }
     }
@@ -39,10 +47,12 @@ public class OpenConnections {
     }
 
     public void add(Long reportId, Session remote) {
-        if (!CONNECTION_MAP.containsKey(reportId)) {
-            CONNECTION_MAP.put(reportId, new ArrayList<Session>());
+        synchronized (CONNECTION_MAP) {
+            if (!CONNECTION_MAP.containsKey(reportId)) {
+                CONNECTION_MAP.put(reportId, new ArrayList<Session>());
+            }
+            CONNECTION_MAP.get(reportId).add(remote);
         }
-        CONNECTION_MAP.get(reportId).add(remote);
     }
 
 
