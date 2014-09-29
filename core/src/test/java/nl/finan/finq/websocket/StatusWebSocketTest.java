@@ -1,30 +1,24 @@
 package nl.finan.finq.websocket;
 
 import nl.finan.finq.dao.RunningStoriesDao;
-import nl.finan.finq.entities.Log;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.RunningStoriesStatus;
 import nl.finan.finq.entities.StepLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
-
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -92,6 +86,22 @@ public class StatusWebSocketTest {
         statusWebSocket.sendStatus(1200L, log, StatusType.FINAL_STATUS);
 
         Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":100,\"log\":null,\"status\":\"SUCCESS\",\"step\":\"test Step\"},\"statusType\":\"FINAL_STATUS\"}");
+    }
+
+    @Test
+    public void testException() throws IOException{
+        Session session = mock(Session.class);
+        RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
+        when(session.getAsyncRemote()).thenReturn(async);
+        RunningStories runningStories = mock(RunningStories.class);
+        when(runningStories.getStatus()).thenReturn(RunningStoriesStatus.SUCCESS);
+        when(runningStories.getId()).thenThrow(IOException.class);
+        when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
+
+        statusWebSocket.message(session, "subscribe: 1200");
+
+        Mockito.verify(async).sendText(null);
+
     }
 
 
