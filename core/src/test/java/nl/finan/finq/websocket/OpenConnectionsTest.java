@@ -57,4 +57,24 @@ public class OpenConnectionsTest {
         Assert.assertTrue(sessions.contains(session));
     }
 
+    @Test
+    public void testRemove() {
+        Session session = PowerMockito.mock(Session.class);
+        openConnections.add(100L, session);
+        openConnections.add(101L, session);
+        openConnections.add(102L, session);
+
+        openConnections.removeFromConnectionMap(100L,session);
+
+        Assert.assertNull(openConnections.get(100L));
+        Assert.assertTrue(openConnections.containsKey(101L));
+        Assert.assertTrue(openConnections.containsKey(102L));
+
+        openConnections.removeSession(session);
+
+        Assert.assertFalse(openConnections.containsKey(101L));
+        Assert.assertFalse(openConnections.containsKey(102L));
+
+    }
+
 }

@@ -3,6 +3,8 @@ package nl.finan.finq.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,6 +19,8 @@ import java.io.Writer;
 @ServerEndpoint(value = "/api/statusws")
 @Stateless
 public class StatusWebSocket {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatusWebSocket.class);
 
     private static final String SUBSCRIBE = "subscribe";
     private static final String UNSUBSCRIBE = "unsubscribe";
@@ -81,7 +85,7 @@ public class StatusWebSocket {
 
             return writer.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Something went wrong serializing the object, returning null", e);
         }
         return null;
     }
