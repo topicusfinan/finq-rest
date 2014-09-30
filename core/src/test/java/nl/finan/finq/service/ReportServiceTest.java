@@ -16,6 +16,11 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.Serializable;
+
+import static org.mockito.Matchers.any;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @RunWith(PowerMockRunner.class)
 public class ReportServiceTest {
 
@@ -70,5 +75,24 @@ public class ReportServiceTest {
         Assert.assertEquals(step.getCombinedStepLines(), stepLog.getStep());
         Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
         Assert.assertEquals(RunningStoriesStatus.PENDING, stepLog.getStatus());
+    }
+
+    @Test
+    public void testFindStoryLog(){
+        StoryLog storyLog = new StoryLog();
+        when(storyLogDao.find(any(Serializable.class))).thenReturn(storyLog);
+
+        StoryLog log = reportService.findStoryLog(100L);
+
+        Assert.assertSame(storyLog,log);
+    }
+    @Test
+    public void testFindScenarioLog(){
+        ScenarioLog scenarioLog = new ScenarioLog();
+        when(scenarioLogDao.find(any(Serializable.class))).thenReturn(scenarioLog);
+
+        ScenarioLog log = reportService.findScenarioLog(100L);
+
+        Assert.assertSame(scenarioLog,log);
     }
 }
