@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "JBEHAVE_BUNDLE")
+@Table(name = "FINQ_BUNDLE")
 public class Bundle extends GenericEntity {
 
     @Column(name = "NAME")

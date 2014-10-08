@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "JBEHAVE_STORY")
+@Table(name = "FINQ_STORY")
 public class Story extends GenericEntity {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "JBEHAVE_RUNNING_STORIES")
+@Table(name = "FINQ_RUNNING_STORIES")
 public class RunningStories extends GenericEntity {
 
     @Enumerated(EnumType.STRING)

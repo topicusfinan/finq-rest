@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "JBEHAVE_LOG_STEP")
+@Table(name = "FINQ_LOG_STEP")
 public class StepLog extends Log {
 
     @ManyToOne

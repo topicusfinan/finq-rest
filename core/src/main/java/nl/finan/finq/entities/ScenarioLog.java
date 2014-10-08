@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "JBEHAVE_LOG_SCENARIO")
+@Table(name = "FINQ_LOG_SCENARIO")
 public class ScenarioLog extends Log {
 
     @ManyToOne

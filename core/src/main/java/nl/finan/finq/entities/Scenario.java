@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "JBEHAVE_SCENARIO")
+@Table(name = "FINQ_SCENARIO")
 public class Scenario extends GenericEntity {
 
     @ManyToOne(optional = false)
@@ -23,7 +23,7 @@ public class Scenario extends GenericEntity {
 
 
     @ElementCollection()
-    @CollectionTable(name = "JBEHAVE_STEPS", joinColumns = @JoinColumn(name = "SCENARIO_ID"))
+    @CollectionTable(name = "FINQ_STEPS", joinColumns = @JoinColumn(name = "SCENARIO_ID"))
     @Column(name = "STEPS")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<String> steps;

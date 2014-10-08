@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "JBEHAVE_COLLECTION")
+@Table(name = "FINQ_COLLECTION")
 public class Collection extends GenericEntity {
 
     @Column(name = "NAME")
@@ -12,7 +12,7 @@ public class Collection extends GenericEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "JBEHAVE_COLLECTION_SET",
+            name = "FINQ_COLLECTION_SET",
             joinColumns = {@JoinColumn(name = "BUNDLE_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "COLLECTION_ID", referencedColumnName = "ID")})
     private List<Bundle> bundles;
