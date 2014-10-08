@@ -14,17 +14,17 @@ public class RunningStories extends GenericEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private RunningStoriesStatus status;
+    private LogStatus status;
 
     @OneToMany(mappedBy = "runningStory")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<StoryLog> logs = new ArrayList<StoryLog>();
 
-    public RunningStoriesStatus getStatus() {
+    public LogStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RunningStoriesStatus status) {
+    public void setStatus(LogStatus status) {
         this.status = status;
     }
 

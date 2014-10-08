@@ -4,8 +4,8 @@ import nl.eernie.jmoribus.JMoribus;
 import nl.eernie.jmoribus.parser.ParseableStory;
 import nl.eernie.jmoribus.parser.StoryParser;
 import nl.finan.finq.dao.RunningStoriesDao;
+import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.RunningStoriesStatus;
 import nl.finan.finq.entities.Story;
 import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
@@ -55,14 +55,14 @@ public class StatefulStoryRunner implements StoryRunner {
         try {
             jMoribus.playAct(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
-            runningStories.setStatus(RunningStoriesStatus.SUCCESS);
+            runningStories.setStatus(LogStatus.SUCCESS);
             statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
 
         } catch (Exception e) {
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
             RunningStories runningStories = runningStoriesDao.find(reportId);
-            runningStories.setStatus(RunningStoriesStatus.FAILED);
+            runningStories.setStatus(LogStatus.FAILED);
             statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
         }
     }

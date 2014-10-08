@@ -1,6 +1,6 @@
 package nl.finan.finq.entities;
 
 
-public enum RunningStoriesStatus {
+public enum LogStatus {
     RUNNING, FAILED, PENDING, SUCCESS
 }

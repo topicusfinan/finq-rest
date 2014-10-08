@@ -86,7 +86,7 @@ public class WebStoryReporter implements Reporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for (String step : scenarioLog.getScenario().getSteps()) {
                 if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.SUCCESS);
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.SUCCESS);
                     statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
 
                 }
@@ -100,7 +100,7 @@ public class WebStoryReporter implements Reporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for (String step : scenarioLog.getScenario().getSteps()) {
                 if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.PENDING);
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.PENDING);
                     statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
                 }
             }
@@ -111,8 +111,8 @@ public class WebStoryReporter implements Reporter {
     public void afterScenario(Scenario scenario) {
         if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            if (scenarioLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
-                scenarioLog.setStatus(RunningStoriesStatus.SUCCESS);
+            if (scenarioLog.getStatus().equals(LogStatus.RUNNING)) {
+                scenarioLog.setStatus(LogStatus.SUCCESS);
                 statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.AFTER_SCENARIO);
             }
         }
@@ -122,8 +122,8 @@ public class WebStoryReporter implements Reporter {
     public void afterStory(Story story) {
         if (currentStoryLog != null) {
             StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
-            if (storyLog.getStatus().equals(RunningStoriesStatus.RUNNING)) {
-                storyLog.setStatus(RunningStoriesStatus.SUCCESS);
+            if (storyLog.getStatus().equals(LogStatus.RUNNING)) {
+                storyLog.setStatus(LogStatus.SUCCESS);
                 statusWebSocket.sendStatus(reportId, storyLog, StatusType.AFTER_STORY);
             }
         }
@@ -135,11 +135,11 @@ public class WebStoryReporter implements Reporter {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
             for (String step : scenarioLog.getScenario().getSteps()) {
                 if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, RunningStoriesStatus.FAILED);
+                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.FAILED);
                     stepLog.setLog(e.getMessage());
-                    scenarioLog.getStoryLog().setStatus(RunningStoriesStatus.FAILED);
-                    scenarioLog.setStatus(RunningStoriesStatus.FAILED);
-                    scenarioLog.getStoryLog().getRunningStory().setStatus(RunningStoriesStatus.FAILED);
+                    scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
+                    scenarioLog.setStatus(LogStatus.FAILED);
+                    scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
                     statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
                 }
             }

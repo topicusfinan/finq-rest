@@ -26,7 +26,7 @@ public class ReportService {
         StoryLog storyLog = new StoryLog();
         storyLog.setRunningStory(runningStories);
         storyLog.setStory(story);
-        storyLog.setStatus(RunningStoriesStatus.RUNNING);
+        storyLog.setStatus(LogStatus.RUNNING);
         storyLogDao.persist(storyLog);
         return storyLog;
     }
@@ -37,7 +37,7 @@ public class ReportService {
 
     public ScenarioLog createScenarioLog(Scenario scenario, StoryLog storyLog) {
         ScenarioLog scenarioLog = new ScenarioLog();
-        scenarioLog.setStatus(RunningStoriesStatus.RUNNING);
+        scenarioLog.setStatus(LogStatus.RUNNING);
         scenarioLog.setScenario(scenario);
         scenarioLog.setStoryLog(storyLog);
         scenarioLogDao.persist(scenarioLog);
@@ -48,7 +48,7 @@ public class ReportService {
         return scenarioLogDao.find(id);
     }
 
-    public StepLog createStepLog(Step runningStep, ScenarioLog scenarioLog, RunningStoriesStatus status) {
+    public StepLog createStepLog(Step runningStep, ScenarioLog scenarioLog, LogStatus status) {
         StepLog stepLog = new StepLog();
         stepLog.setStatus(status);
         stepLog.setStep(runningStep.getCombinedStepLines());

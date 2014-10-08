@@ -1,8 +1,8 @@
 package nl.finan.finq.websocket;
 
 import nl.finan.finq.dao.RunningStoriesDao;
+import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.RunningStoriesStatus;
 import nl.finan.finq.entities.StepLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class StatusWebSocketTest {
         Mockito.verify(async).sendText("Could not find the report you're subscribing too.");
 
         RunningStories runningStories = new RunningStories();
-        runningStories.setStatus(RunningStoriesStatus.SUCCESS);
+        runningStories.setStatus(LogStatus.SUCCESS);
         runningStories.setId(1200L);
         when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
 
@@ -80,7 +80,7 @@ public class StatusWebSocketTest {
         List<Session> sessions = Arrays.asList(session);
         when(openConnections.get(1200l)).thenReturn(sessions);
         StepLog log = new StepLog();
-        log.setStatus(RunningStoriesStatus.SUCCESS);
+        log.setStatus(LogStatus.SUCCESS);
         log.setId(100L);
         log.setStep("test Step");
         statusWebSocket.sendStatus(1200L, log, StatusType.FINAL_STATUS);
@@ -94,7 +94,7 @@ public class StatusWebSocketTest {
         RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
         when(session.getAsyncRemote()).thenReturn(async);
         RunningStories runningStories = mock(RunningStories.class);
-        when(runningStories.getStatus()).thenReturn(RunningStoriesStatus.SUCCESS);
+        when(runningStories.getStatus()).thenReturn(LogStatus.SUCCESS);
         when(runningStories.getId()).thenThrow(IOException.class);
         when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
 

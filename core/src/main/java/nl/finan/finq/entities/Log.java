@@ -13,7 +13,7 @@ public abstract class Log extends GenericEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private RunningStoriesStatus status;
+    private LogStatus status;
 
     public String getLog() {
         return log;
@@ -23,11 +23,11 @@ public abstract class Log extends GenericEntity {
         this.log = log;
     }
 
-    public RunningStoriesStatus getStatus() {
+    public LogStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RunningStoriesStatus status) {
+    public void setStatus(LogStatus status) {
         this.status = status;
     }
 }

@@ -47,7 +47,7 @@ public class ReportServiceTest {
         Mockito.verify(storyLogDao).persist(storyLog);
         Assert.assertSame(story, storyLog.getStory());
         Assert.assertSame(runningStories, storyLog.getRunningStory());
-        Assert.assertEquals(RunningStoriesStatus.RUNNING, storyLog.getStatus());
+        Assert.assertEquals(LogStatus.RUNNING, storyLog.getStatus());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ReportServiceTest {
         Mockito.verify(scenarioLogDao).persist(scenarioLog);
         Assert.assertSame(scenario, scenarioLog.getScenario());
         Assert.assertSame(storyLog, scenarioLog.getStoryLog());
-        Assert.assertEquals(RunningStoriesStatus.RUNNING, scenarioLog.getStatus());
+        Assert.assertEquals(LogStatus.RUNNING, scenarioLog.getStatus());
     }
 
     @Test
@@ -69,12 +69,12 @@ public class ReportServiceTest {
         step.getStepLines().add(new Line("Test step"));
         ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
 
-        StepLog stepLog = reportService.createStepLog(step, scenarioLog, RunningStoriesStatus.PENDING);
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.PENDING);
 
         Mockito.verify(stepLogDao).persist(stepLog);
         Assert.assertEquals(step.getCombinedStepLines(), stepLog.getStep());
         Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
-        Assert.assertEquals(RunningStoriesStatus.PENDING, stepLog.getStatus());
+        Assert.assertEquals(LogStatus.PENDING, stepLog.getStatus());
     }
 
     @Test

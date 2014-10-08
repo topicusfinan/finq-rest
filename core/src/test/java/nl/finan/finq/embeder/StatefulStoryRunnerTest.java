@@ -2,8 +2,8 @@ package nl.finan.finq.embeder;
 
 import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.finan.finq.dao.RunningStoriesDao;
+import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.RunningStoriesStatus;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
 import nl.finan.finq.websocket.StatusType;
@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
@@ -59,10 +58,10 @@ public class StatefulStoryRunnerTest {
         when(configurationFactory.getConfigurationWithReporter(100l)).thenReturn(new DefaultConfiguration());
         RunningStories runningStories = mock(RunningStories.class);
         when(runningStoriesDao.find(100l)).thenReturn(runningStories);
-        doThrow(new RuntimeException()).when(runningStories).setStatus(RunningStoriesStatus.SUCCESS);
+        doThrow(new RuntimeException()).when(runningStories).setStatus(LogStatus.SUCCESS);
 
         statefulStoryRunner.run();
-        Mockito.verify(runningStories).setStatus(RunningStoriesStatus.FAILED);
+        Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
         Mockito.verify(statusWebSocket).sendStatus(100l,runningStories, StatusType.FINAL_STATUS);
     }
 

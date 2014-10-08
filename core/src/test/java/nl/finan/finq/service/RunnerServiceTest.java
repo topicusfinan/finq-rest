@@ -53,7 +53,7 @@ public class RunnerServiceTest {
         RunningStories run = runnerService.run(story);
 
         Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(RunningStoriesStatus.RUNNING, run.getStatus());
+        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
         Mockito.verify(managedExecutorService).execute(storyRunner);
     }
 
@@ -63,7 +63,7 @@ public class RunnerServiceTest {
         RunningStories run = runnerService.run(bundle);
 
         Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(RunningStoriesStatus.RUNNING, run.getStatus());
+        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
         Mockito.verify(managedExecutorService).execute(storyRunner);
     }
 
@@ -73,7 +73,7 @@ public class RunnerServiceTest {
         RunningStories run = runnerService.run(scenario);
 
         Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(RunningStoriesStatus.RUNNING, run.getStatus());
+        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
         Mockito.verify(managedExecutorService).execute(storyRunner);
     }
 
