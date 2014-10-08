@@ -83,6 +83,25 @@
                     <maxmem>256m</maxmem>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.0.0.Final</version>
+                <configuration>
+                    <hostname>178.62.202.110</hostname>
+                    <port>9990</port>
+                    <username>${env.CI_DEPLOY_USERNAME}</username>
+                    <password>${env.CI_DEPLOY_PASSWORD}</password>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- 						<phase>package</phase> -->
+                        <!-- 						<goals> -->
+                        <!-- 							<goal>deploy</goal> -->
+                        <!-- 						</goals> -->
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

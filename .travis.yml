@@ -1,4 +1,9 @@
 language: java
+env:
+  global:
+  - secure: bV6fZye+WuF8a5zj47hktFN559/E7aa0g4cn/g5cDRE8TKIlzN1xo3GLBhr4AZgNdt1PULoCdyQGFITLc49H2pAVH3YyEB3KhhJ2uIyWLdGk3kucN1ts6EPJoCanWb0RMp3xcDSwj8ysuSc4o1V4guPlLBROo39I4L8ogA96j+U=
+  - secure: CCNDd/Pw+nJBKtivLaEZozGSDtWxFkavgHcnN6Jbhp0tyzEOqb6ZHs+6PlTtpPGlfyDGmw6GjaPDYSS5kd4tiDbjUF13ul/BB1SGFu+CAP3B/5xMmGglUvn4zqdWWsGm5NjMRb8NmIBDwR7iKn4mvEg8p4cWLcJugVZ36a2Z3q4=
 
 after_success:
-  - mvn -f core/pom.xml clean test cobertura:cobertura coveralls:cobertura
+- mvn -pl core clean test cobertura:cobertura coveralls:cobertura
+- mvn -pl test wildfly:deploy
