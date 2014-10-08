@@ -6,4 +6,4 @@ env:
 
 after_success:
 - mvn -pl core clean test cobertura:cobertura coveralls:cobertura
-- if git rev-parse --abbrev-ref HEAD | grep 'develop'; then mvn -pl test wildfly:deploy; fi
+- if [${TRAVIS_BRANCH} == "develop"] && [${TRAVIS_PULL_REQUEST}] ; then mvn -pl test wildfly:deploy; fi
