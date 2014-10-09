@@ -34,17 +34,6 @@ public class RunnerService {
         return doRun(book.getStories());
     }
 
-    public RunningStories run(Scenario scenario) {
-        //We have to create a new "dummy" story so jmoribus has a story to run.
-        Story story = new Story();
-        story.setTitle("Dummy Story " + new Date().getTime());
-        story.setDummy(true);
-        story.getScenarios().add(scenario);
-        storyDao.persist(story);
-
-        return doRun(Arrays.asList(story));
-    }
-
     private RunningStories doRun(List<Story> stories) {
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(LogStatus.RUNNING);

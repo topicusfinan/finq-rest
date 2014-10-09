@@ -26,10 +26,6 @@ public class Story extends GenericEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Scenario> scenarios;
 
-    @Column(name = "DUMMY")
-    @JsonIgnore
-    private Boolean dummy = false;
-
     public Book getBook() {
         return book;
     }
@@ -55,14 +51,6 @@ public class Story extends GenericEntity {
 
     public void setScenarios(List<Scenario> scenarios) {
         this.scenarios = scenarios;
-    }
-
-    public Boolean isDummy() {
-        return dummy;
-    }
-
-    public void setDummy(Boolean dummy) {
-        this.dummy = dummy;
     }
 
     public String toStory() {

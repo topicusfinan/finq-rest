@@ -69,17 +69,4 @@ public class RunnerResources {
         return Response.ok(runningStories).build();
     }
 
-    @POST
-    @Path("/scenario")
-    @Transactional
-    public Response runScenario(Long id) {
-        Scenario scenario = scenarioDao.find(id);
-        if (scenario == null) {
-            return Response.status(Status.NOT_FOUND).build();
-        }
-
-        RunningStories runningStories = runnerService.run(scenario);
-
-        return Response.ok(runningStories).build();
-    }
 }
