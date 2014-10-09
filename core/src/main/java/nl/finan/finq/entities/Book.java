@@ -15,10 +15,6 @@ public class Book extends GenericEntity {
     @OneToMany(mappedBy = "bundle", fetch = FetchType.EAGER)
     private List<Story> stories;
 
-    @ManyToMany(mappedBy = "bundles")
-    @JsonBackReference
-    private List<Collection> collections;
-
     public String getTitle() {
         return title;
     }
@@ -35,11 +31,4 @@ public class Book extends GenericEntity {
         this.stories = stories;
     }
 
-    public List<Collection> getCollections() {
-        return collections;
-    }
-
-    public void setCollections(List<Collection> collections) {
-        this.collections = collections;
-    }
 }

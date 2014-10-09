@@ -21,7 +21,6 @@ public class Scenario extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-
     @ElementCollection()
     @CollectionTable(name = "FINQ_STEPS", joinColumns = @JoinColumn(name = "SCENARIO_ID"))
     @Column(name = "STEPS")
