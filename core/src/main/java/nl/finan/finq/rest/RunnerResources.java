@@ -1,7 +1,7 @@
 package nl.finan.finq.rest;
 
 
-import nl.finan.finq.dao.BundleDao;
+import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.entities.Book;
@@ -32,7 +32,7 @@ public class RunnerResources {
     private StoryDao storyDao;
 
     @EJB
-    private BundleDao bundleDao;
+    private BookDao bookDao;
 
     @EJB
     private ScenarioDao scenarioDao;
@@ -59,7 +59,7 @@ public class RunnerResources {
     @Path("/bundle")
     @Transactional
     public Response runBundle(Long id) {
-        Book book = bundleDao.find(id);
+        Book book = bookDao.find(id);
         if (book == null) {
             return Response.status(Status.NOT_FOUND).build();
         }

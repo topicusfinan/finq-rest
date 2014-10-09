@@ -1,6 +1,6 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.BundleDao;
+import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.entities.Book;
@@ -27,7 +27,7 @@ public class TestData {
     private StoryDao storyDao;
 
     @EJB
-    private BundleDao projectDao;
+    private BookDao projectDao;
 
     @EJB
     private ScenarioDao scenarioDao;
