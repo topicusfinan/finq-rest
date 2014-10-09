@@ -15,7 +15,7 @@ import java.util.List;
 public class Story extends GenericEntity {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "BUNDLE_ID", nullable = true)
+    @JoinColumn(name = "BOOK_ID", nullable = true)
     @JsonBackReference
     private Book book;
 
