@@ -67,14 +67,4 @@ public class RunnerServiceTest {
         Mockito.verify(managedExecutorService).execute(storyRunner);
     }
 
-    @Test
-    public void runScenario(){
-        Scenario scenario = mock(Scenario.class);
-        RunningStories run = runnerService.run(scenario);
-
-        Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
-        Mockito.verify(managedExecutorService).execute(storyRunner);
-    }
-
 }

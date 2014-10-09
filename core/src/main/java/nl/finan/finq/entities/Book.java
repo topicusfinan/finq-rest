@@ -3,6 +3,7 @@ package nl.finan.finq.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,7 +13,7 @@ public class Book extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToMany(mappedBy = "bundle", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private List<Story> stories;
 
     public String getTitle() {
@@ -24,6 +25,9 @@ public class Book extends GenericEntity {
     }
 
     public List<Story> getStories() {
+        if(stories == null){
+            stories = new ArrayList<>();
+        }
         return stories;
     }
 

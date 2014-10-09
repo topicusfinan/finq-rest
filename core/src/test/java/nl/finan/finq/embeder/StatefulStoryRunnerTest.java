@@ -2,10 +2,7 @@ package nl.finan.finq.embeder;
 
 import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.finan.finq.dao.RunningStoriesDao;
-import nl.finan.finq.entities.LogStatus;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Scenario;
-import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.*;
 import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.junit.Test;
@@ -80,7 +77,7 @@ public class StatefulStoryRunnerTest {
         scenario.setId(100l);
         scenario.setStory(story);
         scenario.setTitle("Scenario Title");
-        scenario.setSteps(Arrays.asList("Given this scenario has the right syntax", "Then JMoribus can parse this story", "And no exceptions are thrown"));
+        scenario.setSteps(Arrays.asList(new Step("Given this scenario has the right syntax"), new Step("Then JMoribus can parse this story"), new Step("And no exceptions are thrown")));
         return Arrays.asList(scenario);
     }
 }

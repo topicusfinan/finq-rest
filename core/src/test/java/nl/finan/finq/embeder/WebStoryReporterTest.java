@@ -1,12 +1,17 @@
 package nl.finan.finq.embeder;
 
 import nl.eernie.jmoribus.model.Line;
-import nl.eernie.jmoribus.model.Step;
+import nl.eernie.jmoribus.model.Scenario;
 import nl.eernie.jmoribus.model.StepType;
 import nl.eernie.jmoribus.model.Story;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.*;
+import nl.finan.finq.entities.ScenarioLog;
+import nl.finan.finq.entities.Step;
+import nl.finan.finq.entities.StepLog;
+import nl.finan.finq.entities.StoryLog;
+import nl.finan.finq.entities.LogStatus;
+import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.service.ReportService;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.junit.Assert;
@@ -84,8 +89,8 @@ public class WebStoryReporterTest {
     @Test
     public void testBeforeScenario() throws Exception {
         Whitebox.setInternalState(webStoryReporter, "currentStoryLog", 20l);
-        Scenario scenario = PowerMockito.mock(Scenario.class);
-        List<Scenario> scenarios = Arrays.asList(scenario);
+        nl.finan.finq.entities.Scenario scenario = PowerMockito.mock(nl.finan.finq.entities.Scenario.class);
+        List<nl.finan.finq.entities.Scenario> scenarios = Arrays.asList(scenario);
         StoryLog storyLog = PowerMockito.mock(StoryLog.class);
         ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
         nl.finan.finq.entities.Story story = PowerMockito.mock(nl.finan.finq.entities.Story.class);
@@ -125,30 +130,30 @@ public class WebStoryReporterTest {
 
     @Test
     public void testSuccessful() throws Exception {
-        Step runningStep = new Step(StepType.THEN);
+        nl.eernie.jmoribus.model.Step runningStep = new nl.eernie.jmoribus.model.Step(StepType.THEN);
         runningStep.getStepLines().add(new Line("this is a step"));
 
         ScenarioLog scenarioLog = this.mockStep(runningStep);
 
         webStoryReporter.successStep(runningStep);
 
-        Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, LogStatus.SUCCESS);
+        Mockito.verify(reportService).createStepLog(scenarioLog.getScenario().getSteps().get(0), scenarioLog, LogStatus.SUCCESS);
     }
 
     @Test
     public void testPending() throws Exception {
-        Step runningStep = new Step(StepType.THEN);
+        nl.eernie.jmoribus.model.Step runningStep = new nl.eernie.jmoribus.model.Step(StepType.THEN);
         runningStep.getStepLines().add(new Line("this is a step"));
         ScenarioLog scenarioLog = this.mockStep(runningStep);
 
         webStoryReporter.pendingStep(runningStep);
 
-        Mockito.verify(reportService).createStepLog(runningStep, scenarioLog, LogStatus.PENDING);
+        Mockito.verify(reportService).createStepLog(scenarioLog.getScenario().getSteps().get(0), scenarioLog, LogStatus.PENDING);
     }
 
     @Test
     public void testFailed() throws Exception {
-        Step runningStep = new Step(StepType.THEN);
+        nl.eernie.jmoribus.model.Step runningStep = new nl.eernie.jmoribus.model.Step(StepType.THEN);
         runningStep.getStepLines().add(new Line("this is a step"));
         ScenarioLog scenarioLog = this.mockStep(runningStep);
         AssertionError throwable = PowerMockito.mock(AssertionError.class);
@@ -159,7 +164,7 @@ public class WebStoryReporterTest {
         when(throwable.getMessage()).thenReturn("Assertion Failed!");
         when(scenarioLog.getStoryLog()).thenReturn(storyLog);
         when(storyLog.getRunningStory()).thenReturn(runningStories);
-        when(reportService.createStepLog(runningStep, scenarioLog, LogStatus.FAILED)).thenReturn(steplog);
+        when(reportService.createStepLog(scenarioLog.getScenario().getSteps().get(0), scenarioLog, LogStatus.FAILED)).thenReturn(steplog);
 
         webStoryReporter.failedStep(runningStep, throwable);
 
@@ -168,11 +173,13 @@ public class WebStoryReporterTest {
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
     }
 
-    private ScenarioLog mockStep(Step step) {
+    private ScenarioLog mockStep(nl.eernie.jmoribus.model.Step step) {
+        step.setStepContainer(new nl.eernie.jmoribus.model.Scenario());
+        step.getStepContainer().getSteps().add(step);
         Whitebox.setInternalState(webStoryReporter, "currentScenarioLog", 100l);
         ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
-        Scenario scenario = PowerMockito.mock(Scenario.class);
-        List<String> steps = Arrays.asList(step.getStepType().name() + " " + step.getCombinedStepLines());
+        nl.finan.finq.entities.Scenario scenario = PowerMockito.mock(nl.finan.finq.entities.Scenario.class);
+        List<nl.finan.finq.entities.Step> steps = Arrays.asList(new nl.finan.finq.entities.Step(step.getStepType().name() + " " + step.getCombinedStepLines()));
 
         when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
         when(scenarioLog.getScenario()).thenReturn(scenario);

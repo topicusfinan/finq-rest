@@ -3,6 +3,7 @@ package nl.finan.finq.embeder;
 
 import nl.eernie.jmoribus.model.*;
 import nl.eernie.jmoribus.model.Scenario;
+import nl.eernie.jmoribus.model.Step;
 import nl.eernie.jmoribus.model.Story;
 import nl.eernie.jmoribus.reporter.Reporter;
 import nl.finan.finq.dao.RunningStoriesDao;
@@ -84,13 +85,10 @@ public class WebStoryReporter implements Reporter {
     public void successStep(Step runningStep) {
         if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for (String step : scenarioLog.getScenario().getSteps()) {
-                if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.SUCCESS);
-                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
-
-                }
-            }
+            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SUCCESS);
+            statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
         }
     }
 
@@ -98,12 +96,10 @@ public class WebStoryReporter implements Reporter {
     public void pendingStep(Step runningStep) {
         if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for (String step : scenarioLog.getScenario().getSteps()) {
-                if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.PENDING);
-                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
-                }
-            }
+            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.PENDING);
+            statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
         }
     }
 
@@ -133,16 +129,16 @@ public class WebStoryReporter implements Reporter {
     public void failedStep(Step runningStep, AssertionError e) {
         if (currentScenarioLog != null) {
             ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            for (String step : scenarioLog.getScenario().getSteps()) {
-                if (step.equalsIgnoreCase(completeStep(runningStep))) {
-                    StepLog stepLog = reportService.createStepLog(runningStep, scenarioLog, LogStatus.FAILED);
-                    stepLog.setLog(e.getMessage());
-                    scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
-                    scenarioLog.setStatus(LogStatus.FAILED);
-                    scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
-                    statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
-                }
-            }
+
+            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+
+            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.FAILED);
+            stepLog.setLog(e.getMessage());
+            scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
+            scenarioLog.setStatus(LogStatus.FAILED);
+            scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
+            statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
         }
     }
 

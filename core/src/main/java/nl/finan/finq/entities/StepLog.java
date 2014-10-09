@@ -1,8 +1,10 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import nl.eernie.jmoribus.model.*;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "FINQ_LOG_STEP")
@@ -13,8 +15,9 @@ public class StepLog extends Log {
     @JsonBackReference
     private ScenarioLog scenarioLog;
 
-    @Column
-    private String step;
+    @JoinColumn
+    @ManyToOne
+    private Step step;
 
     public ScenarioLog getScenarioLog() {
         return scenarioLog;
@@ -24,11 +27,11 @@ public class StepLog extends Log {
         this.scenarioLog = scenarioLog;
     }
 
-    public String getStep() {
+    public Step getStep() {
         return step;
     }
 
-    public void setStep(String step) {
+    public void setStep(Step step) {
         this.step = step;
     }
 }

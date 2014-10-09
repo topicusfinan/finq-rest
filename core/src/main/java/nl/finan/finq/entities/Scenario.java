@@ -21,17 +21,8 @@ public class Scenario extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @ElementCollection()
-    @CollectionTable(name = "FINQ_STEPS", joinColumns = @JoinColumn(name = "SCENARIO_ID"))
-    @Column(name = "STEPS")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<String> steps;
-
-    public Scenario() {
-        if (steps == null) {
-            steps = new ArrayList<String>();
-        }
-    }
+    @OneToMany(mappedBy = "scenario", fetch = FetchType.EAGER)
+    private List<Step> steps;
 
     public Story getStory() {
         return story;
@@ -39,14 +30,6 @@ public class Scenario extends GenericEntity {
 
     public void setStory(Story story) {
         this.story = story;
-    }
-
-    public List<String> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<String> steps) {
-        this.steps = steps;
     }
 
     public String getTitle() {
@@ -57,14 +40,24 @@ public class Scenario extends GenericEntity {
         this.title = title;
     }
 
+    public List<Step> getSteps() {
+        if(steps == null){
+            steps = new ArrayList<>();
+        }
+        return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+    }
 
     public String toStory() {
         StringBuilder builder = new StringBuilder();
         builder.append("Scenario: ");
         builder.append(getTitle());
-        for (String step : steps) {
+        for (Step step : getSteps()) {
             builder.append(System.lineSeparator());
-            builder.append(step);
+            builder.append(step.toStory());
         }
         return builder.toString();
     }
