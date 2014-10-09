@@ -19,8 +19,8 @@ public class Story extends GenericEntity {
     @JsonBackReference
     private Book book;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "TITLE")
+    private String title;
 
     @OneToMany(mappedBy = "story")
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -38,12 +38,12 @@ public class Story extends GenericEntity {
         this.book = book;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public List<Scenario> getScenarios() {

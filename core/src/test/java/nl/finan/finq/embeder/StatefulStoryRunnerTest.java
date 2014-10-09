@@ -70,7 +70,7 @@ public class StatefulStoryRunnerTest {
     private Story createStory() {
         Story story = new Story();
         story.setId(100l);
-        story.setName("Story Name");
+        story.setTitle("Story Name");
         story.setScenarios(createScenarios(story));
         return story;
     }

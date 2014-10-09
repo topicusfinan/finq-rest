@@ -36,16 +36,15 @@ public class TestData {
     @Transactional
     public Response generateTestDate() {
         Book b = new Book();
-        b.setDescription("Test Bundle");
         b.setTitle("Test Bundle");
         projectDao.persist(b);
 
         for (int i = 0; i < 2; i++) {
             Story s = new Story();
-            s.setName("story " + i);
+            s.setTitle("story " + i);
             s.setBook(b);
             storyDao.persist(s);
-            LOGGER.info("Story: {}", s.getName());
+            LOGGER.info("Story: {}", s.getTitle());
             for (int x = 0; x < 2; x++) {
                 Scenario sc = new Scenario();
                 sc.setTitle("Scenario Title " + i + "-" + x);
