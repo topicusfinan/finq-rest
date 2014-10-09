@@ -7,13 +7,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "FINQ_BUNDLE")
-public class Bundle extends GenericEntity {
+public class Book extends GenericEntity {
 
-    @Column(name = "NAME")
-    private String name;
-
-    @Column(name = "DESCRIPTION")
-    private String description;
+    @Column(name = "TITLE")
+    private String title;
 
     @OneToMany(mappedBy = "bundle", fetch = FetchType.EAGER)
     private List<Story> stories;
@@ -22,20 +19,12 @@ public class Bundle extends GenericEntity {
     @JsonBackReference
     private List<Collection> collections;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public List<Story> getStories() {

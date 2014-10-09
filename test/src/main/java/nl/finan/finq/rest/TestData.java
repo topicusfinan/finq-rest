@@ -3,7 +3,7 @@ package nl.finan.finq.rest;
 import nl.finan.finq.dao.BundleDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Bundle;
+import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
 import org.slf4j.Logger;
@@ -35,15 +35,15 @@ public class TestData {
     @GET
     @Transactional
     public Response generateTestDate() {
-        Bundle b = new Bundle();
+        Book b = new Book();
         b.setDescription("Test Bundle");
-        b.setName("Test Bundle");
+        b.setTitle("Test Bundle");
         projectDao.persist(b);
 
         for (int i = 0; i < 2; i++) {
             Story s = new Story();
             s.setName("story " + i);
-            s.setBundle(b);
+            s.setBook(b);
             storyDao.persist(s);
             LOGGER.info("Story: {}", s.getName());
             for (int x = 0; x < 2; x++) {

@@ -17,7 +17,7 @@ public class Story extends GenericEntity {
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "BUNDLE_ID", nullable = true)
     @JsonBackReference
-    private Bundle bundle;
+    private Book book;
 
     @Column(name = "NAME")
     private String name;
@@ -30,12 +30,12 @@ public class Story extends GenericEntity {
     @JsonIgnore
     private Boolean dummy = false;
 
-    public Bundle getBundle() {
-        return bundle;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBundle(Bundle bundle) {
-        this.bundle = bundle;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     public String getName() {

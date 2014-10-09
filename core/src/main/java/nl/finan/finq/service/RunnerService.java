@@ -30,8 +30,8 @@ public class RunnerService {
         return doRun(Arrays.asList(story));
     }
 
-    public RunningStories run(Bundle bundle) {
-        return doRun(bundle.getStories());
+    public RunningStories run(Book book) {
+        return doRun(book.getStories());
     }
 
     public RunningStories run(Scenario scenario) {

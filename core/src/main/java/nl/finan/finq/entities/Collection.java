@@ -15,7 +15,7 @@ public class Collection extends GenericEntity {
             name = "FINQ_COLLECTION_SET",
             joinColumns = {@JoinColumn(name = "BUNDLE_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "COLLECTION_ID", referencedColumnName = "ID")})
-    private List<Bundle> bundles;
+    private List<Book> books;
 
     public String getName() {
         return name;
@@ -25,11 +25,11 @@ public class Collection extends GenericEntity {
         this.name = name;
     }
 
-    public List<Bundle> getBundles() {
-        return bundles;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public void setBundles(List<Bundle> bundles) {
-        this.bundles = bundles;
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

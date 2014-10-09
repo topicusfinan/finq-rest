@@ -1,7 +1,7 @@
 package nl.finan.finq.rest;
 
 import nl.finan.finq.dao.BundleDao;
-import nl.finan.finq.entities.Bundle;
+import nl.finan.finq.entities.Book;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -23,8 +23,8 @@ public class BundleResources {
     private BundleDao bundleDao;
 
     @GET
-    public List<Bundle> getBundles() {
-        List<Bundle> all = bundleDao.listAll();
+    public List<Book> getBundles() {
+        List<Book> all = bundleDao.listAll();
 
         return all;
     }

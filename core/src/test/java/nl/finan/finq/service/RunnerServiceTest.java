@@ -59,8 +59,8 @@ public class RunnerServiceTest {
 
     @Test
     public void runBundle(){
-        Bundle bundle = mock(Bundle.class);
-        RunningStories run = runnerService.run(bundle);
+        Book book = mock(Book.class);
+        RunningStories run = runnerService.run(book);
 
         Mockito.verify(runningStoriesDao).persist(run);
         Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
