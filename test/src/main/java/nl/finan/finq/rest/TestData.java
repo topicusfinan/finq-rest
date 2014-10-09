@@ -62,7 +62,7 @@ public class TestData {
                 addStep(sc,"Then a result must been shown");
             }
         }
-        return Response.temporaryRedirect(URI.create("bundles")).build();
+        return Response.temporaryRedirect(URI.create("books")).build();
     }
 
     private void addStep(Scenario sc, String s) {

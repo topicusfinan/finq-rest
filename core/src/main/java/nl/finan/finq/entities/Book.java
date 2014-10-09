@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "FINQ_BUNDLE")
+@Table(name = "FINQ_BOOK")
 public class Book extends GenericEntity {
 
     @Column(name = "TITLE")
