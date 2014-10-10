@@ -27,9 +27,11 @@ public class Story extends GenericEntity {
     private List<Scenario> scenarios;
 
     @ManyToMany(mappedBy = "stories")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Set> sets = new ArrayList<>();
 
     @ManyToMany(mappedBy = "stories")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Tag> tags = new ArrayList<>();
 
     public Book getBook() {

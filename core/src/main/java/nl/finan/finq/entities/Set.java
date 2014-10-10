@@ -3,6 +3,7 @@ package nl.finan.finq.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Set extends GenericEntity {
         joinColumns={@JoinColumn(name="SET_ID", referencedColumnName="ID")},
         inverseJoinColumns={@JoinColumn(name="STORY_ID", referencedColumnName="ID")})
     @JsonBackReference
-    private List<Story> stories;
+    private List<Story> stories = new ArrayList<>();
 
     public String getName() {
         return name;

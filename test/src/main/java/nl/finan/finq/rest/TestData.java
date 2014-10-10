@@ -34,6 +34,15 @@ public class TestData {
     @EJB
     private ApplicationDao applicationDao;
 
+    @EJB
+    private SetDao setDao;
+
+    @EJB
+    private TagDao tagDao;
+
+    @EJB
+    private EnvironmentDao environmentDao;
+
     @GET
     @Transactional
     public Response generateTestDate() {
@@ -45,8 +54,10 @@ public class TestData {
             Story s = new Story();
             s.setTitle("story " + i);
             s.setBook(b);
-            b.getStories().add(s);
             storyDao.persist(s);
+            addTags(s);
+            addSets(s);
+            b.getStories().add(s);
             LOGGER.info("Story: {}", s.getTitle());
             for (int x = 0; x < 2; x++) {
                 Scenario sc = new Scenario();
@@ -68,7 +79,36 @@ public class TestData {
             applicationDao.persist(application);
         }
 
+        if(environmentDao.listAll().isEmpty()){
+            Environment environment = new Environment();
+            environment.setName("Stalone");
+            environment.setAddress("http://stalone.local");
+            environmentDao.persist(environment);
+
+            Environment mattdamon = new Environment();
+            mattdamon.setAddress("http://mattdamon.local");
+            mattdamon.setName("MattDamon");
+            environmentDao.persist(mattdamon);
+        }
+
         return Response.temporaryRedirect(URI.create("books")).build();
+    }
+
+    private void addTags(Story s) {
+        Tag tag = new Tag();
+        tag.setKey("test");
+        tag.setValue("Test");
+        tag.getStories().add(s);
+        s.getTags().add(tag);
+        tagDao.persist(tag);
+    }
+
+    private void addSets(Story s) {
+        Set set = new Set();
+        set.setName("Regressie");
+        set.getStories().add(s);
+        s.getSets().add(set);
+        setDao.persist(set);
     }
 
     private void addStep(Scenario sc, String s) {
