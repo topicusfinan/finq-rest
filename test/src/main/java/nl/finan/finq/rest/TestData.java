@@ -1,10 +1,12 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.BundleDao;
+import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.ScenarioDao;
+import nl.finan.finq.dao.StepDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Bundle;
+import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.Scenario;
+import nl.finan.finq.entities.Step;
 import nl.finan.finq.entities.Story;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,35 +29,47 @@ public class TestData {
     private StoryDao storyDao;
 
     @EJB
-    private BundleDao projectDao;
+    private BookDao projectDao;
 
     @EJB
     private ScenarioDao scenarioDao;
 
+    @EJB
+    private StepDao stepDao;
+
     @GET
     @Transactional
     public Response generateTestDate() {
-        Bundle b = new Bundle();
-        b.setDescription("Test Bundle");
-        b.setName("Test Bundle");
+        Book b = new Book();
+        b.setTitle("Test Bundle");
         projectDao.persist(b);
 
         for (int i = 0; i < 2; i++) {
             Story s = new Story();
-            s.setName("story " + i);
-            s.setBundle(b);
+            s.setTitle("story " + i);
+            s.setBook(b);
+            b.getStories().add(s);
             storyDao.persist(s);
-            LOGGER.info("Story: {}", s.getName());
+            LOGGER.info("Story: {}", s.getTitle());
             for (int x = 0; x < 2; x++) {
                 Scenario sc = new Scenario();
                 sc.setTitle("Scenario Title " + i + "-" + x);
-                sc.getSteps().add("Given this is a given step");
-                sc.getSteps().add("When a When step has been run");
-                sc.getSteps().add("Then a result must been shown");
                 sc.setStory(s);
                 scenarioDao.persist(sc);
+                s.getScenarios().add(sc);
+                addStep(sc, "Given this is a given step");
+                addStep(sc, "When a When step has been run");
+                addStep(sc,"Then a result must been shown");
             }
         }
-        return Response.temporaryRedirect(URI.create("bundles")).build();
+        return Response.temporaryRedirect(URI.create("books")).build();
+    }
+
+    private void addStep(Scenario sc, String s) {
+        Step step = new Step();
+        step.setScenario(sc);
+        step.setTitle(s);
+        sc.getSteps().add(step);
+        stepDao.persist(step);
     }
 }

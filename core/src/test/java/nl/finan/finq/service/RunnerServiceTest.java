@@ -59,18 +59,8 @@ public class RunnerServiceTest {
 
     @Test
     public void runBundle(){
-        Bundle bundle = mock(Bundle.class);
-        RunningStories run = runnerService.run(bundle);
-
-        Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
-        Mockito.verify(managedExecutorService).execute(storyRunner);
-    }
-
-    @Test
-    public void runScenario(){
-        Scenario scenario = mock(Scenario.class);
-        RunningStories run = runnerService.run(scenario);
+        Book book = mock(Book.class);
+        RunningStories run = runnerService.run(book);
 
         Mockito.verify(runningStoriesDao).persist(run);
         Assert.assertEquals(LogStatus.RUNNING, run.getStatus());

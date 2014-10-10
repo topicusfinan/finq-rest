@@ -30,19 +30,8 @@ public class RunnerService {
         return doRun(Arrays.asList(story));
     }
 
-    public RunningStories run(Bundle bundle) {
-        return doRun(bundle.getStories());
-    }
-
-    public RunningStories run(Scenario scenario) {
-        //We have to create a new "dummy" story so jmoribus has a story to run.
-        Story story = new Story();
-        story.setName("Dummy Story " + new Date().getTime());
-        story.setDummy(true);
-        story.getScenarios().add(scenario);
-        storyDao.persist(story);
-
-        return doRun(Arrays.asList(story));
+    public RunningStories run(Book book) {
+        return doRun(book.getStories());
     }
 
     private RunningStories doRun(List<Story> stories) {

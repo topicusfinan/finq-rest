@@ -3,6 +3,7 @@ package nl.finan.finq.websocket;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.entities.Step;
 import nl.finan.finq.entities.StepLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,10 +83,10 @@ public class StatusWebSocketTest {
         StepLog log = new StepLog();
         log.setStatus(LogStatus.SUCCESS);
         log.setId(100L);
-        log.setStep("test Step");
+        log.setStep(new Step("test Step"));
         statusWebSocket.sendStatus(1200L, log, StatusType.FINAL_STATUS);
 
-        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":100,\"log\":null,\"status\":\"SUCCESS\",\"step\":\"test Step\"},\"statusType\":\"FINAL_STATUS\"}");
+        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":100,\"log\":null,\"status\":\"SUCCESS\",\"step\":{\"id\":null,\"title\":\"test Step\",\"template\":null}},\"statusType\":\"FINAL_STATUS\"}");
     }
 
     @Test

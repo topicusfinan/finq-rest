@@ -1,10 +1,10 @@
 package nl.finan.finq.rest;
 
 
-import nl.finan.finq.dao.BundleDao;
+import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Bundle;
+import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
@@ -32,7 +32,7 @@ public class RunnerResources {
     private StoryDao storyDao;
 
     @EJB
-    private BundleDao bundleDao;
+    private BookDao bookDao;
 
     @EJB
     private ScenarioDao scenarioDao;
@@ -59,27 +59,14 @@ public class RunnerResources {
     @Path("/bundle")
     @Transactional
     public Response runBundle(Long id) {
-        Bundle bundle = bundleDao.find(id);
-        if (bundle == null) {
+        Book book = bookDao.find(id);
+        if (book == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
 
-        RunningStories runningStories = runnerService.run(bundle);
+        RunningStories runningStories = runnerService.run(book);
 
         return Response.ok(runningStories).build();
     }
 
-    @POST
-    @Path("/scenario")
-    @Transactional
-    public Response runScenario(Long id) {
-        Scenario scenario = scenarioDao.find(id);
-        if (scenario == null) {
-            return Response.status(Status.NOT_FOUND).build();
-        }
-
-        RunningStories runningStories = runnerService.run(scenario);
-
-        return Response.ok(runningStories).build();
-    }
 }

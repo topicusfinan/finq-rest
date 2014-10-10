@@ -15,35 +15,31 @@ import java.util.List;
 public class Story extends GenericEntity {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "BUNDLE_ID", nullable = true)
+    @JoinColumn(name = "BOOK_ID", nullable = true)
     @JsonBackReference
-    private Bundle bundle;
+    private Book book;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "TITLE")
+    private String title;
 
     @OneToMany(mappedBy = "story")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Scenario> scenarios;
 
-    @Column(name = "DUMMY")
-    @JsonIgnore
-    private Boolean dummy = false;
-
-    public Bundle getBundle() {
-        return bundle;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBundle(Bundle bundle) {
-        this.bundle = bundle;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public List<Scenario> getScenarios() {
@@ -55,14 +51,6 @@ public class Story extends GenericEntity {
 
     public void setScenarios(List<Scenario> scenarios) {
         this.scenarios = scenarios;
-    }
-
-    public Boolean isDummy() {
-        return dummy;
-    }
-
-    public void setDummy(Boolean dummy) {
-        this.dummy = dummy;
     }
 
     public String toStory() {

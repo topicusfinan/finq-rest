@@ -1,7 +1,6 @@
 package nl.finan.finq.service;
 
 
-import nl.eernie.jmoribus.model.Step;
 import nl.finan.finq.dao.ScenarioLogDao;
 import nl.finan.finq.dao.StepLogDao;
 import nl.finan.finq.dao.StoryLogDao;
@@ -51,7 +50,7 @@ public class ReportService {
     public StepLog createStepLog(Step runningStep, ScenarioLog scenarioLog, LogStatus status) {
         StepLog stepLog = new StepLog();
         stepLog.setStatus(status);
-        stepLog.setStep(runningStep.getCombinedStepLines());
+        stepLog.setStep(runningStep);
         stepLog.setScenarioLog(scenarioLog);
         stepLogDao.persist(stepLog);
         return stepLog;
