@@ -17,8 +17,6 @@ import java.net.URI;
 @Stateless
 public class TestData {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestData.class);
-
     @EJB
     private StoryDao storyDao;
 
@@ -58,7 +56,7 @@ public class TestData {
             addTags(s);
             addSets(s);
             b.getStories().add(s);
-            LOGGER.info("Story: {}", s.getTitle());
+
             for (int x = 0; x < 2; x++) {
                 Scenario sc = new Scenario();
                 sc.setTitle("Scenario Title " + i + "-" + x);
