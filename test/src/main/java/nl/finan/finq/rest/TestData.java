@@ -1,13 +1,7 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.BookDao;
-import nl.finan.finq.dao.ScenarioDao;
-import nl.finan.finq.dao.StepDao;
-import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Book;
-import nl.finan.finq.entities.Scenario;
-import nl.finan.finq.entities.Step;
-import nl.finan.finq.entities.Story;
+import nl.finan.finq.dao.*;
+import nl.finan.finq.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +31,9 @@ public class TestData {
     @EJB
     private StepDao stepDao;
 
+    @EJB
+    private ApplicationDao applicationDao;
+
     @GET
     @Transactional
     public Response generateTestDate() {
@@ -62,6 +59,15 @@ public class TestData {
                 addStep(sc,"Then a result must been shown");
             }
         }
+
+        if(applicationDao.listAll().isEmpty()){
+            Application application = new Application();
+            application.setAuthenticate(false);
+            application.setSubject("Book store");
+            application.setTitle("Finq app");
+            applicationDao.persist(application);
+        }
+
         return Response.temporaryRedirect(URI.create("books")).build();
     }
 
