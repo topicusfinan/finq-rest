@@ -27,7 +27,10 @@ public class Story extends GenericEntity {
     private List<Scenario> scenarios;
 
     @ManyToMany(mappedBy = "stories")
-    private List<Set> sets;
+    private List<Set> sets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "stories")
+    private List<Tag> tags = new ArrayList<>();
 
     public Book getBook() {
         return book;
@@ -62,6 +65,14 @@ public class Story extends GenericEntity {
 
     public void setSets(List<Set> sets) {
         this.sets = sets;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public String toStory() {
