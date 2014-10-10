@@ -26,6 +26,12 @@ public class Story extends GenericEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Scenario> scenarios;
 
+    @ManyToMany(mappedBy = "stories")
+    private List<Set> sets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "stories")
+    private List<Tag> tags = new ArrayList<>();
+
     public Book getBook() {
         return book;
     }
@@ -51,6 +57,22 @@ public class Story extends GenericEntity {
 
     public void setScenarios(List<Scenario> scenarios) {
         this.scenarios = scenarios;
+    }
+
+    public List<Set> getSets() {
+        return sets;
+    }
+
+    public void setSets(List<Set> sets) {
+        this.sets = sets;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public String toStory() {

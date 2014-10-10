@@ -1,7 +1,7 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.BookDao;
-import nl.finan.finq.entities.Book;
+import nl.finan.finq.dao.EnvironmentDao;
+import nl.finan.finq.entities.Environment;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -12,19 +12,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("books")
+@Path("environments")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Stateless
-public class BookResources {
+public class EnvironmentResources {
 
     @EJB
-    private BookDao bookDao;
+    private EnvironmentDao environmentDao;
 
     @GET
-    public List<Book> getBundles() {
-        List<Book> all = bookDao.listAll();
-
-        return all;
+    public List<Environment> getEnvironments(){
+        return environmentDao.listAll();
     }
+
 }
