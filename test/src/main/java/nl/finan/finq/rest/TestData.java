@@ -93,7 +93,7 @@ public class TestData {
     private void addTags(Story s) {
         Tag tag = new Tag();
         tag.setaKey("test");
-        tag.setAValue("Test");
+        tag.setaValue("Test");
         tag.getStories().add(s);
         s.getTags().add(tag);
         tagDao.persist(tag);

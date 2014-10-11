@@ -35,12 +35,12 @@ public class Tag extends GenericEntity {
         this.aKey = aKey;
     }
 
-    public String getAValue() {
+    public String getaValue() {
         return aValue;
     }
 
-    public void setAValue(String value) {
-        this.aValue = value;
+    public void setaValue(String aValue) {
+        this.aValue = aValue;
     }
 
     public List<Story> getStories() {
