@@ -1,6 +1,7 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,9 +12,11 @@ import java.util.List;
 public class Tag extends GenericEntity {
 
     @Column(name="aKEY")
+    @JsonProperty("key")
     private String aKey;
 
     @Column(name="aVALUE")
+    @JsonProperty("value")
     private String aValue;
 
     @ManyToMany
