@@ -1,8 +1,6 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ public class Scenario extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToMany(mappedBy = "scenario", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "scenario", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Step> steps;
 
     public Story getStory() {
