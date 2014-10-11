@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,8 +22,8 @@ import java.io.Writer;
 import java.util.List;
 
 @Path("stories")
-@Singleton
 @Transactional
+@Stateless
 public class StoriesResources {
 
     @EJB
@@ -33,16 +34,11 @@ public class StoriesResources {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //TODO: please refactor me, I want to return a List of Stories but this isn't possible because of the List<String> in the scenario... Dangit
-    public String stories() throws IOException {
+    public List<Story> stories() throws IOException {
 
         List<Story> storiesList = storyDao.listAll();
-        ObjectMapper mapper = new ObjectMapper();
 
-        Writer writer = new StringWriter();
-        mapper.writeValue(writer, storiesList);
-
-        return writer.toString();
+        return storiesList;
     }
 
     @GET
