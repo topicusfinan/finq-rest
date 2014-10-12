@@ -13,7 +13,7 @@ public class Book extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Story> stories;
 
     public String getTitle() {

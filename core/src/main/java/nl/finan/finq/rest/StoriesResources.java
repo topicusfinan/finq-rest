@@ -1,24 +1,25 @@
 package nl.finan.finq.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.eernie.jmoribus.GherkinsListener;
 import nl.eernie.jmoribus.parser.ParseableStory;
 import nl.eernie.jmoribus.parser.StoryParser;
+import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.StoryDao;
+import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
 import nl.finan.finq.service.StoryService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.net.URI;
 import java.util.List;
 
 @Path("stories")
@@ -26,8 +27,13 @@ import java.util.List;
 @Stateless
 public class StoriesResources {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StoriesResources.class);
+
     @EJB
     private StoryDao storyDao;
+
+    @EJB
+    private BookDao bookDao;
 
     @EJB
     private StoryService storyService;
@@ -39,6 +45,23 @@ public class StoriesResources {
         List<Story> storiesList = storyDao.listAll();
 
         return storiesList;
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createStory(Story story){
+        if(story.getBook() == null){
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        Long bookId = story.getBook().getId();
+        Book book = bookDao.find(bookId);
+        if(book == null){
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        story.setBook(book);
+        storyDao.persist(story);
+        return Response.created(URI.create("stories/"+story.getId())).build();
     }
 
     @GET
@@ -58,7 +81,7 @@ public class StoriesResources {
 
     @PUT
     @Transactional
-    @Consumes("text/plain")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Path("/{name}/save")
     public void saveStory(@PathParam("name") String name, String story)
     {

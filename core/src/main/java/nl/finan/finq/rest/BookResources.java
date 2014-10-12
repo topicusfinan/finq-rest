@@ -5,11 +5,10 @@ import nl.finan.finq.entities.Book;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 
 @Path("books")
@@ -26,5 +25,17 @@ public class BookResources {
         List<Book> all = bookDao.listAll();
 
         return all;
+    }
+
+    @POST
+    public Response saveBook(Book book){
+        bookDao.persist(book);
+        return Response.created(URI.create("books/"+book.getId())).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Book getBook(@PathParam("id") Long id){
+        return bookDao.find(id);
     }
 }
