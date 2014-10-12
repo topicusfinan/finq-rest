@@ -2,6 +2,7 @@ package nl.finan.finq.rest;
 
 import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.entities.Book;
+import nl.finan.finq.service.BookService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,6 +21,9 @@ public class BookResources {
     @EJB
     private BookDao bookDao;
 
+    @EJB
+    private BookService bookService;
+
     @GET
     public List<Book> getBundles() {
         List<Book> all = bookDao.listAll();
@@ -29,7 +33,10 @@ public class BookResources {
 
     @POST
     public Response saveBook(Book book){
-        bookDao.persist(book);
+        book = bookService.updateOrCreateEntity(book);
+        if(book == null){
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
         return Response.created(URI.create("books/"+book.getId())).build();
     }
 

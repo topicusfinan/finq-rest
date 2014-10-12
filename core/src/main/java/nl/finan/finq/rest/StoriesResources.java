@@ -7,6 +7,7 @@ import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
+import nl.finan.finq.service.BookService;
 import nl.finan.finq.service.StoryService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class StoriesResources {
     private BookDao bookDao;
 
     @EJB
+    private BookService bookService;
+
+    @EJB
     private StoryService storyService;
 
     @GET
@@ -51,11 +55,7 @@ public class StoriesResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createStory(Story story){
-        if(story.getBook() == null){
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        }
-        Long bookId = story.getBook().getId();
-        Book book = bookDao.find(bookId);
+        Book book = bookService.updateOrCreateEntity(story.getBook());
         if(book == null){
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
