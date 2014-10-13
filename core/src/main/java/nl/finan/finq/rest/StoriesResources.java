@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-@Path(PathConstants.STORIES)
+@Path(PathConstants.BOOKS +"/{bookId}/"+ PathConstants.STORIES)
 @Transactional
 @Stateless
 public class StoriesResources {
@@ -44,24 +44,25 @@ public class StoriesResources {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Story> stories() throws IOException {
-
-        List<Story> storiesList = storyDao.listAll();
-
-        return storiesList;
+    public Response stories(@PathParam("bookId") Long bookId) throws IOException {
+        Book book = bookDao.find(bookId);
+        if(book == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(book.getStories()).build();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createStory(Story story){
-        Book book = bookService.updateOrCreateEntity(story.getBook());
+    public Response createStory(@PathParam("bookId") Long bookId, Story story){
+        Book book = bookDao.find(bookId);
         if(book == null){
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         story.setBook(book);
         storyDao.persist(story);
-        return Response.created(URI.create(PathConstants.STORIES+"/"+story.getId())).build();
+        return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story.getId())).build();
     }
 
     @GET
