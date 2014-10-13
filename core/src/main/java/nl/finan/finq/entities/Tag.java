@@ -1,6 +1,7 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,9 +12,11 @@ import java.util.List;
 public class Tag extends GenericEntity {
 
     @Column(name="aKEY")
+    @JsonProperty("key")
     private String aKey;
 
     @Column(name="aVALUE")
+    @JsonProperty("value")
     private String aValue;
 
     @ManyToMany
@@ -32,12 +35,12 @@ public class Tag extends GenericEntity {
         this.aKey = aKey;
     }
 
-    public String getAValue() {
+    public String getaValue() {
         return aValue;
     }
 
-    public void setAValue(String value) {
-        this.aValue = value;
+    public void setaValue(String aValue) {
+        this.aValue = aValue;
     }
 
     public List<Story> getStories() {
