@@ -2,8 +2,6 @@ package nl.finan.finq.rest;
 
 import nl.finan.finq.dao.*;
 import nl.finan.finq.entities.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -94,8 +92,8 @@ public class TestData {
 
     private void addTags(Story s) {
         Tag tag = new Tag();
-        tag.setKey("test");
-        tag.setValue("Test");
+        tag.setaKey("test");
+        tag.setaValue("Test");
         tag.getStories().add(s);
         s.getTags().add(tag);
         tagDao.persist(tag);
