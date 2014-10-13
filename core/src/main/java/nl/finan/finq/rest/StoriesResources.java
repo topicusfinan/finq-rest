@@ -61,6 +61,7 @@ public class StoriesResources {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         story.setBook(book);
+        storyService.addParentsToChilds(story);
         storyDao.persist(story);
         return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story.getId())).entity(story).build();
     }

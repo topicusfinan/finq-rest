@@ -46,4 +46,17 @@ public class StoryService {
 
         return storyEntity;
     }
+
+    public void addParentsToChilds(Story story){
+        for(nl.finan.finq.entities.Scenario scenario: story.getScenarios()){
+            scenario.setStory(story);
+            addParentsToChilds(scenario);
+        }
+    }
+
+    private void addParentsToChilds(nl.finan.finq.entities.Scenario scenario) {
+        for (nl.finan.finq.entities.Step step : scenario.getSteps()) {
+            step.setScenario(scenario);
+        }
+    }
 }
