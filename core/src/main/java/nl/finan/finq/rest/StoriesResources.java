@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-@Path("stories")
+@Path(PathConstants.STORIES)
 @Transactional
 @Stateless
 public class StoriesResources {
@@ -61,7 +61,7 @@ public class StoriesResources {
         }
         story.setBook(book);
         storyDao.persist(story);
-        return Response.created(URI.create("stories/"+story.getId())).build();
+        return Response.created(URI.create(PathConstants.STORIES+"/"+story.getId())).build();
     }
 
     @GET

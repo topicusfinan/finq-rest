@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 
-@Path("books")
+@Path(PathConstants.BOOKS)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Stateless
@@ -37,7 +37,7 @@ public class BookResources {
         if(book == null){
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-        return Response.created(URI.create("books/"+book.getId())).build();
+        return Response.created(URI.create(PathConstants.BOOKS+"/"+book.getId())).build();
     }
 
     @GET
