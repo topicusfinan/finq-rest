@@ -62,7 +62,7 @@ public class StoriesResources {
         }
         story.setBook(book);
         storyDao.persist(story);
-        return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story.getId())).build();
+        return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story.getId())).entity(story).build();
     }
 
     @GET
