@@ -81,24 +81,27 @@ public class StoriesResources {
         return story.getScenarios();
     }
 
-    @PUT
-    @Transactional
+    @POST
     @Consumes(MediaType.TEXT_PLAIN)
-    @Path("/{name}/save")
-    public void saveStory(@PathParam("name") String name, String story)
-    {
-        try
-        {
+    @Path("/{name}")
+    public Response saveStory(@PathParam("name") String name, @PathParam("bookId") Long bookId, String story){
+
+        Book book = bookDao.find(bookId);
+        if(book == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        try{
             ParseableStory ps = new ParseableStory(IOUtils.toInputStream(story, "UTF-8"), name);
             nl.eernie.jmoribus.model.Story s = StoryParser.parseStory(ps);
             Story story1 = storyService.convertAndSaveStory(s);
-            System.out.println("name: " + name + ", story: " + story + ", entity: "+ story1);
+            story1.setBook(book);
+            return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story1.getId())).entity(story).build();
         }
-        catch(IOException ioe)
-        {
-            ioe.printStackTrace();
-        }
+        catch(IOException ioe){
 
+            LOGGER.error("Something went wrong wile parsing the story",ioe);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
