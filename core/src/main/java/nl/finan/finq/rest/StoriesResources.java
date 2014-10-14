@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.List;
 
 @Path(PathConstants.BOOKS +"/{bookId}/"+ PathConstants.STORIES)
+@Produces(MediaType.APPLICATION_JSON)
 @Transactional
 @Stateless
 public class StoriesResources {
@@ -43,7 +44,6 @@ public class StoriesResources {
     private StoryService storyService;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response stories(@PathParam("bookId") Long bookId) throws IOException {
         Book book = bookDao.find(bookId);
         if(book == null){
@@ -53,7 +53,6 @@ public class StoriesResources {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createStory(@PathParam("bookId") Long bookId, Story story){
         Book book = bookDao.find(bookId);
@@ -67,14 +66,12 @@ public class StoriesResources {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Story story(@PathParam("id") Long id) {
         return storyDao.find(id);
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/scenarios")
     public List<Scenario> scenarios(@PathParam("id") Long id) {
         Story story = storyDao.find(id);
@@ -95,7 +92,7 @@ public class StoriesResources {
             nl.eernie.jmoribus.model.Story s = StoryParser.parseStory(ps);
             Story story1 = storyService.convertAndSaveStory(s);
             story1.setBook(book);
-            return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story1.getId())).entity(story).build();
+            return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story1.getId())).entity(story1).build();
         }
         catch(IOException ioe){
 

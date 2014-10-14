@@ -34,7 +34,8 @@ public class StoryService {
             for(Step step : scenario.getSteps())
             {
                 nl.finan.finq.entities.Step stepEntity = new nl.finan.finq.entities.Step();
-                stepEntity.setTitle(step.getStepType().name() + " " + step.getCombinedStepLines());
+                String key = step.getStepType().name();
+                stepEntity.setTitle(key.substring(0, 1).toUpperCase() + key.substring(1).toLowerCase() + " " + step.getCombinedStepLines());
                 stepEntity.setScenario(scenarioEntity);
                 scenarioEntity.getSteps().add(stepEntity);
             }
