@@ -1,7 +1,6 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -22,7 +21,7 @@ public class Story extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story", cascade = javax.persistence.CascadeType.PERSIST)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Scenario> scenarios;
 
