@@ -3,6 +3,7 @@ package nl.finan.finq.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class StoryLog extends Log {
     private RunningStories runningStory;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "storyLog")
-    private List<ScenarioLog> scenarioLogs;
+    private List<ScenarioLog> scenarioLogs = new ArrayList<>();
 
     public Story getStory() {
         return story;

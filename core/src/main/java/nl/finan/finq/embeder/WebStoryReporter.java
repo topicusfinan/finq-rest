@@ -15,10 +15,10 @@ import nl.finan.finq.websocket.StatusWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.transaction.Transactional;
 
+@Local(Reporter.class)
 @Stateless
 @Transactional
 public class WebStoryReporter implements Reporter {
@@ -39,7 +39,6 @@ public class WebStoryReporter implements Reporter {
 
 
     @Override
-    @Transactional
     public void beforeStory(Story story) {
         Long reportId = getReportId(story.getUniqueIdentifier());
         RunningStories runningStories = runningStoriesDao.find(reportId);

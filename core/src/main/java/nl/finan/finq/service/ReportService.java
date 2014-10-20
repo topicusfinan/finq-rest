@@ -27,6 +27,7 @@ public class ReportService {
         storyLog.setStory(story);
         storyLog.setStatus(LogStatus.RUNNING);
         storyLogDao.persist(storyLog);
+        runningStories.getLogs().add(storyLog);
         return storyLog;
     }
 
@@ -40,6 +41,7 @@ public class ReportService {
         scenarioLog.setScenario(scenario);
         scenarioLog.setStoryLog(storyLog);
         scenarioLogDao.persist(scenarioLog);
+        storyLog.getScenarioLogs().add(scenarioLog);
         return scenarioLog;
     }
 
@@ -53,6 +55,7 @@ public class ReportService {
         stepLog.setStep(runningStep);
         stepLog.setScenarioLog(scenarioLog);
         stepLogDao.persist(stepLog);
+        stepLog.setScenarioLog(scenarioLog);
         return stepLog;
     }
 }
