@@ -203,18 +203,6 @@ public class WebStoryReporterTest {
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
     }
 
-    private ScenarioLog mockStep(nl.eernie.jmoribus.model.Step step) {
-        step.setStepContainer(new nl.eernie.jmoribus.model.Scenario());
-        step.getStepContainer().getSteps().add(step);
-        ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
-        nl.finan.finq.entities.Scenario scenario = PowerMockito.mock(nl.finan.finq.entities.Scenario.class);
-        List<nl.finan.finq.entities.Step> steps = Arrays.asList(new nl.finan.finq.entities.Step(step.getStepType().name() + " " + step.getCombinedStepLines()));
-
-        when(reportService.findScenarioLog(100l)).thenReturn(scenarioLog);
-        when(scenarioLog.getScenario()).thenReturn(scenario);
-        when(scenario.getSteps()).thenReturn(steps);
-        return scenarioLog;
-    }
 
     private Story createCompleteStory(){
         Story story = new Story();
