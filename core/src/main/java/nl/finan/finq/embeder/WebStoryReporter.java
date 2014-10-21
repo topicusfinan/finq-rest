@@ -15,13 +15,11 @@ import nl.finan.finq.websocket.StatusWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateful;
+import javax.ejb.*;
 import javax.transaction.Transactional;
 
-@Local(WebStoryReporter.class)
-@Stateful
+@Local(Reporter.class)
+@Stateless
 @Transactional
 public class WebStoryReporter implements Reporter {
 
@@ -39,41 +37,29 @@ public class WebStoryReporter implements Reporter {
     @EJB
     private StatusWebSocket statusWebSocket;
 
-    private Long reportId;
-
-    private Long currentStoryLog;
-
-    private Long currentScenarioLog;
-
-
-    public void init(Long reportId) {
-        this.reportId = reportId;
-    }
 
     @Override
-    @Transactional
     public void beforeStory(Story story) {
+        Long reportId = getReportId(story.getUniqueIdentifier());
         RunningStories runningStories = runningStoriesDao.find(reportId);
 
-        nl.finan.finq.entities.Story storyModel = storyDao.find(Long.valueOf(story.getUniqueIdentifier()));
+        nl.finan.finq.entities.Story storyModel = storyDao.find(getStoryId(story.getUniqueIdentifier()));
 
         StoryLog storyLog = reportService.createStoryLog(storyModel, runningStories);
-        currentStoryLog = storyLog.getId();
         statusWebSocket.sendStatus(reportId, storyLog, StatusType.BEFORE_STORY);
     }
 
     @Override
     public void beforeScenario(Scenario beforeScenario) {
-        if (currentStoryLog != null) {
-            StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
-            for (nl.finan.finq.entities.Scenario scenario : storyLog.getStory().getScenarios()) {
-                if (scenario.getTitle().equals(beforeScenario.getTitle())) {
-                    ScenarioLog scenarioLog = reportService.createScenarioLog(scenario, storyLog);
-                    currentScenarioLog = scenarioLog.getId();
-                    statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.BEFORE_SCENARIO);
-                }
-            }
-        }
+        int scenarioIndex = beforeScenario.getStory().getScenarios().indexOf(beforeScenario);
+        Long reportId = getReportId(beforeScenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        nl.finan.finq.entities.Scenario scenario = storyLog.getStory().getScenarios().get(scenarioIndex);
+
+        ScenarioLog scenarioLog = reportService.createScenarioLog(scenario, storyLog);
+        statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.BEFORE_SCENARIO);
     }
 
     @Override
@@ -83,63 +69,79 @@ public class WebStoryReporter implements Reporter {
 
     @Override
     public void successStep(Step runningStep) {
-        if (currentScenarioLog != null) {
-            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
-            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
-            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SUCCESS);
-            statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
-        }
+        Scenario scenario = (Scenario) runningStep.getStepContainer();
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
+
+        int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+        nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SUCCESS);
+        statusWebSocket.sendStatus(reportId, stepLog, StatusType.SUCCESSFUL_STEP);
+
     }
 
     @Override
     public void pendingStep(Step runningStep) {
-        if (currentScenarioLog != null) {
-            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
-            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
-            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.PENDING);
-            statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
-        }
+        Scenario scenario = (Scenario) runningStep.getStepContainer();
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
+
+        int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+        nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.PENDING);
+        statusWebSocket.sendStatus(reportId, stepLog, StatusType.PENDING_STEP);
     }
 
     @Override
     public void afterScenario(Scenario scenario) {
-        if (currentScenarioLog != null) {
-            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
-            if (scenarioLog.getStatus().equals(LogStatus.RUNNING)) {
-                scenarioLog.setStatus(LogStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.AFTER_SCENARIO);
-            }
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
+        if (scenarioLog.getStatus().equals(LogStatus.RUNNING)) {
+            scenarioLog.setStatus(LogStatus.SUCCESS);
+            statusWebSocket.sendStatus(reportId, scenarioLog, StatusType.AFTER_SCENARIO);
+
         }
     }
 
     @Override
     public void afterStory(Story story) {
-        if (currentStoryLog != null) {
-            StoryLog storyLog = reportService.findStoryLog(currentStoryLog);
-            if (storyLog.getStatus().equals(LogStatus.RUNNING)) {
-                storyLog.setStatus(LogStatus.SUCCESS);
-                statusWebSocket.sendStatus(reportId, storyLog, StatusType.AFTER_STORY);
-            }
+
+        Long reportId = getReportId(story.getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        if (storyLog.getStatus().equals(LogStatus.RUNNING)) {
+            storyLog.setStatus(LogStatus.SUCCESS);
+            statusWebSocket.sendStatus(reportId, storyLog, StatusType.AFTER_STORY);
         }
     }
 
     @Override
     public void failedStep(Step runningStep, AssertionError e) {
-        if (currentScenarioLog != null) {
-            ScenarioLog scenarioLog = reportService.findScenarioLog(currentScenarioLog);
+        Scenario scenario = (Scenario) runningStep.getStepContainer();
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
 
-            int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
-            nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+        int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+        nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
 
-            StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.FAILED);
-            stepLog.setLog(e.getMessage());
-            scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
-            scenarioLog.setStatus(LogStatus.FAILED);
-            scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
-            statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
-        }
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.FAILED);
+        stepLog.setLog(e.getMessage());
+        scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
+        scenarioLog.setStatus(LogStatus.FAILED);
+        scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
+        statusWebSocket.sendStatus(reportId, stepLog, StatusType.FAILED_STEP);
     }
 
     @Override
@@ -177,7 +179,11 @@ public class WebStoryReporter implements Reporter {
 
     }
 
-    private String completeStep(Step runningStep) {
-        return runningStep.getStepType().name() + " " + runningStep.getCombinedStepLines();
+    private Long getReportId(String uniqueIdentifier){
+        return Long.valueOf(uniqueIdentifier.split("-")[1]);
+    }
+
+    private Long getStoryId(String uniqueIdentifier){
+        return Long.valueOf(uniqueIdentifier.split("-")[0]);
     }
 }

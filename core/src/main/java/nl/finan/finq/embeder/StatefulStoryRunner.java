@@ -39,7 +39,7 @@ public class StatefulStoryRunner implements StoryRunner {
     public void init(List<Story> stories, Long reportId) {
         List<ParseableStory> parseableStories = new ArrayList<>(stories.size());
         for (Story story : stories) {
-            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()));
+            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()+"-"+reportId));
         }
         this.stories = StoryParser.parseStories(parseableStories);
         this.reportId = reportId;
