@@ -11,7 +11,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -27,14 +26,14 @@ public class RunnerService {
     private ManagedExecutorService runExecutor;
 
     public RunningStories run(Story story) {
-        return doRun(Arrays.asList(story));
+        return run(Arrays.asList(story));
     }
 
     public RunningStories run(Book book) {
-        return doRun(book.getStories());
+        return run(book.getStories());
     }
 
-    private RunningStories doRun(List<Story> stories) {
+    public RunningStories run(List<Story> stories) {
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(LogStatus.RUNNING);
         runningStoriesDao.persist(runningStories);
