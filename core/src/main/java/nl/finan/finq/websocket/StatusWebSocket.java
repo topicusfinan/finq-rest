@@ -3,6 +3,7 @@ package nl.finan.finq.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.websocket.to.ReceivingEventTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,14 +17,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-@ServerEndpoint(value = "/api/statusws")
+@ServerEndpoint(value = "/api/status", decoders = ReceivingEventDecoder.class)
 @Stateless
 public class StatusWebSocket {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusWebSocket.class);
-
-    private static final String SUBSCRIBE = "subscribe";
-    private static final String UNSUBSCRIBE = "unsubscribe";
 
     @EJB
     private RunningStoriesDao runningStoriesDao;
@@ -32,12 +30,16 @@ public class StatusWebSocket {
     private OpenConnections openConnections;
 
     @OnMessage
-    public void message(Session session, String message) throws IOException {
-        if (message.startsWith(SUBSCRIBE)) {
-            subscribe(session, message);
-        }
-        if (message.startsWith(UNSUBSCRIBE)) {
-            unsubscribe(session, message);
+    public void message(Session session, ReceivingEventTO event) throws IOException {
+        switch (event.getEvent()){
+            case SUBSCRIBE:
+                subscribe(session,event.getData().getRun());
+                break;
+            case UNSUBSCRIBE:
+                unsubscribe(session, event.getData().getRun());
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
@@ -54,13 +56,11 @@ public class StatusWebSocket {
         }
     }
 
-    private void unsubscribe(Session session, String message) throws IOException {
-        Long reportId = getReportId(message);
+    private void unsubscribe(Session session, Long reportId) throws IOException {
         openConnections.removeFromConnectionMap(reportId, session);
     }
 
-    private void subscribe(Session session, String message) throws IOException {
-        Long reportId = getReportId(message);
+    private void subscribe(Session session, Long reportId) throws IOException {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         if (runningStories != null) {
             openConnections.add(reportId, session);
