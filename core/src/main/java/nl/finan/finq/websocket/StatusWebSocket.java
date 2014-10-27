@@ -3,7 +3,10 @@ package nl.finan.finq.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.websocket.to.EventType;
+import nl.finan.finq.websocket.to.GistEvent;
 import nl.finan.finq.websocket.to.ReceivingEventTO;
+import nl.finan.finq.websocket.to.SendEventTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +51,10 @@ public class StatusWebSocket {
         openConnections.removeSession(session);
     }
 
-    public void sendStatus(Long reportId, Object log, StatusType type) {
-        if (openConnections.containsKey(reportId)) {
-            for (Session session : openConnections.get(reportId)) {
-                session.getAsyncRemote().sendText(toJson(new StatusTO(reportId, log, type)));
+    public void sendStatus(RunningStories runningStories) {
+        if (openConnections.containsKey(runningStories.getId())) {
+            for (Session session : openConnections.get(runningStories.getId())) {
+                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST,new GistEvent(runningStories))));
             }
         }
     }
@@ -64,7 +67,7 @@ public class StatusWebSocket {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         if (runningStories != null) {
             openConnections.add(reportId, session);
-            session.getAsyncRemote().sendText(toJson(new StatusTO(reportId, runningStories, StatusType.INITIAL_STATUS)));
+            session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new GistEvent(runningStories))));
         } else {
             session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
         }

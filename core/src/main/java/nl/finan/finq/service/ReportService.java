@@ -55,7 +55,7 @@ public class ReportService {
         stepLog.setStep(runningStep);
         stepLog.setScenarioLog(scenarioLog);
         stepLogDao.persist(stepLog);
-        stepLog.setScenarioLog(scenarioLog);
+        scenarioLog.getStepLogs().add(stepLog);
         return stepLog;
     }
 }

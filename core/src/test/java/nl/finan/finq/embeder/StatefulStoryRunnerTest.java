@@ -44,7 +44,7 @@ public class StatefulStoryRunnerTest {
         when(runningStoriesDao.find(100l)).thenReturn(runningStories);
 
         statefulStoryRunner.run();
-        Mockito.verify(statusWebSocket).sendStatus(100l,runningStories, StatusType.FINAL_STATUS);
+        Mockito.verify(statusWebSocket).sendStatus(runningStories);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class StatefulStoryRunnerTest {
 
         statefulStoryRunner.run();
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
-        Mockito.verify(statusWebSocket).sendStatus(100l,runningStories, StatusType.FINAL_STATUS);
+        Mockito.verify(statusWebSocket).sendStatus(runningStories);
     }
 
 

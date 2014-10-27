@@ -56,14 +56,14 @@ public class StatefulStoryRunner implements StoryRunner {
             jMoribus.playAct(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(LogStatus.SUCCESS);
-            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(runningStories);
 
         } catch (Exception e) {
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(LogStatus.FAILED);
-            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(runningStories);
         }
     }
 }
