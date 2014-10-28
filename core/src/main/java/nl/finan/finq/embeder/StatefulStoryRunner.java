@@ -53,7 +53,7 @@ public class StatefulStoryRunner implements StoryRunner {
         JMoribus jMoribus = new JMoribus(configurationFactory.getConfigurationWithReporter(reportId));
 
         try {
-            jMoribus.playAct(this.stories);
+            jMoribus.runStories(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(LogStatus.SUCCESS);
             statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);

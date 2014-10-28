@@ -1,9 +1,9 @@
 package nl.finan.finq.rest;
 
 import nl.eernie.jmoribus.configuration.Configuration;
-import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.eernie.jmoribus.model.StepType;
 import nl.eernie.jmoribus.to.PossibleStepTO;
+import nl.finan.finq.DefaultConfiguration;
 import nl.finan.finq.embeder.ConfigurationFactory;
 import org.junit.Assert;
 import org.junit.Before;
