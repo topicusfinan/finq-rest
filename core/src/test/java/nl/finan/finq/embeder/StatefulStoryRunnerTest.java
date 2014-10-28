@@ -3,7 +3,6 @@ package nl.finan.finq.embeder;
 import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.*;
-import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.junit.Test;
 import org.junit.runner.RunWith;

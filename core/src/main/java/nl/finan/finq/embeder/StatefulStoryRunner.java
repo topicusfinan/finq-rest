@@ -7,7 +7,6 @@ import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Story;
-import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
