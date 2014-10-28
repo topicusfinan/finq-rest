@@ -22,8 +22,6 @@ import javax.transaction.Transactional;
 @Transactional
 public class WebStoryReporter implements Reporter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebStoryReporter.class);
-
     @EJB
     private RunningStoriesDao runningStoriesDao;
 
@@ -44,8 +42,8 @@ public class WebStoryReporter implements Reporter {
 
         nl.finan.finq.entities.Story storyModel = storyDao.find(getStoryId(story.getUniqueIdentifier()));
 
-        StoryLog storyLog = reportService.createStoryLog(storyModel, runningStories);
-        statusWebSocket.sendStatus(runningStories);
+        reportService.createStoryLog(storyModel, runningStories);
+
     }
 
     @Override
@@ -58,7 +56,6 @@ public class WebStoryReporter implements Reporter {
         nl.finan.finq.entities.Scenario scenario = storyLog.getStory().getScenarios().get(scenarioIndex);
 
         reportService.createScenarioLog(scenario, storyLog);
-        statusWebSocket.sendStatus(runningStories);
     }
 
     @Override
@@ -78,7 +75,7 @@ public class WebStoryReporter implements Reporter {
         int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
         nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
         reportService.createStepLog(step, scenarioLog, LogStatus.SUCCESS);
-        statusWebSocket.sendStatus(runningStories);
+        statusWebSocket.sendProgress(reportId,scenarioLog);
 
     }
 
@@ -94,7 +91,7 @@ public class WebStoryReporter implements Reporter {
         int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
         nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
         reportService.createStepLog(step, scenarioLog, LogStatus.SKIPPED);
-        statusWebSocket.sendStatus(runningStories);
+        statusWebSocket.sendProgress(reportId,scenarioLog);
     }
 
     @Override
@@ -106,9 +103,8 @@ public class WebStoryReporter implements Reporter {
         ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
         if (scenarioLog.getStatus().equals(LogStatus.RUNNING)) {
             scenarioLog.setStatus(LogStatus.SUCCESS);
-            statusWebSocket.sendStatus(runningStories);
-
         }
+        statusWebSocket.sendProgress(reportId,scenarioLog);
     }
 
     @Override
@@ -119,7 +115,6 @@ public class WebStoryReporter implements Reporter {
         StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
         if (storyLog.getStatus().equals(LogStatus.RUNNING)) {
             storyLog.setStatus(LogStatus.SUCCESS);
-            statusWebSocket.sendStatus(runningStories);
         }
     }
 
@@ -140,7 +135,7 @@ public class WebStoryReporter implements Reporter {
         scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
         scenarioLog.setStatus(LogStatus.FAILED);
         scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
-        statusWebSocket.sendStatus(runningStories);
+        statusWebSocket.sendProgress(reportId,scenarioLog);
     }
 
     @Override

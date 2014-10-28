@@ -28,7 +28,6 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@Ignore
 public class StatusWebSocketTest {
     @Mock
     private RunningStoriesDao runningStoriesDao;
@@ -55,7 +54,7 @@ public class StatusWebSocketTest {
 
         statusWebSocket.message(session, createSubscribe());
 
-        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":1200,\"status\":\"SUCCESS\",\"logs\":[]},\"statusType\":\"INITIAL_STATUS\"}");
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
 
         Mockito.verify(openConnections).add(Long.valueOf("1200"), session);
 
@@ -89,12 +88,16 @@ public class StatusWebSocketTest {
         log.setStatus(LogStatus.SUCCESS);
         log.setId(100L);
         log.setStep(new Step("test Step"));
-        statusWebSocket.sendStatus(null);
 
-        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":100,\"log\":null,\"status\":\"SUCCESS\",\"step\":{\"id\":null,\"title\":\"test Step\",\"template\":null}},\"statusType\":\"FINAL_STATUS\"}");
+        RunningStories runningStories = new RunningStories();
+        runningStories.setStatus(LogStatus.SUCCESS);
+        runningStories.setId(1200l);
+        statusWebSocket.sendStatus(runningStories);
+
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
     }
 
-    @Test
+    @Test(expected = IOException.class)
     public void testException() throws IOException{
         Session session = mock(Session.class);
         RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);

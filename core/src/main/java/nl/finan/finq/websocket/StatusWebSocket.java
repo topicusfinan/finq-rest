@@ -3,10 +3,9 @@ package nl.finan.finq.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.websocket.to.EventType;
-import nl.finan.finq.websocket.to.GistEvent;
-import nl.finan.finq.websocket.to.ReceivingEventTO;
-import nl.finan.finq.websocket.to.SendEventTO;
+import nl.finan.finq.entities.ScenarioLog;
+import nl.finan.finq.entities.StepLog;
+import nl.finan.finq.websocket.to.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,14 @@ public class StatusWebSocket {
         if (openConnections.containsKey(runningStories.getId())) {
             for (Session session : openConnections.get(runningStories.getId())) {
                 session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST,new GistEvent(runningStories))));
+            }
+        }
+    }
+
+    public void sendProgress(Long reportId, ScenarioLog scenarioLog){
+        if (openConnections.containsKey(reportId)) {
+            for (Session session : openConnections.get(reportId)) {
+                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.PROGRESS,new ProgressEvent(scenarioLog))));
             }
         }
     }

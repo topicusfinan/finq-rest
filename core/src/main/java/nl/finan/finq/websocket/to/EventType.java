@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum EventType {
     SUBSCRIBE("run:subscribe"),
     UNSUBSCRIBE("run:unsubscribe"),
-    GIST("run:gist");
+    GIST("run:gist"),
+    PROGRESS("run:progress");
 
     private String value;
     EventType(String value) {
