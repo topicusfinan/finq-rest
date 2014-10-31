@@ -7,7 +7,6 @@ import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Story;
-import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,14 +55,14 @@ public class StatefulStoryRunner implements StoryRunner {
             jMoribus.runStories(this.stories);
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(LogStatus.SUCCESS);
-            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(runningStories);
 
         } catch (Exception e) {
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
             RunningStories runningStories = runningStoriesDao.find(reportId);
             runningStories.setStatus(LogStatus.FAILED);
-            statusWebSocket.sendStatus(reportId, runningStories, StatusType.FINAL_STATUS);
+            statusWebSocket.sendStatus(runningStories);
         }
     }
 }

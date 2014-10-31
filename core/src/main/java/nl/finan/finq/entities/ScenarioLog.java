@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,9 @@ public class ScenarioLog extends Log {
     }
 
     public List<StepLog> getStepLogs() {
+        if(stepLogs == null){
+            stepLogs = new ArrayList<>();
+        }
         return stepLogs;
     }
 

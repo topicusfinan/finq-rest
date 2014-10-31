@@ -5,6 +5,10 @@ import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Step;
 import nl.finan.finq.entities.StepLog;
+import nl.finan.finq.websocket.to.DataTO;
+import nl.finan.finq.websocket.to.ReceivingEventTO;
+import nl.finan.finq.websocket.to.EventType;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,7 +43,7 @@ public class StatusWebSocketTest {
         Session session = mock(Session.class);
         RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
         when(session.getAsyncRemote()).thenReturn(async);
-        statusWebSocket.message(session, "subscribe: 1200");
+        statusWebSocket.message(session, createSubscribe());
 
         Mockito.verify(async).sendText("Could not find the report you're subscribing too.");
 
@@ -48,9 +52,9 @@ public class StatusWebSocketTest {
         runningStories.setId(1200L);
         when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
 
-        statusWebSocket.message(session, "subscribe: 1200");
+        statusWebSocket.message(session, createSubscribe());
 
-        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":1200,\"status\":\"SUCCESS\",\"logs\":[]},\"statusType\":\"INITIAL_STATUS\"}");
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
 
         Mockito.verify(openConnections).add(Long.valueOf("1200"), session);
 
@@ -59,7 +63,7 @@ public class StatusWebSocketTest {
     @Test
     public void testUnsubscribe() throws IOException {
         Session session = mock(Session.class);
-        statusWebSocket.message(session, "unsubscribe: 1200");
+        statusWebSocket.message(session, createUnsubscribe());
 
         Mockito.verify(openConnections).removeFromConnectionMap(Long.valueOf(1200), session);
 
@@ -84,12 +88,16 @@ public class StatusWebSocketTest {
         log.setStatus(LogStatus.SUCCESS);
         log.setId(100L);
         log.setStep(new Step("test Step"));
-        statusWebSocket.sendStatus(1200L, log, StatusType.FINAL_STATUS);
 
-        Mockito.verify(async).sendText("{\"reportId\":1200,\"log\":{\"id\":100,\"log\":null,\"status\":\"SUCCESS\",\"step\":{\"id\":null,\"title\":\"test Step\",\"template\":null}},\"statusType\":\"FINAL_STATUS\"}");
+        RunningStories runningStories = new RunningStories();
+        runningStories.setStatus(LogStatus.SUCCESS);
+        runningStories.setId(1200l);
+        statusWebSocket.sendStatus(runningStories);
+
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
     }
 
-    @Test
+    @Test(expected = IOException.class)
     public void testException() throws IOException{
         Session session = mock(Session.class);
         RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
@@ -99,11 +107,29 @@ public class StatusWebSocketTest {
         when(runningStories.getId()).thenThrow(IOException.class);
         when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
 
-        statusWebSocket.message(session, "subscribe: 1200");
+
+
+        statusWebSocket.message(session, createSubscribe());
 
         Mockito.verify(async).sendText(null);
-
     }
 
+    private ReceivingEventTO createSubscribe(){
+        ReceivingEventTO receivingEventTO = new ReceivingEventTO();
+        DataTO dataTO = new DataTO();
+        dataTO.setRun(1200l);
+        receivingEventTO.setData(dataTO);
+        receivingEventTO.setEvent(EventType.SUBSCRIBE);
+        return receivingEventTO;
+    }
+
+    private ReceivingEventTO createUnsubscribe(){
+        ReceivingEventTO receivingEventTO = new ReceivingEventTO();
+        DataTO dataTO = new DataTO();
+        dataTO.setRun(1200l);
+        receivingEventTO.setData(dataTO);
+        receivingEventTO.setEvent(EventType.UNSUBSCRIBE);
+        return receivingEventTO;
+    }
 
 }

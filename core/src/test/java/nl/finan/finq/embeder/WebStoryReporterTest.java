@@ -20,13 +20,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -169,7 +167,7 @@ public class WebStoryReporterTest {
 
         webStoryReporter.pendingStep(createCompleteStory().getScenarios().get(0).getSteps().get(0));
 
-        Mockito.verify(reportService).createStepLog(scenarioLog.getScenario().getSteps().get(0), scenarioLog, LogStatus.PENDING);
+        Mockito.verify(reportService).createStepLog(scenarioLog.getScenario().getSteps().get(0), scenarioLog, LogStatus.SKIPPED);
     }
 
     @Test
