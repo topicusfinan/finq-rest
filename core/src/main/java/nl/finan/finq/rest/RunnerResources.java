@@ -8,7 +8,11 @@ import nl.finan.finq.entities.Book;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Scenario;
 import nl.finan.finq.entities.Story;
+import nl.finan.finq.rest.to.RunTO;
+import nl.finan.finq.rest.to.StoryTO;
 import nl.finan.finq.service.RunnerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,12 +25,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.List;
 
-@Path("runner")
+@Path("run")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
 public class RunnerResources {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunnerResources.class);
 
     @EJB
     private StoryDao storyDao;
@@ -41,30 +49,21 @@ public class RunnerResources {
     private RunnerService runnerService;
 
     @POST
-    @Path("/story")
+    @Path("/stories")
     @Transactional
-    public Response runStory(Long id) throws NamingException {
+    public Response runStory(RunTO run) throws NamingException {
+        LOGGER.debug("Receiving post request with run {}", run);
 
-        Story story = storyDao.find(id);
-        if (story == null) {
-            return Response.status(Status.NOT_FOUND).build();
+        List<Story> stories = new ArrayList<>();
+        for (StoryTO storyTO : run.getStories()) {
+            Story story = storyDao.find(storyTO.getId());
+            if (story == null) {
+                return Response.status(Status.NOT_FOUND).build();
+            }
+            stories.add(story);
         }
 
-        RunningStories runningStories = runnerService.run(story);
-
-        return Response.ok(runningStories).build();
-    }
-
-    @POST
-    @Path("/bundle")
-    @Transactional
-    public Response runBundle(Long id) {
-        Book book = bookDao.find(id);
-        if (book == null) {
-            return Response.status(Status.NOT_FOUND).build();
-        }
-
-        RunningStories runningStories = runnerService.run(book);
+        RunningStories runningStories = runnerService.run(stories);
 
         return Response.ok(runningStories).build();
     }

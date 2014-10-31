@@ -3,7 +3,6 @@ package nl.finan.finq.embeder;
 import nl.eernie.jmoribus.configuration.DefaultConfiguration;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.*;
-import nl.finan.finq.websocket.StatusType;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +43,6 @@ public class StatefulStoryRunnerTest {
         when(runningStoriesDao.find(100l)).thenReturn(runningStories);
 
         statefulStoryRunner.run();
-        Mockito.verify(statusWebSocket).sendStatus(100l,runningStories, StatusType.FINAL_STATUS);
     }
 
     @Test
@@ -59,7 +57,6 @@ public class StatefulStoryRunnerTest {
 
         statefulStoryRunner.run();
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
-        Mockito.verify(statusWebSocket).sendStatus(100l,runningStories, StatusType.FINAL_STATUS);
     }
 
 

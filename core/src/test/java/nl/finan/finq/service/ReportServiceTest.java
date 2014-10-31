@@ -1,7 +1,5 @@
 package nl.finan.finq.service;
 
-import nl.eernie.jmoribus.model.Line;
-import nl.eernie.jmoribus.model.StepType;
 import nl.finan.finq.dao.ScenarioLogDao;
 import nl.finan.finq.dao.StepLogDao;
 import nl.finan.finq.dao.StoryLogDao;
@@ -67,12 +65,12 @@ public class ReportServiceTest {
         Step step = new Step("Test step");
         ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
 
-        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.PENDING);
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SKIPPED);
 
         Mockito.verify(stepLogDao).persist(stepLog);
         Assert.assertEquals(step.getTitle(), stepLog.getStep().getTitle());
         Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
-        Assert.assertEquals(LogStatus.PENDING, stepLog.getStatus());
+        Assert.assertEquals(LogStatus.SKIPPED, stepLog.getStatus());
     }
 
     @Test
