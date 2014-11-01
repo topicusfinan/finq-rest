@@ -67,7 +67,7 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
         } catch (NoResultException e) {
             LOGGER.debug("It was not possible to find any {} with SQL parameter(s): {}", getPersistentClass(), parameters);
         } catch (NonUniqueResultException e) {
-            LOGGER.error("More than one result was found " + e.getStackTrace() + " for {} with SQL parameter(s): {}", getPersistentClass(), parameters);
+            LOGGER.error("More than one result was found for "+getPersistentClass()+" with SQL parameter(s): "+ parameters, e);
             throw e;
         }
 
