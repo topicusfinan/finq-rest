@@ -14,7 +14,7 @@ import static nl.finan.finq.dao.impl.NamedParameter.np;
 public class RunningStoriesDaoImpl extends DaoJPAImpl<RunningStories> implements RunningStoriesDao {
 
     @Override
-    public List<RunningStories> findByStatuses(List<LogStatus> statuses) {
-        return list(RunningStories.QUERY_FIND_BY_STATUS, np("statuses", statuses));
+    public List<RunningStories> findByStatuses(List<LogStatus> statuses, Integer page, Integer size) {
+        return list(RunningStories.QUERY_FIND_BY_STATUS,page,size, np("statuses", statuses));
     }
 }

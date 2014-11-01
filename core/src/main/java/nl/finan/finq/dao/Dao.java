@@ -2,6 +2,7 @@ package nl.finan.finq.dao;
 
 import nl.finan.finq.dao.impl.NamedParameter;
 import nl.finan.finq.entities.GenericEntity;
+import nl.finan.finq.entities.RunningStories;
 
 import javax.ejb.Local;
 import java.io.Serializable;
@@ -81,4 +82,6 @@ public interface Dao<T extends GenericEntity> {
     void delete(T instance);
 
     T getReference(Long id);
+
+    List<T> listAll(Integer page, Integer size);
 }

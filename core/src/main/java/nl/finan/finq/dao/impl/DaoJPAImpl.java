@@ -59,10 +59,10 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
     @SuppressWarnings("unchecked")
     public T find(String namedQuery, NamedParameter... parameters) {
         LOGGER.debug(">>> executing query (find) {}", namedQuery);
-        T retrieviedEntity = null;
+        T retrievedEntity = null;
 
         try {
-            retrieviedEntity = (T) createNamedQuery(namedQuery, parameters).getSingleResult();
+            retrievedEntity = (T) createNamedQuery(namedQuery, parameters).getSingleResult();
 
         } catch (NoResultException e) {
             LOGGER.debug("It was not possible to find any {} with SQL parameter(s): {}", getPersistentClass(), parameters);
@@ -71,7 +71,7 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
             throw e;
         }
 
-        return retrieviedEntity;
+        return retrievedEntity;
     }
 
     public List<T> list(String query, NamedParameter... parameters) {
@@ -92,18 +92,28 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
     }
 
 
-    public List<T> list(String query, int firstResult, int maxResult, NamedParameter... parameters) {
+    public List<T> list(String query, int page, int size, NamedParameter... parameters) {
         LOGGER.debug(">>> executing query (list, paginated) {}", query);
 
         @SuppressWarnings("unchecked")
-        List<T> retrievedList = createNamedQuery(query, parameters).setFirstResult(firstResult).setMaxResults(maxResult).getResultList();
+        List<T> retrievedList = createNamedQuery(query, parameters).setFirstResult(page * size).setMaxResults(size).getResultList();
 
         return retrievedList == null ? new ArrayList<T>() : retrievedList;
     }
 
 
     public List<T> listAll() {
-        Query query = em.createQuery(String.format(QUERY_LISTALL, getPersistentClass().getSimpleName()),getPersistentClass());
+        return listAll(null,null);
+    }
+
+    @Override
+    public List<T> listAll(Integer page, Integer size) {
+        Query query = em.createQuery(String.format(QUERY_LISTALL, getPersistentClass().getSimpleName()), getPersistentClass());
+
+        if(page != null && size != null) {
+            query.setFirstResult(page * size);
+            query.setMaxResults(size);
+        }
 
         @SuppressWarnings("unchecked")
         List<T> resultList = query.getResultList();
