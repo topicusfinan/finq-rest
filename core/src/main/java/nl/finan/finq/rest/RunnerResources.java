@@ -2,12 +2,10 @@ package nl.finan.finq.rest;
 
 
 import nl.finan.finq.dao.BookDao;
+import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Book;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Scenario;
-import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.*;
 import nl.finan.finq.rest.to.RunTO;
 import nl.finan.finq.rest.to.StoryTO;
 import nl.finan.finq.service.RunnerService;
@@ -18,13 +16,12 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.NamingException;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,13 @@ public class RunnerResources {
     private ScenarioDao scenarioDao;
 
     @EJB
+    private RunningStoriesDao runningStoriesDao;
+
+    @EJB
     private RunnerService runnerService;
+
+    @Context
+    private UriInfo uriInfo;
 
     @POST
     @Path("/stories")
@@ -66,6 +69,19 @@ public class RunnerResources {
         RunningStories runningStories = runnerService.run(stories);
 
         return Response.ok(runningStories).build();
+    }
+
+    @GET
+    public List<RunningStories> getRuns(@QueryParam("status") List<String> statuses){
+        if(statuses !=null && !statuses.isEmpty()){
+            List<LogStatus> logStatuses = new ArrayList<>();
+            for (String status : statuses) {
+                logStatuses.add(LogStatus.valueOf(status));
+            }
+            
+            return runningStoriesDao.findByStatuses(logStatuses);
+        }
+        return runningStoriesDao.listAll();
     }
 
 }
