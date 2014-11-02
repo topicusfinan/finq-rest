@@ -20,14 +20,14 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
 
     @Override
     public Configuration getConfiguration() {
-        Configuration configuration = new DefaultConfiguration();
+        Configuration configuration = new JmoribusConfiguration();
         configuration.addSteps(Arrays.<Object>asList(new Step()));
         return configuration;
     }
 
     @Override
     public Configuration getConfigurationWithReporter(Long reportId) {
-        Configuration configuration = new DefaultConfiguration();
+        Configuration configuration = new JmoribusConfiguration();
         configuration.addSteps(Arrays.<Object>asList(new Step()));
         configuration.addReporter(reporter);
         return configuration;

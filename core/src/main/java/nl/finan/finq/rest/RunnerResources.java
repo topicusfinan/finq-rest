@@ -48,9 +48,6 @@ public class RunnerResources {
     @EJB
     private RunnerService runnerService;
 
-    @Context
-    private UriInfo uriInfo;
-
     @POST
     @Path("/stories")
     @Transactional
@@ -72,7 +69,9 @@ public class RunnerResources {
     }
 
     @GET
-    public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("size") @DefaultValue("20") Integer size){
+    public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
+                                        @QueryParam("page") @DefaultValue("0") Integer page,
+                                        @QueryParam("size") @DefaultValue("20") Integer size){
         Long count;
         List<RunningStories> resultList;
         if(statuses !=null && !statuses.isEmpty()){
