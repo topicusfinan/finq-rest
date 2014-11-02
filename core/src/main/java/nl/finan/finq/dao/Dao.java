@@ -84,4 +84,6 @@ public interface Dao<T extends GenericEntity> {
     T getReference(Long id);
 
     List<T> listAll(Integer page, Integer size);
+
+    Long countAll();
 }

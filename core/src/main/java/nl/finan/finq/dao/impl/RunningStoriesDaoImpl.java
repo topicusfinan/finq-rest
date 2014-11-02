@@ -17,4 +17,9 @@ public class RunningStoriesDaoImpl extends DaoJPAImpl<RunningStories> implements
     public List<RunningStories> findByStatuses(List<LogStatus> statuses, Integer page, Integer size) {
         return list(RunningStories.QUERY_FIND_BY_STATUS,page,size, np("statuses", statuses));
     }
+
+    @Override
+    public Long countBySatuses(List<LogStatus> logStatuses) {
+        return count(RunningStories.QUERY_COUNT_BY_STATUS, np("statuses",logStatuses));
+    }
 }

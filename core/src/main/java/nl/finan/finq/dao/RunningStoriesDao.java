@@ -9,4 +9,6 @@ import java.util.List;
 @Local
 public interface RunningStoriesDao extends Dao<RunningStories> {
     List<RunningStories> findByStatuses(List<LogStatus> statuses, Integer page, Integer size);
+
+    Long countBySatuses(List<LogStatus> logStatuses);
 }

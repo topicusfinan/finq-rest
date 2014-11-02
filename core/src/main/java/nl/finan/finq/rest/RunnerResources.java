@@ -72,18 +72,21 @@ public class RunnerResources {
     }
 
     @GET
-    public List<RunningStories> getRuns(@QueryParam("status") List<String> statuses, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
-        page = page == null ? 0  : page;
-        size = size == null ? 20 : size;
+    public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("size") @DefaultValue("20") Integer size){
+        Long count;
+        List<RunningStories> resultList;
         if(statuses !=null && !statuses.isEmpty()){
             List<LogStatus> logStatuses = new ArrayList<>();
             for (String status : statuses) {
                 logStatuses.add(LogStatus.valueOf(status));
             }
-
-            return runningStoriesDao.findByStatuses(logStatuses,page,size);
+            count = runningStoriesDao.countBySatuses(logStatuses);
+            resultList = runningStoriesDao.findByStatuses(logStatuses,page,size);
+        } else {
+            count = runningStoriesDao.countAll();
+            resultList = runningStoriesDao.listAll(page,size);
         }
-        return runningStoriesDao.listAll(page,size);
+        return new Page<>(resultList,count,page,size, uriInfo);
     }
 
 }

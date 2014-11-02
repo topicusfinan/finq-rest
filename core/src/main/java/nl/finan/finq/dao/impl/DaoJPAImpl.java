@@ -16,6 +16,7 @@ import java.util.List;
 public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DaoJPAImpl.class);
     private static final String QUERY_LISTALL = "SELECT o FROM %s o";
+    private static final String QUERY_COUNTALL = "select count(o) from %s o";
     private final Class<T> persistentClass;
     @PersistenceContext
     private EntityManager em;
@@ -119,6 +120,16 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
         List<T> resultList = query.getResultList();
 
         return resultList;
+    }
+
+    @Override
+    public Long countAll() {
+        Query query = em.createQuery(String.format(QUERY_COUNTALL,getPersistentClass().getSimpleName()), Long.class);
+
+        @SuppressWarnings("unchecked")
+        Long result = (Long) query.getSingleResult();
+
+        return result;
     }
 
     /**
