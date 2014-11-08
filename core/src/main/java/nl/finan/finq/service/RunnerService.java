@@ -38,7 +38,7 @@ public class RunnerService {
         runningStories.setStatus(LogStatus.RUNNING);
         runningStoriesDao.persist(runningStories);
 
-        StoryRunner statefulStoryRunner = BeanFactory.getBean(StoryRunner.class);
+        StoryRunner statefulStoryRunner = BeanFactory.getBean("java:module/StatefulStoryRunner");
         statefulStoryRunner.init(stories, runningStories.getId());
 
         runExecutor.execute(statefulStoryRunner);

@@ -43,7 +43,7 @@ public class RunnerServiceTest {
     @Before
     public void before(){
         PowerMockito.mockStatic(BeanFactory.class);
-        when(BeanFactory.getBean(StoryRunner.class)).thenReturn(storyRunner);
+        when(BeanFactory.getBean("java:module/StatefulStoryRunner")).thenReturn(storyRunner);
 
     }
 
