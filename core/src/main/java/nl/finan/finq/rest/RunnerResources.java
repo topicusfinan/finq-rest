@@ -2,12 +2,10 @@ package nl.finan.finq.rest;
 
 
 import nl.finan.finq.dao.BookDao;
+import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.Book;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Scenario;
-import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.*;
 import nl.finan.finq.rest.to.RunTO;
 import nl.finan.finq.rest.to.StoryTO;
 import nl.finan.finq.service.RunnerService;
@@ -18,13 +16,12 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.NamingException;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +41,9 @@ public class RunnerResources {
 
     @EJB
     private ScenarioDao scenarioDao;
+
+    @EJB
+    private RunningStoriesDao runningStoriesDao;
 
     @EJB
     private RunnerService runnerService;
@@ -66,6 +66,26 @@ public class RunnerResources {
         RunningStories runningStories = runnerService.run(stories);
 
         return Response.ok(runningStories).build();
+    }
+
+    @GET
+    public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
+                                        @QueryParam("page") @DefaultValue("0") Integer page,
+                                        @QueryParam("size") @DefaultValue("20") Integer size){
+        Long count;
+        List<RunningStories> resultList;
+        if(statuses !=null && !statuses.isEmpty()){
+            List<LogStatus> logStatuses = new ArrayList<>();
+            for (String status : statuses) {
+                logStatuses.add(LogStatus.valueOf(status));
+            }
+            count = runningStoriesDao.countBySatuses(logStatuses);
+            resultList = runningStoriesDao.findByStatuses(logStatuses,page,size);
+        } else {
+            count = runningStoriesDao.countAll();
+            resultList = runningStoriesDao.listAll(page,size);
+        }
+        return new Page<>(resultList,count,page,size, uriInfo);
     }
 
 }

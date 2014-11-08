@@ -10,7 +10,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "FINQ_RUNNING_STORIES")
+@NamedQueries({
+    @NamedQuery(name = RunningStories.QUERY_FIND_BY_STATUS,
+        query = "select rs from RunningStories rs where rs.status in (:statuses)"),
+    @NamedQuery(name = RunningStories.QUERY_COUNT_BY_STATUS,
+        query = "select count(rs) from RunningStories rs where rs.status in (:statuses)")
+})
 public class RunningStories extends GenericEntity {
+
+    public static final String QUERY_FIND_BY_STATUS = "RunningStories.findByStatus";
+    public static final String QUERY_COUNT_BY_STATUS = "RunningStories.countByStatus";
 
     @Enumerated(EnumType.STRING)
     @Column

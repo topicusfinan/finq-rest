@@ -25,6 +25,17 @@
             <groupId>nl.eernie.jmoribus</groupId>
             <artifactId>jmoribus-core</artifactId>
             <version>0.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>selenium-java</artifactId>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>2.43.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
