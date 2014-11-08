@@ -9,4 +9,3 @@ Add a DataSource to your Wildfly Application Server named: `java:/finq`
 
 build and deploy with 1.7.
 
-Running artifact name should be `runner.war`.
