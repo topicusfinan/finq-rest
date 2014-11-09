@@ -139,13 +139,43 @@ public class WebStoryReporter implements Reporter {
     }
 
     @Override
-    public void errorStep(Step step, Throwable e) {
+    public void errorStep(Step runningStep, Throwable e) {
+        Scenario scenario = (Scenario) runningStep.getStepContainer();
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
 
+        int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+        nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.FAILED);
+        stepLog.setLog(e.getMessage());
+        scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
+        scenarioLog.setStatus(LogStatus.FAILED);
+        scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
+        statusWebSocket.sendProgress(reportId,scenarioLog);
     }
 
     @Override
-    public void errorStep(Step step, String cause) {
+    public void errorStep(Step runningStep, String cause) {
+        Scenario scenario = (Scenario) runningStep.getStepContainer();
+        int scenarioIndex = scenario.getStory().getScenarios().indexOf(scenario);
+        Long reportId = getReportId(scenario.getStory().getUniqueIdentifier());
+        RunningStories runningStories = runningStoriesDao.find(reportId);
+        StoryLog storyLog = runningStories.getLogs().get(runningStories.getLogs().size()-1);
+        ScenarioLog scenarioLog = storyLog.getScenarioLogs().get(scenarioIndex);
 
+        int index = runningStep.getStepContainer().getSteps().indexOf(runningStep);
+        nl.finan.finq.entities.Step step = scenarioLog.getScenario().getSteps().get(index);
+
+        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.FAILED);
+        stepLog.setLog(cause);
+        scenarioLog.getStoryLog().setStatus(LogStatus.FAILED);
+        scenarioLog.setStatus(LogStatus.FAILED);
+        scenarioLog.getStoryLog().getRunningStory().setStatus(LogStatus.FAILED);
+        statusWebSocket.sendProgress(reportId,scenarioLog);
     }
 
     @Override
