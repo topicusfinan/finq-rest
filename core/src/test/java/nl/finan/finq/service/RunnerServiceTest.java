@@ -4,7 +4,6 @@ import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.embeder.StoryRunner;
 import nl.finan.finq.entities.*;
-import nl.finan.finq.factory.BeanFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,12 +18,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.jms.*;
 
-import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BeanFactory.class)
 public class RunnerServiceTest {
 
     @Mock
