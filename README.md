@@ -6,6 +6,7 @@ finq-rest
 
 To start with develop you have to do the following things: 
 Add a DataSource to your Wildfly Application Server named: `java:/finq`
+Add a queue at jndi: `java:/jms/runStoriesQueue`
 
 build and deploy with 1.7.
 
