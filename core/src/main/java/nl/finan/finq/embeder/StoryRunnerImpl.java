@@ -12,19 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
-import javax.transaction.Transactional;
+import javax.ejb.Stateless;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Stateful
-public class StatefulStoryRunner implements StoryRunner {
+@Stateless
+public class StoryRunnerImpl implements StoryRunner {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatefulStoryRunner.class);
-
-    private List<nl.eernie.jmoribus.model.Story> stories;
-    private Long reportId;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StoryRunnerImpl.class);
 
     @EJB
     private RunningStoriesDao runningStoriesDao;
@@ -35,25 +31,19 @@ public class StatefulStoryRunner implements StoryRunner {
     @EJB
     private ConfigurationFactory configurationFactory;
 
-    public void init(List<Story> stories, Long reportId) {
-        List<ParseableStory> parseableStories = new ArrayList<>(stories.size());
-        for (Story story : stories) {
-            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()+"-"+reportId));
-        }
-        this.stories = StoryParser.parseStories(parseableStories);
-        this.reportId = reportId;
-    }
-
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void run() {
+    public void run(RunMessage object) {
+        List<ParseableStory> parseableStories = new ArrayList<>(object.getStories().size());
+        for (Story story : object.getStories()) {
+            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()+"-"+object.getRunId()));
+        }
+        List<nl.eernie.jmoribus.model.Story> stories = StoryParser.parseStories(parseableStories);
 
-
-        JMoribus jMoribus = new JMoribus(configurationFactory.getConfigurationWithReporter(reportId));
+        JMoribus jMoribus = new JMoribus(configurationFactory.getConfiguration());
 
         try {
-            jMoribus.runStories(this.stories);
-            RunningStories runningStories = runningStoriesDao.find(reportId);
+            jMoribus.runStories(stories);
+            RunningStories runningStories = runningStoriesDao.find(object.getRunId());
             if(runningStories.getStatus().equals(LogStatus.RUNNING)){
                 runningStories.setStatus(LogStatus.SUCCESS);
             }
@@ -62,7 +52,7 @@ public class StatefulStoryRunner implements StoryRunner {
         } catch (Exception e) {
             LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
 
-            RunningStories runningStories = runningStoriesDao.find(reportId);
+            RunningStories runningStories = runningStoriesDao.find(object.getRunId());
             runningStories.setStatus(LogStatus.FAILED);
             statusWebSocket.sendStatus(runningStories);
         }

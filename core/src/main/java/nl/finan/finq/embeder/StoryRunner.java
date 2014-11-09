@@ -1,12 +1,10 @@
 package nl.finan.finq.embeder;
 
-import nl.finan.finq.entities.Story;
 
 import javax.ejb.Local;
-import java.util.List;
 
 @Local
-public interface StoryRunner extends Runnable {
+public interface StoryRunner  {
 
-    void init(List<Story> stories, Long reportId);
+    void run(RunMessage object);
 }

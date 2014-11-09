@@ -22,13 +22,6 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
     public Configuration getConfiguration() {
         Configuration configuration = new JmoribusConfiguration();
         configuration.addSteps(Arrays.<Object>asList(new Step()));
-        return configuration;
-    }
-
-    @Override
-    public Configuration getConfigurationWithReporter(Long reportId) {
-        Configuration configuration = new JmoribusConfiguration();
-        configuration.addSteps(Arrays.<Object>asList(new Step()));
         configuration.addReporter(reporter);
         return configuration;
     }
