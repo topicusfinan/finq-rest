@@ -50,7 +50,7 @@ public class StoryRunnerImpl implements StoryRunner {
             statusWebSocket.sendStatus(runningStories);
 
         } catch (Exception e) {
-            LOGGER.error("exception while running stories {}, {} ", e.getMessage(), e);
+            LOGGER.error("exception while running stories [{}]", e.getMessage());
 
             RunningStories runningStories = runningStoriesDao.find(object.getRunId());
             runningStories.setStatus(LogStatus.FAILED);

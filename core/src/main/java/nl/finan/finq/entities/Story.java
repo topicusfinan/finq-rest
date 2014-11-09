@@ -78,6 +78,7 @@ public class Story extends GenericEntity {
 
     public String toStory() {
         StringBuilder builder = new StringBuilder();
+        builder.append("Feature: ").append(title);
         for (Scenario scenario : getScenarios()) {
             builder.append(System.lineSeparator());
             builder.append(scenario.toStory());
