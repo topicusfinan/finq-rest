@@ -32,17 +32,17 @@ public class BookResources {
     }
 
     @POST
-    public Response saveBook(Book book){
+    public Response saveBook(Book book) {
         book = bookService.updateOrCreateEntity(book);
-        if(book == null){
+        if (book == null) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-        return Response.created(URI.create(PathConstants.BOOKS+"/"+book.getId())).build();
+        return Response.created(URI.create(PathConstants.BOOKS + "/" + book.getId())).build();
     }
 
     @GET
     @Path("{id}")
-    public Book getBook(@PathParam("id") Long id){
+    public Book getBook(@PathParam("id") Long id) {
         return bookDao.find(id);
     }
 }

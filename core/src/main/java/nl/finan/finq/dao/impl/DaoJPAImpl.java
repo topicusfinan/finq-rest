@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +66,7 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
         } catch (NoResultException e) {
             LOGGER.debug("It was not possible to find any {} with SQL parameter(s): {}", getPersistentClass(), parameters);
         } catch (NonUniqueResultException e) {
-            LOGGER.error("More than one result was found for "+getPersistentClass()+" with SQL parameter(s): "+ parameters, e);
+            LOGGER.error("More than one result was found for " + getPersistentClass() + " with SQL parameter(s): " + parameters, e);
             throw e;
         }
 
@@ -104,14 +102,14 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
 
 
     public List<T> listAll() {
-        return listAll(null,null);
+        return listAll(null, null);
     }
 
     @Override
     public List<T> listAll(Integer page, Integer size) {
         Query query = em.createQuery(String.format(QUERY_LISTALL, getPersistentClass().getSimpleName()), getPersistentClass());
 
-        if(page != null && size != null) {
+        if (page != null && size != null) {
             query.setFirstResult(page * size);
             query.setMaxResults(size);
         }
@@ -124,7 +122,7 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
 
     @Override
     public Long countAll() {
-        Query query = em.createQuery(String.format(QUERY_COUNTALL,getPersistentClass().getSimpleName()), Long.class);
+        Query query = em.createQuery(String.format(QUERY_COUNTALL, getPersistentClass().getSimpleName()), Long.class);
 
         @SuppressWarnings("unchecked")
         Long result = (Long) query.getSingleResult();

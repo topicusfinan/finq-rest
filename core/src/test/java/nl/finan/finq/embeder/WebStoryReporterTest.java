@@ -6,12 +6,7 @@ import nl.eernie.jmoribus.model.StepType;
 import nl.eernie.jmoribus.model.Story;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.ScenarioLog;
-import nl.finan.finq.entities.Step;
-import nl.finan.finq.entities.StepLog;
-import nl.finan.finq.entities.StoryLog;
-import nl.finan.finq.entities.LogStatus;
-import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.entities.*;
 import nl.finan.finq.service.ReportService;
 import nl.finan.finq.websocket.StatusWebSocket;
 import org.junit.Assert;
@@ -27,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -192,17 +186,17 @@ public class WebStoryReporterTest {
         when(throwable.getMessage()).thenReturn("Assertion Failed!");
         when(runningStoriesDao.find(101l)).thenReturn(runningStories);
         when(runningStories.getLogs()).thenReturn(Arrays.asList(storyLog));
-        when(reportService.createStepLog(step,scenarioLog,LogStatus.FAILED)).thenReturn(stepLog);
+        when(reportService.createStepLog(step, scenarioLog, LogStatus.FAILED)).thenReturn(stepLog);
 
         webStoryReporter.failedStep(createCompleteStory().getScenarios().get(0).getSteps().get(0), throwable);
 
-        Assert.assertEquals(stepLog.getLog(),"Assertion Failed!");
-        Assert.assertEquals(LogStatus.FAILED,storyLog.getStatus());
+        Assert.assertEquals(stepLog.getLog(), "Assertion Failed!");
+        Assert.assertEquals(LogStatus.FAILED, storyLog.getStatus());
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
     }
 
 
-    private Story createCompleteStory(){
+    private Story createCompleteStory() {
         Story story = new Story();
         story.setUniqueIdentifier("100-101");
         story.setTitle("Story title");
@@ -233,6 +227,6 @@ public class WebStoryReporterTest {
         step3.getStepLines().add(new Line("the value will be returned"));
         step3.setStepContainer(scenario);
 
-        return Arrays.asList(step1,step2,step3);
+        return Arrays.asList(step1, step2, step3);
     }
 }

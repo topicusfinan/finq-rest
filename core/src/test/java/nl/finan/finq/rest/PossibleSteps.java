@@ -7,5 +7,6 @@ public class PossibleSteps {
 
     @When("this is a step")
     @Category("Test")
-    public void test(){}
+    public void test() {
+    }
 }

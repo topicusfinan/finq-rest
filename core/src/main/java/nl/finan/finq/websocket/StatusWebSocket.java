@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.ScenarioLog;
-import nl.finan.finq.entities.StepLog;
 import nl.finan.finq.websocket.to.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +32,9 @@ public class StatusWebSocket {
 
     @OnMessage
     public void message(Session session, ReceivingEventTO event) throws IOException {
-        switch (event.getEvent()){
+        switch (event.getEvent()) {
             case SUBSCRIBE:
-                subscribe(session,event.getData().getRun());
+                subscribe(session, event.getData().getRun());
                 break;
             case UNSUBSCRIBE:
                 unsubscribe(session, event.getData().getRun());
@@ -53,15 +52,15 @@ public class StatusWebSocket {
     public void sendStatus(RunningStories runningStories) {
         if (openConnections.containsKey(runningStories.getId())) {
             for (Session session : openConnections.get(runningStories.getId())) {
-                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST,new GistEvent(runningStories))));
+                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new GistEvent(runningStories))));
             }
         }
     }
 
-    public void sendProgress(Long reportId, ScenarioLog scenarioLog){
+    public void sendProgress(Long reportId, ScenarioLog scenarioLog) {
         if (openConnections.containsKey(reportId)) {
             for (Session session : openConnections.get(reportId)) {
-                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.PROGRESS,new ProgressEvent(scenarioLog))));
+                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.PROGRESS, new ProgressEvent(scenarioLog))));
             }
         }
     }

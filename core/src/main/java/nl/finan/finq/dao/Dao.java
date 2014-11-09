@@ -2,7 +2,6 @@ package nl.finan.finq.dao;
 
 import nl.finan.finq.dao.impl.NamedParameter;
 import nl.finan.finq.entities.GenericEntity;
-import nl.finan.finq.entities.RunningStories;
 
 import javax.ejb.Local;
 import java.io.Serializable;

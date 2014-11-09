@@ -11,19 +11,19 @@ import java.util.List;
 @Table(name = "FINQ_TAG")
 public class Tag extends GenericEntity {
 
-    @Column(name="aKEY")
+    @Column(name = "aKEY")
     @JsonProperty("key")
     private String aKey;
 
-    @Column(name="aVALUE")
+    @Column(name = "aVALUE")
     @JsonProperty("value")
     private String aValue;
 
     @ManyToMany
     @JoinTable(
-        name="FINQ_STORY_TAG",
-        joinColumns={@JoinColumn(name="TAG_ID", referencedColumnName="ID")},
-        inverseJoinColumns={@JoinColumn(name="STORY_ID", referencedColumnName="ID")})
+        name = "FINQ_STORY_TAG",
+        joinColumns = {@JoinColumn(name = "TAG_ID", referencedColumnName = "ID")},
+        inverseJoinColumns = {@JoinColumn(name = "STORY_ID", referencedColumnName = "ID")})
     @JsonBackReference
     private List<Story> stories = new ArrayList<>();
 

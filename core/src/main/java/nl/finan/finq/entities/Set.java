@@ -10,14 +10,14 @@ import java.util.List;
 @Table(name = "FINQ_SET")
 public class Set extends GenericEntity {
 
-    @Column(name="NAME")
+    @Column(name = "NAME")
     private String name;
 
     @ManyToMany
     @JoinTable(
-        name="FINQ_STORY_SET",
-        joinColumns={@JoinColumn(name="SET_ID", referencedColumnName="ID")},
-        inverseJoinColumns={@JoinColumn(name="STORY_ID", referencedColumnName="ID")})
+        name = "FINQ_STORY_SET",
+        joinColumns = {@JoinColumn(name = "SET_ID", referencedColumnName = "ID")},
+        inverseJoinColumns = {@JoinColumn(name = "STORY_ID", referencedColumnName = "ID")})
     @JsonBackReference
     private List<Story> stories = new ArrayList<>();
 

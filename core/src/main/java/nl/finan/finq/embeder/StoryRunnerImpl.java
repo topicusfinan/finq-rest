@@ -35,7 +35,7 @@ public class StoryRunnerImpl implements StoryRunner {
     public void run(RunMessage object) {
         List<ParseableStory> parseableStories = new ArrayList<>(object.getStories().size());
         for (Story story : object.getStories()) {
-            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString()+"-"+object.getRunId()));
+            parseableStories.add(new ParseableStory(new ByteArrayInputStream(story.toStory().getBytes()), story.getId().toString() + "-" + object.getRunId()));
         }
         List<nl.eernie.jmoribus.model.Story> stories = StoryParser.parseStories(parseableStories);
 
@@ -44,7 +44,7 @@ public class StoryRunnerImpl implements StoryRunner {
         try {
             jMoribus.runStories(stories);
             RunningStories runningStories = runningStoriesDao.find(object.getRunId());
-            if(runningStories.getStatus().equals(LogStatus.RUNNING)){
+            if (runningStories.getStatus().equals(LogStatus.RUNNING)) {
                 runningStories.setStatus(LogStatus.SUCCESS);
             }
             statusWebSocket.sendStatus(runningStories);

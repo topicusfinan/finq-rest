@@ -6,7 +6,7 @@ import nl.finan.finq.entities.Story;
 import java.io.Serializable;
 import java.util.List;
 
-public class RunMessage implements Serializable{
+public class RunMessage implements Serializable {
 
     private List<Story> stories;
     private Long runId;

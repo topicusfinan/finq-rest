@@ -52,10 +52,10 @@ public class RunnerResourcesTest {
         when(runningStoriesDao.countAll()).thenReturn(3l);
 
         when(runningStoriesDao.listAll()).thenReturn(Arrays.asList(new RunningStories(), new RunningStories(), new RunningStories()));
-        when(runningStoriesDao.findByStatuses(Arrays.asList(LogStatus.RUNNING),0,1)).thenReturn(Arrays.asList(new RunningStories()));
+        when(runningStoriesDao.findByStatuses(Arrays.asList(LogStatus.RUNNING), 0, 1)).thenReturn(Arrays.asList(new RunningStories()));
 
         Page<RunningStories> running = runnerResources.getRuns(null, Arrays.asList("RUNNING"), 0, 1);
-        Assert.assertEquals(Long.valueOf(1),running.getTotalCount());
+        Assert.assertEquals(Long.valueOf(1), running.getTotalCount());
         Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
         Assert.assertEquals(Integer.valueOf(0), running.getPage());
 
@@ -63,17 +63,16 @@ public class RunnerResourcesTest {
         UriBuilder uriBuilder = mock(UriBuilder.class);
         URI uri = new URI("http://test");
         when(uriInfo.getRequestUriBuilder()).thenReturn(uriBuilder);
-        when(uriBuilder.replaceQueryParam(Mockito.anyString(),Mockito.anyString())).thenReturn(uriBuilder);
+        when(uriBuilder.replaceQueryParam(Mockito.anyString(), Mockito.anyString())).thenReturn(uriBuilder);
         when(uriBuilder.build()).thenReturn(uri);
 
-        running = runnerResources.getRuns(uriInfo,null,1,1);
-        Assert.assertEquals(Long.valueOf(3),running.getTotalCount());
+        running = runnerResources.getRuns(uriInfo, null, 1, 1);
+        Assert.assertEquals(Long.valueOf(3), running.getTotalCount());
         Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
         Assert.assertEquals(Integer.valueOf(1), running.getPage());
         Assert.assertEquals(2, running.get_link().size());
 
     }
-
 
 
 }

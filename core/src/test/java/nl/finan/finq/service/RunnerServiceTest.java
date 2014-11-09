@@ -2,8 +2,10 @@ package nl.finan.finq.service;
 
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.embeder.StoryRunner;
-import nl.finan.finq.entities.*;
+import nl.finan.finq.entities.Book;
+import nl.finan.finq.entities.LogStatus;
+import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.entities.Story;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.enterprise.concurrent.ManagedExecutorService;

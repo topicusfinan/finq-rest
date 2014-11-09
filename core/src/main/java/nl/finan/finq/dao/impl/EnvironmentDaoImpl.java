@@ -6,6 +6,6 @@ import nl.finan.finq.entities.Environment;
 import javax.ejb.Stateless;
 
 @Stateless
-public class EnvironmentDaoImpl extends DaoJPAImpl<Environment> implements EnvironmentDao{
-    
+public class EnvironmentDaoImpl extends DaoJPAImpl<Environment> implements EnvironmentDao {
+
 }

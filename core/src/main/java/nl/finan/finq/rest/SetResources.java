@@ -22,7 +22,7 @@ public class SetResources {
     private SetDao setDao;
 
     @GET
-    public List<Set> getSets(){
-        return  setDao.listAll();
+    public List<Set> getSets() {
+        return setDao.listAll();
     }
 }

@@ -1,7 +1,5 @@
 package nl.finan.finq.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ public class Book extends GenericEntity {
     }
 
     public List<Story> getStories() {
-        if(stories == null){
+        if (stories == null) {
             stories = new ArrayList<>();
         }
         return stories;

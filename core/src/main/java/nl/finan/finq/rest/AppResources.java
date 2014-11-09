@@ -22,9 +22,9 @@ public class AppResources {
     private ApplicationDao applicationDao;
 
     @GET
-    public Application getApp(){
+    public Application getApp() {
         List<Application> applications = applicationDao.listAll();
-        if(applications.isEmpty()){
+        if (applications.isEmpty()) {
             return new Application();
         }
         return applications.get(0);

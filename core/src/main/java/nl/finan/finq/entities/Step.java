@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "FINQ_STEP")
-public class Step extends GenericEntity{
+public class Step extends GenericEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "SCENARIO_ID")
@@ -58,7 +58,7 @@ public class Step extends GenericEntity{
         this.template = template;
     }
 
-    public String toStory(){
+    public String toStory() {
         return title;
     }
 }

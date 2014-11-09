@@ -22,7 +22,7 @@ public class ReceivingEventDecoder implements Decoder.Text<ReceivingEventTO> {
         try {
             return mapper.readValue(s, ReceivingEventTO.class);
         } catch (IOException e) {
-            LOGGER.error("IOException caught while deserialization ["+s+"]", e);
+            LOGGER.error("IOException caught while deserialization [" + s + "]", e);
             return null;
         }
     }

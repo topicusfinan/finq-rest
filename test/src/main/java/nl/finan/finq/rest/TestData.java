@@ -63,11 +63,11 @@ public class TestData {
                 s.getScenarios().add(sc);
                 addStep(sc, "Given this is a given step");
                 addStep(sc, "When a When step has been run");
-                addStep(sc,"Then a result must been shown");
+                addStep(sc, "Then a result must been shown");
             }
         }
 
-        if(applicationDao.listAll().isEmpty()){
+        if (applicationDao.listAll().isEmpty()) {
             Application application = new Application();
             application.setAuthenticate(false);
             application.setSubject("Book store");
@@ -75,7 +75,7 @@ public class TestData {
             applicationDao.persist(application);
         }
 
-        if(environmentDao.listAll().isEmpty()){
+        if (environmentDao.listAll().isEmpty()) {
             Environment environment = new Environment();
             environment.setName("Stalone");
             environment.setAddress("http://stalone.local");

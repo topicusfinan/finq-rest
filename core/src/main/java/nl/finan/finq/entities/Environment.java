@@ -6,12 +6,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "FINQ_ENVIRONMENT")
-public class Environment extends GenericEntity{
+public class Environment extends GenericEntity {
 
-    @Column(name="NAME")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name="ADDRESS")
+    @Column(name = "ADDRESS")
     private String address;
 
     public String getName() {

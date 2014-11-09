@@ -34,7 +34,7 @@ public class ScenarioLog extends Log {
     }
 
     public List<StepLog> getStepLogs() {
-        if(stepLogs == null){
+        if (stepLogs == null) {
             stepLogs = new ArrayList<>();
         }
         return stepLogs;

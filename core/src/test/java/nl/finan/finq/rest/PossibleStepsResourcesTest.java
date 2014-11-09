@@ -28,7 +28,7 @@ public class PossibleStepsResourcesTest {
     private PossibleStepsResources possibleStepsResources;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         Configuration config = new DefaultConfiguration();
         config.addSteps(Arrays.<Object>asList(new PossibleSteps()));
 
@@ -37,11 +37,11 @@ public class PossibleStepsResourcesTest {
     }
 
     @Test
-    public void testGetPossibleSteps(){
+    public void testGetPossibleSteps() {
         List<PossibleStepTO> possibleSteps = possibleStepsResources.getPossibleSteps();
 
         Assert.assertEquals(1, possibleSteps.size());
-        Assert.assertEquals(StepType.WHEN,possibleSteps.get(0).getStepType());
+        Assert.assertEquals(StepType.WHEN, possibleSteps.get(0).getStepType());
         Assert.assertEquals("Test", possibleSteps.get(0).getCategories()[0]);
         Assert.assertEquals("this is a step", possibleSteps.get(0).getStep());
 

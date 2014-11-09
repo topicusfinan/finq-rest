@@ -64,7 +64,7 @@ public class OpenConnectionsTest {
         openConnections.add(101L, session);
         openConnections.add(102L, session);
 
-        openConnections.removeFromConnectionMap(100L,session);
+        openConnections.removeFromConnectionMap(100L, session);
 
         Assert.assertNull(openConnections.get(100L));
         Assert.assertTrue(openConnections.containsKey(101L));

@@ -1,7 +1,5 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.entities.RunningStories;
-
 import javax.ws.rs.core.UriInfo;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +18,11 @@ public class Page<T> {
         totalCount = count;
         this.page = page;
         pageSize = size;
-        if( (page + 1) * size < count ){
+        if ((page + 1) * size < count) {
             _link.put("next", uriInfo.getRequestUriBuilder().replaceQueryParam("page", page + 1).build().toString());
         }
-        if(page > 0){
-            _link.put("previous", uriInfo.getRequestUriBuilder().replaceQueryParam("page",page-1).build().toString());
+        if (page > 0) {
+            _link.put("previous", uriInfo.getRequestUriBuilder().replaceQueryParam("page", page - 1).build().toString());
         }
     }
 

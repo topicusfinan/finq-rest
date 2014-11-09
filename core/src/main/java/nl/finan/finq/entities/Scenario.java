@@ -39,7 +39,7 @@ public class Scenario extends GenericEntity {
     }
 
     public List<Step> getSteps() {
-        if(steps == null){
+        if (steps == null) {
             steps = new ArrayList<>();
         }
         return steps;

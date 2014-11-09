@@ -21,16 +21,16 @@ public class TagResources {
     private TagDao tagDao;
 
     @GET
-    public List<Tag> getTags(){
+    public List<Tag> getTags() {
         return tagDao.listAll();
     }
 
     @POST
-    public Response createTag(Tag tag){
-        if(tag == null || tag.getId() != null){
+    public Response createTag(Tag tag) {
+        if (tag == null || tag.getId() != null) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
         tagDao.persist(tag);
-        return Response.created(URI.create(PathConstants.TAGS+"/"+tag.getId())).entity(tag).build();
+        return Response.created(URI.create(PathConstants.TAGS + "/" + tag.getId())).entity(tag).build();
     }
 }

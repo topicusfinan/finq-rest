@@ -14,8 +14,6 @@ import org.mockito.Mockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 public class StoryServicesTest {
@@ -27,7 +25,7 @@ public class StoryServicesTest {
     private StoryService storyService;
 
     @Test
-    public void testConvertAndSaveStory(){
+    public void testConvertAndSaveStory() {
         InputStream fileInputStream = getClass().getResourceAsStream("/StoryServices.story");
         ParseableStory parseableStory = new ParseableStory(fileInputStream, "/StoryServices.story");
 
@@ -38,14 +36,14 @@ public class StoryServicesTest {
         Mockito.verify(storyDao).persist(Mockito.any(nl.finan.finq.entities.Story.class));
 
         Assert.assertEquals("Story title", storyEntity.getTitle());
-        Assert.assertEquals(1,storyEntity.getScenarios().size());
-        Assert.assertEquals(3,storyEntity.getScenarios().get(0).getSteps().size());
-        Assert.assertEquals("scenario description",storyEntity.getScenarios().get(0).getTitle());
+        Assert.assertEquals(1, storyEntity.getScenarios().size());
+        Assert.assertEquals(3, storyEntity.getScenarios().get(0).getSteps().size());
+        Assert.assertEquals("scenario description", storyEntity.getScenarios().get(0).getTitle());
     }
 
 
     @Test
-    public void testAddParentToChilds(){
+    public void testAddParentToChilds() {
         InputStream fileInputStream = getClass().getResourceAsStream("/StoryServices.story");
         ParseableStory parseableStory = new ParseableStory(fileInputStream, "/StoryServices.story");
 

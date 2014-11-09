@@ -1,9 +1,10 @@
 package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import nl.eernie.jmoribus.model.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity

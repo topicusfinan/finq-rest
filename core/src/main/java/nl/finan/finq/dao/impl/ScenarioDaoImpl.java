@@ -7,6 +7,6 @@ import javax.ejb.Stateless;
 
 @Stateless
 public class ScenarioDaoImpl extends DaoJPAImpl<Scenario> implements
-        ScenarioDao {
+    ScenarioDao {
 
 }

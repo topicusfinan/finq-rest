@@ -6,5 +6,5 @@ import nl.finan.finq.entities.Application;
 import javax.ejb.Stateless;
 
 @Stateless
-public class ApplicationDaoImpl extends DaoJPAImpl<Application> implements ApplicationDao{
+public class ApplicationDaoImpl extends DaoJPAImpl<Application> implements ApplicationDao {
 }

@@ -11,10 +11,10 @@ public class Application extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @Column(name="SUBJECT")
+    @Column(name = "SUBJECT")
     private String subject;
 
-    @Column(name="AUTHENTICATE")
+    @Column(name = "AUTHENTICATE")
     private Boolean authenticate;
 
     public String getTitle() {

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-@Path(PathConstants.BOOKS +"/{bookId}/"+ PathConstants.STORIES)
+@Path(PathConstants.BOOKS + "/{bookId}/" + PathConstants.STORIES)
 @Produces(MediaType.APPLICATION_JSON)
 @Transactional
 @Stateless
@@ -46,7 +46,7 @@ public class StoriesResources {
     @GET
     public Response stories(@PathParam("bookId") Long bookId) throws IOException {
         Book book = bookDao.find(bookId);
-        if(book == null){
+        if (book == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(book.getStories()).build();
@@ -54,15 +54,15 @@ public class StoriesResources {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createStory(@PathParam("bookId") Long bookId, Story story){
+    public Response createStory(@PathParam("bookId") Long bookId, Story story) {
         Book book = bookDao.find(bookId);
-        if(book == null){
+        if (book == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         story.setBook(book);
         storyService.addParentsToChilds(story);
         storyDao.persist(story);
-        return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story.getId())).entity(story).build();
+        return Response.created(URI.create(PathConstants.BOOKS + "/" + bookId + "/" + PathConstants.STORIES + "/" + story.getId())).entity(story).build();
     }
 
     @GET
@@ -81,22 +81,21 @@ public class StoriesResources {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/{name}")
-    public Response saveStory(@PathParam("name") String name, @PathParam("bookId") Long bookId, String story){
+    public Response saveStory(@PathParam("name") String name, @PathParam("bookId") Long bookId, String story) {
 
         Book book = bookDao.find(bookId);
-        if(book == null){
+        if (book == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        try{
+        try {
             ParseableStory ps = new ParseableStory(IOUtils.toInputStream(story, "UTF-8"), name);
             nl.eernie.jmoribus.model.Story s = StoryParser.parseStory(ps);
             Story story1 = storyService.convertAndSaveStory(s);
             story1.setBook(book);
-            return Response.created(URI.create(PathConstants.BOOKS +"/"+bookId+"/"+ PathConstants.STORIES+"/"+story1.getId())).entity(story1).build();
-        }
-        catch(IOException ioe){
+            return Response.created(URI.create(PathConstants.BOOKS + "/" + bookId + "/" + PathConstants.STORIES + "/" + story1.getId())).entity(story1).build();
+        } catch (IOException ioe) {
 
-            LOGGER.error("Something went wrong wile parsing the story",ioe);
+            LOGGER.error("Something went wrong wile parsing the story", ioe);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

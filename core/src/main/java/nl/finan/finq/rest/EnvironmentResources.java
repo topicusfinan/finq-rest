@@ -22,7 +22,7 @@ public class EnvironmentResources {
     private EnvironmentDao environmentDao;
 
     @GET
-    public List<Environment> getEnvironments(){
+    public List<Environment> getEnvironments() {
         return environmentDao.listAll();
     }
 

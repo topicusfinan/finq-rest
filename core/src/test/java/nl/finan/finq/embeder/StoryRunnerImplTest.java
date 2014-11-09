@@ -4,8 +4,6 @@ import nl.finan.finq.DefaultConfiguration;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.*;
 import nl.finan.finq.websocket.StatusWebSocket;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,9 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 public class StoryRunnerImplTest {
@@ -36,32 +32,31 @@ public class StoryRunnerImplTest {
     private StoryRunnerImpl statefulStoryRunner;
 
     @Test
-    public void testRun(){
+    public void testRun() {
         Story story = createStory();
 
         when(configurationFactory.getConfiguration()).thenReturn(new DefaultConfiguration());
         RunningStories runningStories = mock(RunningStories.class);
         when(runningStories.getStatus()).thenReturn(LogStatus.RUNNING);
         when(runningStoriesDao.find(100l)).thenReturn(runningStories);
-        statefulStoryRunner.run(new RunMessage(Arrays.asList(story),100l));
+        statefulStoryRunner.run(new RunMessage(Arrays.asList(story), 100l));
 
         Mockito.verify(statusWebSocket).sendStatus(runningStories);
         Mockito.verify(runningStories).setStatus(LogStatus.SUCCESS);
     }
 
     @Test
-    public void testException(){
+    public void testException() {
         Story story = createStory();
 
         when(configurationFactory.getConfiguration()).thenReturn(new DefaultConfiguration());
         RunningStories runningStories = mock(RunningStories.class);
         when(runningStoriesDao.find(100l)).thenReturn(runningStories);
         doThrow(new RuntimeException()).when(runningStories).getStatus();
-        statefulStoryRunner.run(new RunMessage(Arrays.asList(story),100l));
+        statefulStoryRunner.run(new RunMessage(Arrays.asList(story), 100l));
 
         Mockito.verify(runningStories).setStatus(LogStatus.FAILED);
     }
-
 
 
     private Story createStory() {

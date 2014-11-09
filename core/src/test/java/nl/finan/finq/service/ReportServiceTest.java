@@ -74,21 +74,22 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void testFindStoryLog(){
+    public void testFindStoryLog() {
         StoryLog storyLog = new StoryLog();
         when(storyLogDao.find(any(Serializable.class))).thenReturn(storyLog);
 
         StoryLog log = reportService.findStoryLog(100L);
 
-        Assert.assertSame(storyLog,log);
+        Assert.assertSame(storyLog, log);
     }
+
     @Test
-    public void testFindScenarioLog(){
+    public void testFindScenarioLog() {
         ScenarioLog scenarioLog = new ScenarioLog();
         when(scenarioLogDao.find(any(Serializable.class))).thenReturn(scenarioLog);
 
         ScenarioLog log = reportService.findScenarioLog(100L);
 
-        Assert.assertSame(scenarioLog,log);
+        Assert.assertSame(scenarioLog, log);
     }
 }

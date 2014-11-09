@@ -10,22 +10,23 @@ public enum EventType {
     PROGRESS("run:progress");
 
     private String value;
+
     EventType(String value) {
         this.value = value;
     }
 
-    @JsonValue
-    public String getValue(){
-        return value;
-    }
-
     @JsonCreator
-    public static EventType forValue(String s){
+    public static EventType forValue(String s) {
         for (EventType eventType : EventType.values()) {
-            if(eventType.value.equals(s)){
+            if (eventType.value.equals(s)) {
                 return eventType;
             }
         }
-        throw new IllegalArgumentException("EventType "+s+" does not excist");
+        throw new IllegalArgumentException("EventType " + s + " does not excist");
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
     }
 }

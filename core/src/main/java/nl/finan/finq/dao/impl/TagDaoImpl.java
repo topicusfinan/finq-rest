@@ -6,5 +6,5 @@ import nl.finan.finq.entities.Tag;
 import javax.ejb.Stateless;
 
 @Stateless
-public class TagDaoImpl extends DaoJPAImpl<Tag> implements TagDao{
+public class TagDaoImpl extends DaoJPAImpl<Tag> implements TagDao {
 }

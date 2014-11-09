@@ -5,7 +5,9 @@ import nl.finan.finq.dao.BookDao;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.ScenarioDao;
 import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.*;
+import nl.finan.finq.entities.LogStatus;
+import nl.finan.finq.entities.RunningStories;
+import nl.finan.finq.entities.Story;
 import nl.finan.finq.rest.to.RunTO;
 import nl.finan.finq.rest.to.StoryTO;
 import nl.finan.finq.service.RunnerService;
@@ -71,21 +73,21 @@ public class RunnerResources {
     @GET
     public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
                                         @QueryParam("page") @DefaultValue("0") Integer page,
-                                        @QueryParam("size") @DefaultValue("20") Integer size){
+                                        @QueryParam("size") @DefaultValue("20") Integer size) {
         Long count;
         List<RunningStories> resultList;
-        if(statuses !=null && !statuses.isEmpty()){
+        if (statuses != null && !statuses.isEmpty()) {
             List<LogStatus> logStatuses = new ArrayList<>();
             for (String status : statuses) {
                 logStatuses.add(LogStatus.valueOf(status));
             }
             count = runningStoriesDao.countBySatuses(logStatuses);
-            resultList = runningStoriesDao.findByStatuses(logStatuses,page,size);
+            resultList = runningStoriesDao.findByStatuses(logStatuses, page, size);
         } else {
             count = runningStoriesDao.countAll();
-            resultList = runningStoriesDao.listAll(page,size);
+            resultList = runningStoriesDao.listAll(page, size);
         }
-        return new Page<>(resultList,count,page,size, uriInfo);
+        return new Page<>(resultList, count, page, size, uriInfo);
     }
 
 }

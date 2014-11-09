@@ -6,9 +6,8 @@ import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.Step;
 import nl.finan.finq.entities.StepLog;
 import nl.finan.finq.websocket.to.DataTO;
-import nl.finan.finq.websocket.to.ReceivingEventTO;
 import nl.finan.finq.websocket.to.EventType;
-import org.junit.Ignore;
+import nl.finan.finq.websocket.to.ReceivingEventTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -98,7 +97,7 @@ public class StatusWebSocketTest {
     }
 
     @Test(expected = IOException.class)
-    public void testException() throws IOException{
+    public void testException() throws IOException {
         Session session = mock(Session.class);
         RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
         when(session.getAsyncRemote()).thenReturn(async);
@@ -108,13 +107,12 @@ public class StatusWebSocketTest {
         when(runningStoriesDao.find(any(Serializable.class))).thenReturn(runningStories);
 
 
-
         statusWebSocket.message(session, createSubscribe());
 
         Mockito.verify(async).sendText(null);
     }
 
-    private ReceivingEventTO createSubscribe(){
+    private ReceivingEventTO createSubscribe() {
         ReceivingEventTO receivingEventTO = new ReceivingEventTO();
         DataTO dataTO = new DataTO();
         dataTO.setRun(1200l);
@@ -123,7 +121,7 @@ public class StatusWebSocketTest {
         return receivingEventTO;
     }
 
-    private ReceivingEventTO createUnsubscribe(){
+    private ReceivingEventTO createUnsubscribe() {
         ReceivingEventTO receivingEventTO = new ReceivingEventTO();
         DataTO dataTO = new DataTO();
         dataTO.setRun(1200l);

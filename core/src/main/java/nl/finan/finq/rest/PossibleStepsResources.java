@@ -24,7 +24,7 @@ public class PossibleStepsResources {
     private ConfigurationFactory configurationFactory;
 
     @GET
-    public List<PossibleStepTO> getPossibleSteps(){
+    public List<PossibleStepTO> getPossibleSteps() {
         Configuration config = configurationFactory.getConfiguration();
         JMoribus jMoribus = new JMoribus(config);
         return jMoribus.getPossibleSteps();
