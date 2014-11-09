@@ -8,6 +8,4 @@ import javax.ejb.Local;
 public interface ConfigurationFactory {
 
     Configuration getConfiguration();
-
-    Configuration getConfigurationWithReporter(Long reportId);
 }
