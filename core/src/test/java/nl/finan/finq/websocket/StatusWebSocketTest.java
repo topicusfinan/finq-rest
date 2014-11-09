@@ -1,10 +1,7 @@
 package nl.finan.finq.websocket;
 
 import nl.finan.finq.dao.RunningStoriesDao;
-import nl.finan.finq.entities.LogStatus;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Step;
-import nl.finan.finq.entities.StepLog;
+import nl.finan.finq.entities.*;
 import nl.finan.finq.websocket.to.DataTO;
 import nl.finan.finq.websocket.to.EventType;
 import nl.finan.finq.websocket.to.ReceivingEventTO;
@@ -83,10 +80,6 @@ public class StatusWebSocketTest {
         when(session.getAsyncRemote()).thenReturn(async);
         List<Session> sessions = Arrays.asList(session);
         when(openConnections.get(1200l)).thenReturn(sessions);
-        StepLog log = new StepLog();
-        log.setStatus(LogStatus.SUCCESS);
-        log.setId(100L);
-        log.setStep(new Step("test Step"));
 
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(LogStatus.SUCCESS);
@@ -94,6 +87,38 @@ public class StatusWebSocketTest {
         statusWebSocket.sendStatus(runningStories);
 
         Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
+    }
+
+    @Test
+    public void testSendProgress() {
+        when(openConnections.containsKey(1200L)).thenReturn(true);
+        Session session = mock(Session.class);
+        RemoteEndpoint.Async async = mock(RemoteEndpoint.Async.class);
+        when(session.getAsyncRemote()).thenReturn(async);
+        List<Session> sessions = Arrays.asList(session);
+        when(openConnections.get(1200l)).thenReturn(sessions);
+        StepLog log = new StepLog();
+        log.setStatus(LogStatus.SUCCESS);
+        log.setId(100L);
+        log.setStep(new Step("test Step"));
+        ScenarioLog scenarioLog = new ScenarioLog();
+        scenarioLog.getStepLogs().add(log);
+        scenarioLog.setStatus(LogStatus.RUNNING);
+        scenarioLog.setScenario(new Scenario());
+        StoryLog storyLog = new StoryLog();
+        scenarioLog.setStoryLog(storyLog);
+        storyLog.setStatus(LogStatus.RUNNING);
+        storyLog.setStory(new Story());
+        storyLog.getStory().setId(10l);
+        storyLog.setRunningStory(new RunningStories());
+        storyLog.getRunningStory().setStatus(LogStatus.RUNNING);
+
+        RunningStories runningStories = new RunningStories();
+        runningStories.setStatus(LogStatus.SUCCESS);
+        runningStories.setId(1200l);
+        statusWebSocket.sendProgress(1200l, scenarioLog);
+
+        Mockito.verify(async).sendText("{\"event\":\"run:progress\",\"data\":{\"id\":null,\"status\":0,\"story\":{\"id\":10,\"status\":0,\"scenario\":{\"id\":null,\"status\":0,\"steps\":[{\"id\":null,\"status\":1,\"message\":null}]}}}}");
     }
 
     @Test(expected = IOException.class)
