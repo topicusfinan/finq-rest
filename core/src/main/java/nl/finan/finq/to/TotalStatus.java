@@ -1,22 +1,27 @@
-package nl.finan.finq.websocket.to;
+package nl.finan.finq.to;
 
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.ScenarioLog;
-import nl.finan.finq.entities.StepLog;
-import nl.finan.finq.entities.StoryLog;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import nl.finan.finq.entities.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class GistEvent {
+public class TotalStatus {
 
     private Long id;
     private int status;
     private List<StoryTO> stories = new ArrayList<StoryTO>();
+    private User startedBy;
+    private Date startDate;
+    private Date completeDate;
 
-    public GistEvent(RunningStories runningStories) {
+    public TotalStatus(RunningStories runningStories) {
         this.id = runningStories.getId();
         this.status = runningStories.getStatus().ordinal();
+        this.startedBy = runningStories.getStartedBy();
+        this.startDate = runningStories.getStartDate();
+        this.completeDate = runningStories.getCompleteDate();
         for (StoryLog storyLog : runningStories.getLogs()) {
             stories.add(new StoryTO(storyLog));
         }
@@ -32,6 +37,18 @@ public class GistEvent {
 
     public List<StoryTO> getStories() {
         return stories;
+    }
+
+    public User getStartedBy() {
+        return startedBy;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getCompleteDate() {
+        return completeDate;
     }
 
     private class StoryTO {

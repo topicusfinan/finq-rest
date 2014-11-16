@@ -11,6 +11,7 @@ import nl.finan.finq.entities.Story;
 import nl.finan.finq.rest.to.RunTO;
 import nl.finan.finq.rest.to.StoryTO;
 import nl.finan.finq.service.RunnerService;
+import nl.finan.finq.to.TotalStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public class RunnerResources {
     }
 
     @GET
-    public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
+    public Page<TotalStatus> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
                                         @QueryParam("since") Date since, @QueryParam("until") Date until,
                                         @QueryParam("page") @DefaultValue("0") Integer page,
                                         @QueryParam("size") @DefaultValue("20") Integer size) {
@@ -80,8 +81,12 @@ public class RunnerResources {
         }
         Long count = runningStoriesDao.countByDateAndStatuses(logStatuses, since, until);
         List<RunningStories> resultList = runningStoriesDao.findByDateAndStatuses(logStatuses, since, until, page, size);
+        List<TotalStatus> statusList = new ArrayList<>();
+        for (RunningStories runningStories : resultList) {
+            statusList.add(new TotalStatus(runningStories));
+        }
 
-        return new Page<>(resultList, count, page, size, uriInfo);
+        return new Page<>(statusList, count, page, size, uriInfo);
     }
 
 }

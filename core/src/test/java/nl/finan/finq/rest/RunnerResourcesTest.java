@@ -7,6 +7,7 @@ import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.service.RunnerService;
+import nl.finan.finq.to.TotalStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,9 +52,11 @@ public class RunnerResourcesTest {
 
         Date date = new Date();
         when(runningStoriesDao.countByDateAndStatuses(Mockito.anyListOf(LogStatus.class),Mockito.any(Date.class),Mockito.any(Date.class))).thenReturn(1l);
-        when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING),date,date, 0, 1)).thenReturn(Arrays.asList(new RunningStories()));
+        RunningStories runningStories = new RunningStories();
+        runningStories.setStatus(LogStatus.RUNNING);
+        when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING),date,date, 0, 1)).thenReturn(Arrays.asList(runningStories));
 
-        Page<RunningStories> running = runnerResources.getRuns(null, Arrays.asList("RUNNING"),date,date, 0, 1);
+        Page<TotalStatus> running = runnerResources.getRuns(null, Arrays.asList("RUNNING"),date,date, 0, 1);
         Assert.assertEquals(Long.valueOf(1), running.getTotalCount());
         Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
         Assert.assertEquals(Integer.valueOf(0), running.getPage());

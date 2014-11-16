@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.entities.RunningStories;
 import nl.finan.finq.entities.ScenarioLog;
+import nl.finan.finq.to.TotalStatus;
 import nl.finan.finq.websocket.to.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class StatusWebSocket {
     public void sendStatus(RunningStories runningStories) {
         if (openConnections.containsKey(runningStories.getId())) {
             for (Session session : openConnections.get(runningStories.getId())) {
-                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new GistEvent(runningStories))));
+                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
             }
         }
     }
@@ -73,7 +74,7 @@ public class StatusWebSocket {
         RunningStories runningStories = runningStoriesDao.find(reportId);
         if (runningStories != null) {
             openConnections.add(reportId, session);
-            session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new GistEvent(runningStories))));
+            session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
         } else {
             session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
         }
