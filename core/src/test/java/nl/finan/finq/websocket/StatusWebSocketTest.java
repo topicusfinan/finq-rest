@@ -50,7 +50,7 @@ public class StatusWebSocketTest {
 
         statusWebSocket.message(session, createSubscribe());
 
-        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[],\"startedBy\":null,\"startDate\":null,\"completeDate\":null}}");
 
         Mockito.verify(openConnections).add(Long.valueOf("1200"), session);
 
@@ -86,7 +86,7 @@ public class StatusWebSocketTest {
         runningStories.setId(1200l);
         statusWebSocket.sendStatus(runningStories);
 
-        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[]}}");
+        Mockito.verify(async).sendText("{\"event\":\"run:gist\",\"data\":{\"id\":1200,\"status\":1,\"stories\":[],\"startedBy\":null,\"startDate\":null,\"completeDate\":null}}");
     }
 
     @Test
