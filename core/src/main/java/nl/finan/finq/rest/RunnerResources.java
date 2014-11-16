@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Path("run")
@@ -37,12 +38,6 @@ public class RunnerResources {
 
     @EJB
     private StoryDao storyDao;
-
-    @EJB
-    private BookDao bookDao;
-
-    @EJB
-    private ScenarioDao scenarioDao;
 
     @EJB
     private RunningStoriesDao runningStoriesDao;
@@ -72,21 +67,20 @@ public class RunnerResources {
 
     @GET
     public Page<RunningStories> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
+                                        @QueryParam("since") Date since, @QueryParam("until") Date until,
                                         @QueryParam("page") @DefaultValue("0") Integer page,
                                         @QueryParam("size") @DefaultValue("20") Integer size) {
-        Long count;
-        List<RunningStories> resultList;
+
+        List<LogStatus> logStatuses = null;
         if (statuses != null && !statuses.isEmpty()) {
-            List<LogStatus> logStatuses = new ArrayList<>();
+            logStatuses = new ArrayList<>();
             for (String status : statuses) {
                 logStatuses.add(LogStatus.valueOf(status));
             }
-            count = runningStoriesDao.countBySatuses(logStatuses);
-            resultList = runningStoriesDao.findByStatuses(logStatuses, page, size);
-        } else {
-            count = runningStoriesDao.countAll();
-            resultList = runningStoriesDao.listAll(page, size);
         }
+        Long count = runningStoriesDao.countByDateAndStatuses(logStatuses, since, until);
+        List<RunningStories> resultList = runningStoriesDao.findByDateAndStatuses(logStatuses, since, until, page, size);
+
         return new Page<>(resultList, count, page, size, uriInfo);
     }
 

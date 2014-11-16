@@ -4,11 +4,12 @@ import nl.finan.finq.entities.LogStatus;
 import nl.finan.finq.entities.RunningStories;
 
 import javax.ejb.Local;
+import java.util.Date;
 import java.util.List;
 
 @Local
 public interface RunningStoriesDao extends Dao<RunningStories> {
-    List<RunningStories> findByStatuses(List<LogStatus> statuses, Integer page, Integer size);
+    List<RunningStories> findByDateAndStatuses(List<LogStatus> statuses, Date since, Date until, Integer page, Integer size);
 
-    Long countBySatuses(List<LogStatus> logStatuses);
+    Long countByDateAndStatuses(List<LogStatus> logStatuses, Date since, Date until);
 }

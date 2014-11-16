@@ -9,6 +9,8 @@ public final class PathConstants {
     public static final String ENVIRONMENTS = "environments";
     public static final String POSSIBLESTEPS = "possibleSteps";
     public static final String STATUS = "status";
+    public static final String USER = "user";
+
     private PathConstants() {
     }
 }

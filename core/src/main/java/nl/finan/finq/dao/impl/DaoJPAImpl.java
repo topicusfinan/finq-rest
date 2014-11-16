@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -151,4 +152,74 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
         return em.getReference(getPersistentClass(), id);
     }
 
+
+    protected abstract class GenericQuery
+    {
+
+        protected CriteriaBuilder builder;
+
+        protected abstract Predicate buildWhere(CriteriaBuilder builder, Root<T> root);
+
+        protected void buildOrderBy(CriteriaBuilder builder, Root<T> root, List<Order> orderBy)
+        {
+        }
+
+        public List<T> select()
+        {
+            return buildInternal().getResultList();
+        }
+
+        public T singleResult()
+        {
+            try
+            {
+                return buildInternal().getSingleResult();
+            }
+            catch (NoResultException e)
+            {
+                return null;
+            }
+        }
+
+        public List<T> pageSelect(int pageNr, int pageSize)
+        {
+            pageNr = Math.max(1, pageNr);
+            int startItem = (pageNr - 1) * pageSize;
+            return buildInternal().setFirstResult(startItem).setMaxResults(pageSize).getResultList();
+        }
+
+        public Long count()
+        {
+            builder = em.getCriteriaBuilder();
+            CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+            Root<T> root = criteria.from(persistentClass);
+            criteria.select(builder.count(root));
+
+            Expression<Boolean> where = buildWhere(builder, root);
+            if (where != null)
+            {
+                criteria.where(where);
+            }
+            return em.createQuery(criteria).getSingleResult();
+        }
+
+        private TypedQuery<T> buildInternal()
+        {
+            builder = em.getCriteriaBuilder();
+            CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
+            Root<T> root = criteria.from(persistentClass);
+
+            Expression<Boolean> where = buildWhere(builder, root);
+            if (where != null)
+            {
+                criteria.where(where);
+            }
+
+            final List<Order> orderBy = new ArrayList<Order>();
+            buildOrderBy(builder, root, orderBy);
+            criteria.orderBy(orderBy);
+
+            return em.createQuery(criteria);
+        }
+    }
 }
