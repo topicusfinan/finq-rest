@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -46,6 +47,7 @@ public class RunnerService {
     public RunningStories run(List<Story> stories) {
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(LogStatus.RUNNING);
+        runningStories.setStartDate(new Date());
         runningStoriesDao.persist(runningStories);
 
         acknowledgeQueue(stories, runningStories);

@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -47,6 +48,7 @@ public class StoryRunnerImpl implements StoryRunner {
             if (runningStories.getStatus().equals(LogStatus.RUNNING)) {
                 runningStories.setStatus(LogStatus.SUCCESS);
             }
+            runningStories.setCompleteDate(new Date());
             statusWebSocket.sendStatus(runningStories);
 
         } catch (Exception e) {
@@ -54,6 +56,7 @@ public class StoryRunnerImpl implements StoryRunner {
 
             RunningStories runningStories = runningStoriesDao.find(object.getRunId());
             runningStories.setStatus(LogStatus.FAILED);
+            runningStories.setCompleteDate(new Date());
             statusWebSocket.sendStatus(runningStories);
         }
     }
