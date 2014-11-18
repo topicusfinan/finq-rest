@@ -12,6 +12,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+import static nl.finan.finq.dao.impl.NamedParameter.np;
+
 @Stateless
 public class UserDaoImpl extends DaoJPAImpl<User> implements UserDao{
     @Override
@@ -38,5 +40,10 @@ public class UserDaoImpl extends DaoJPAImpl<User> implements UserDao{
                 return where;
             }
         };
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        return find(User.QUERY_BY_USER_NAME,np("username",userName));
     }
 }
