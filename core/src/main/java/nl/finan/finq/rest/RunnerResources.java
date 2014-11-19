@@ -1,19 +1,9 @@
 package nl.finan.finq.rest;
 
 
-import nl.finan.finq.dao.BookDao;
-import nl.finan.finq.dao.RunningStoriesDao;
-import nl.finan.finq.dao.ScenarioDao;
-import nl.finan.finq.dao.StoryDao;
-import nl.finan.finq.entities.LogStatus;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Story;
-import nl.finan.finq.rest.to.RunTO;
-import nl.finan.finq.rest.to.StoryTO;
-import nl.finan.finq.service.RunnerService;
-import nl.finan.finq.to.TotalStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,12 +12,22 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import nl.finan.finq.annotation.Authorized;
+import nl.finan.finq.dao.EnvironmentDao;
+import nl.finan.finq.dao.RunningStoriesDao;
+import nl.finan.finq.dao.StoryDao;
+import nl.finan.finq.entities.*;
+import nl.finan.finq.interceptor.AuthenticationInterceptor;
+import nl.finan.finq.rest.to.RunTO;
+import nl.finan.finq.rest.to.StoryTO;
+import nl.finan.finq.service.RunnerService;
+import nl.finan.finq.to.TotalStatus;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("run")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -46,24 +46,38 @@ public class RunnerResources {
     @EJB
     private RunnerService runnerService;
 
+	@EJB
+	private EnvironmentDao environmentDao;
+
     @POST
     @Path("/stories")
     @Transactional
-    public Response runStory(RunTO run) throws NamingException {
+	@Authorized
+	public RunningStories runStory(RunTO run) throws NamingException
+	{
         LOGGER.debug("Receiving post request with run {}", run);
+		User user = AuthenticationInterceptor.USER_THREAD_LOCAL.get();
 
         List<Story> stories = new ArrayList<>();
         for (StoryTO storyTO : run.getStories()) {
             Story story = storyDao.find(storyTO.getId());
             if (story == null) {
-                return Response.status(Status.NOT_FOUND).build();
+				throw new WebApplicationException("Story was not found", Status.NOT_FOUND);
             }
             stories.add(story);
         }
 
-        RunningStories runningStories = runnerService.run(stories);
+		Environment environment = environmentDao.find(run.getEnvironmentId());
+		if (environment == null)
+		{
+			throw new WebApplicationException("Environment was not found", Status.NOT_FOUND);
+		}
 
-        return Response.ok(runningStories).build();
+        RunningStories runningStories = runnerService.run(stories);
+		runningStories.setStartedBy(user);
+		runningStories.setEnvironment(environment);
+
+		return runningStories;
     }
 
     @GET

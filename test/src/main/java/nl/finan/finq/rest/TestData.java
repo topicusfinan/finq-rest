@@ -1,7 +1,6 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.*;
-import nl.finan.finq.entities.*;
+import java.net.URI;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -9,7 +8,11 @@ import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import java.net.URI;
+
+import nl.finan.finq.dao.*;
+import nl.finan.finq.entities.*;
+import nl.finan.finq.service.UserService;
+import nl.finan.finq.to.UserTO;
 
 @Path("testdata")
 @Stateless
@@ -39,37 +42,48 @@ public class TestData {
     @EJB
     private EnvironmentDao environmentDao;
 
+	@EJB
+	private UserDao userDao;
+
+	@EJB
+	private UserService userService;
+
     @GET
     @Transactional
     public Response generateTestDate() {
-        Book b = new Book();
-        b.setTitle("Test Bundle");
-        projectDao.persist(b);
+		if (projectDao.listAll().isEmpty())
+		{
+			Book b = new Book();
+			b.setTitle("Test Bundle");
+			projectDao.persist(b);
 
-        for (int i = 0; i < 2; i++) {
-            Story s = new Story();
-            s.setTitle("story " + i);
-            s.setBook(b);
-            storyDao.persist(s);
-            addTags(s);
-            addSets(s);
-            b.getStories().add(s);
+			for (int i = 0; i < 2; i++)
+			{
+				Story s = new Story();
+				s.setTitle("story " + i);
+				s.setBook(b);
+				storyDao.persist(s);
+				addTags(s);
+				addSets(s);
+				b.getStories().add(s);
 
-            for (int x = 0; x < 2; x++) {
-                Scenario sc = new Scenario();
-                sc.setTitle("Scenario Title " + i + "-" + x);
-                sc.setStory(s);
-                scenarioDao.persist(sc);
-                s.getScenarios().add(sc);
-                addStep(sc, "Given this is a given step");
-                addStep(sc, "When a When step has been run");
-                addStep(sc, "Then a result must been shown");
+				for (int x = 0; x < 2; x++)
+				{
+					Scenario sc = new Scenario();
+					sc.setTitle("Scenario Title " + i + "-" + x);
+					sc.setStory(s);
+					scenarioDao.persist(sc);
+					s.getScenarios().add(sc);
+					addStep(sc, "Given this is a given step");
+					addStep(sc, "When a When step has been run");
+					addStep(sc, "Then a result must been shown");
+				}
             }
         }
 
         if (applicationDao.listAll().isEmpty()) {
             Application application = new Application();
-            application.setAuthenticate(false);
+			application.setAuthenticate(true);
             application.setSubject("Book store");
             application.setTitle("Finq app");
             applicationDao.persist(application);
@@ -86,6 +100,16 @@ public class TestData {
             mattdamon.setName("MattDamon");
             environmentDao.persist(mattdamon);
         }
+
+		if (userDao.listAll().isEmpty())
+		{
+			UserTO user = new UserTO();
+			user.setFirstname("John");
+			user.setLastname("Doe");
+			user.setUsername("JohnDoe");
+			user.setPassword("test");
+			userService.createUser(user);
+		}
 
         return Response.temporaryRedirect(URI.create("books")).build();
     }

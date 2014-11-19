@@ -1,7 +1,7 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.UserDao;
-import nl.finan.finq.entities.User;
+import java.net.URI;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -10,8 +10,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.List;
+
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.entities.User;
+import nl.finan.finq.entities.UserToken;
+import nl.finan.finq.rest.to.LoginTO;
+import nl.finan.finq.service.UserService;
+import nl.finan.finq.to.UserTO;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 @Path(PathConstants.USER)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -21,6 +28,9 @@ public class UserResources {
 
     @EJB
     private UserDao userDao;
+
+	@EJB
+	private UserService userService;
 
     @GET
     public Page<User> getUsers(@Context UriInfo uriInfo,
@@ -34,11 +44,13 @@ public class UserResources {
     }
 
     @POST
-    public Response createUser(User user,@Context UriInfo uriInfo){
-        if(user == null || user.getId() != null || user.getFirstName() == null || user.getLastName() == null){
+	public Response createUser(UserTO userTO, @Context UriInfo uriInfo)
+	{
+		if (userTO == null || userTO.getFirstname() == null || userTO.getLastname() == null)
+		{
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-        userDao.persist(user);
+		User user = userService.createUser(userTO);
         URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
@@ -51,5 +63,22 @@ public class UserResources {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(user).build();
+	}
+
+	@POST
+	@Path("login")
+	public Response login(LoginTO loginTO)
+	{
+		User user = userDao.findByUserName(loginTO.getUsername());
+		if (user == null)
+		{
+			return Response.status(Response.Status.UNAUTHORIZED).entity("User not found").build();
+		}
+		if (!BCrypt.checkpw(loginTO.getPassword(), user.getPassword()))
+		{
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Incorrect password").build();
+		}
+		UserToken token = userService.generateToken(user);
+		return Response.accepted(token).build();
     }
 }
