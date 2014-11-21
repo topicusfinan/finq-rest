@@ -11,9 +11,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import nl.finan.finq.annotation.Authorized;
 import nl.finan.finq.dao.UserDao;
 import nl.finan.finq.entities.User;
 import nl.finan.finq.entities.UserToken;
+import nl.finan.finq.interceptor.AuthenticationInterceptor;
 import nl.finan.finq.rest.to.LoginTO;
 import nl.finan.finq.service.UserService;
 import nl.finan.finq.to.UserTO;
@@ -57,28 +59,35 @@ public class UserResources {
 
     @GET
     @Path("{id}")
-    public Response getUser(@PathParam("id") Long id){
+    public User getUser(@PathParam("id") Long id){
         User user = userDao.find(id);
         if(user == null){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return Response.ok(user).build();
+        return user;
 	}
 
 	@POST
 	@Path("login")
-	public Response login(LoginTO loginTO)
+	public UserToken login(LoginTO loginTO)
 	{
 		User user = userDao.findByEmail(loginTO.getEmail());
 		if (user == null)
 		{
-			return Response.status(Response.Status.UNAUTHORIZED).entity("User not found").build();
+			throw new WebApplicationException("User not found",Response.Status.UNAUTHORIZED);
 		}
 		if (!BCrypt.checkpw(loginTO.getPassword(), user.getPassword()))
 		{
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Incorrect password").build();
+            throw new WebApplicationException("Incorrect password",Response.Status.UNAUTHORIZED);
 		}
 		UserToken token = userService.generateToken(user);
-		return Response.accepted(token).build();
+		return token;
+    }
+
+    @GET
+    @Path("current")
+    @Authorized
+    public User getCurrentUser(){
+        return AuthenticationInterceptor.USER_THREAD_LOCAL.get();
     }
 }
