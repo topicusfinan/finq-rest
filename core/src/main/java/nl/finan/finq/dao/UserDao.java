@@ -14,7 +14,7 @@ public interface UserDao extends Dao<User>
 
 	Long countByName(String firstName, String lastName);
 
-	User findByUserName(String userName);
+	User findByEmail(String email);
 
 	User findByToken(String token);
 }

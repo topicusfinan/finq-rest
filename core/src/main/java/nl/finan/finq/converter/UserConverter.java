@@ -12,7 +12,7 @@ public final class UserConverter {
         User user = new User();
         user.setFirstName(userTO.getFirstname());
         user.setLastName(userTO.getLastname());
-        user.setUsername(userTO.getUsername());
+        user.setEmail(userTO.getEmail());
         user.setPassword(userTO.getPassword());
         return user;
     }

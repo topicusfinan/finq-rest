@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name = "FINQ_USER", indexes = { @Index(columnList = "username", unique = true) })
-@NamedQueries({ @NamedQuery(name = User.QUERY_BY_USER_NAME, query = "select u from User u where u.username = :username"), @NamedQuery(name = User.QUERY_BY_TOKEN, query = "select t.user from UserToken t where t.token = :token") })
+@Table(name = "FINQ_USER", indexes = { @Index(columnList = "email", unique = true) })
+@NamedQueries({ @NamedQuery(name = User.USER_SELECT_BY_EMAIL, query = "select u from User u where u.email = :email"),
+    @NamedQuery(name = User.QUERY_BY_TOKEN, query = "select t.user from UserToken t where t.token = :token") })
 public class User extends GenericEntity
 {
 
-	public static final String QUERY_BY_USER_NAME = "User.selectByUserName";
+	public static final String USER_SELECT_BY_EMAIL = "User.selectByEmail";
 	public static final String QUERY_BY_TOKEN = "User.selectByToken";
 
 	@Column(name = "FIRST_NAME")
@@ -20,8 +21,8 @@ public class User extends GenericEntity
 	@Column(name = "LAST_NAME")
 	private String lastName;
 
-	@Column(name = "username", nullable = false, unique = true)
-	private String username;
+	@Column(name = "email", nullable = false, unique = true)
+	private String email;
 
 	@Column(name = "password", nullable = false)
 	@JsonIgnore
@@ -47,14 +48,14 @@ public class User extends GenericEntity
 		this.lastName = lastName;
 	}
 
-	public String getUsername()
+	public String getEmail()
 	{
-		return username;
+		return email;
 	}
 
-	public void setUsername(String username)
+	public void setEmail(String email)
 	{
-		this.username = username;
+		this.email = email;
 	}
 
 	public String getPassword()

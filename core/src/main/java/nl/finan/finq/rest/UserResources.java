@@ -69,7 +69,7 @@ public class UserResources {
 	@Path("login")
 	public Response login(LoginTO loginTO)
 	{
-		User user = userDao.findByUserName(loginTO.getUsername());
+		User user = userDao.findByEmail(loginTO.getEmail());
 		if (user == null)
 		{
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User not found").build();

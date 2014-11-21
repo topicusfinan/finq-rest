@@ -52,9 +52,9 @@ public class UserDaoImpl extends DaoJPAImpl<User> implements UserDao
 	}
 
 	@Override
-	public User findByUserName(String userName)
+	public User findByEmail(String email)
 	{
-		return find(User.QUERY_BY_USER_NAME, np("username", userName));
+		return find(User.USER_SELECT_BY_EMAIL, np("emailß", email));
 	}
 
 	@Override

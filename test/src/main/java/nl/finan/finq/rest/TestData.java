@@ -106,7 +106,7 @@ public class TestData {
 			UserTO user = new UserTO();
 			user.setFirstname("John");
 			user.setLastname("Doe");
-			user.setUsername("JohnDoe");
+			user.setEmail("JohnDoe");
 			user.setPassword("test");
 			userService.createUser(user);
 		}
