@@ -9,18 +9,20 @@ import java.util.List;
 
 public class TotalStatus {
 
-    private Long id;
-    private int status;
-    private List<StoryTO> stories = new ArrayList<StoryTO>();
-    private User startedBy;
-    private Date startDate;
-    private Date completeDate;
+    private final Long id;
+    private final int status;
+    private final List<StoryTO> stories = new ArrayList<StoryTO>();
+    private final User startedBy;
+    private final Date startDate;
+    private final Date completeDate;
+    private final Environment environment;
 
     public TotalStatus(RunningStories runningStories) {
         this.id = runningStories.getId();
         this.status = runningStories.getStatus().ordinal();
         this.startedBy = runningStories.getStartedBy();
         this.startDate = runningStories.getStartDate();
+        this.environment = runningStories.getEnvironment();
         this.completeDate = runningStories.getCompleteDate();
         for (StoryLog storyLog : runningStories.getLogs()) {
             stories.add(new StoryTO(storyLog));
