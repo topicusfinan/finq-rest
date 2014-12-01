@@ -6,4 +6,5 @@ import javax.ejb.Local;
 
 @Local
 public interface UserTokenDao extends Dao<UserToken>{
+    UserToken findByToken(String token);
 }

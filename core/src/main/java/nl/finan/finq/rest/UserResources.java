@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 
 import nl.finan.finq.annotation.Authorized;
 import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.dao.UserTokenDao;
 import nl.finan.finq.entities.User;
 import nl.finan.finq.entities.UserToken;
 import nl.finan.finq.interceptor.AuthenticationInterceptor;
@@ -33,6 +34,9 @@ public class UserResources {
 
 	@EJB
 	private UserService userService;
+
+    @EJB
+    private UserTokenDao userTokenDao;
 
     @GET
     public Page<User> getUsers(@Context UriInfo uriInfo,
@@ -89,5 +93,14 @@ public class UserResources {
     @Authorized
     public User getCurrentUser(){
         return AuthenticationInterceptor.USER_THREAD_LOCAL.get();
+    }
+
+    @GET
+    @Path("logout")
+    @Authorized
+    public Response logout(@HeaderParam("x-api-key") String token){
+        UserToken byToken = userTokenDao.findByToken(token);
+        userTokenDao.delete(byToken);
+        return Response.ok().build();
     }
 }
