@@ -54,11 +54,6 @@
             <version>4.3.5.Final</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>4.3.5.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock.version}</version>
@@ -76,6 +71,11 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>runner</finalName>
@@ -87,14 +87,36 @@
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
-                        <compilerArguments>
-                            <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-                        </compilerArguments>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <processors>
+                                <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+                            </processors>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-jpamodelgen</artifactId>
+                        <version>4.3.5.Final</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
@@ -121,6 +143,25 @@
                     <format>xml</format>
                     <maxmem>256m</maxmem>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

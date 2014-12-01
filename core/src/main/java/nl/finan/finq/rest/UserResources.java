@@ -1,7 +1,7 @@
 package nl.finan.finq.rest;
 
-import nl.finan.finq.dao.UserDao;
-import nl.finan.finq.entities.User;
+import java.net.URI;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -10,8 +10,18 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.List;
+
+import nl.finan.finq.annotation.Authorized;
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.dao.UserTokenDao;
+import nl.finan.finq.entities.User;
+import nl.finan.finq.entities.UserToken;
+import nl.finan.finq.interceptor.AuthenticationInterceptor;
+import nl.finan.finq.rest.to.LoginTO;
+import nl.finan.finq.service.UserService;
+import nl.finan.finq.to.UserTO;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 @Path(PathConstants.USER)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -21,6 +31,12 @@ public class UserResources {
 
     @EJB
     private UserDao userDao;
+
+	@EJB
+	private UserService userService;
+
+    @EJB
+    private UserTokenDao userTokenDao;
 
     @GET
     public Page<User> getUsers(@Context UriInfo uriInfo,
@@ -34,22 +50,57 @@ public class UserResources {
     }
 
     @POST
-    public Response createUser(User user,@Context UriInfo uriInfo){
-        if(user == null || user.getId() != null || user.getFirstName() == null || user.getLastName() == null){
+	public Response createUser(UserTO userTO, @Context UriInfo uriInfo)
+	{
+		if (userTO == null || userTO.getFirstname() == null || userTO.getLastname() == null)
+		{
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-        userDao.persist(user);
+		User user = userService.createUser(userTO);
         URI uri = uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build();
         return Response.created(uri).build();
     }
 
     @GET
     @Path("{id}")
-    public Response getUser(@PathParam("id") Long id){
+    public User getUser(@PathParam("id") Long id){
         User user = userDao.find(id);
         if(user == null){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return Response.ok(user).build();
+        return user;
+	}
+
+	@POST
+	@Path("login")
+	public UserToken login(LoginTO loginTO)
+	{
+		User user = userDao.findByEmail(loginTO.getEmail());
+		if (user == null)
+		{
+			throw new WebApplicationException("User not found",Response.Status.UNAUTHORIZED);
+		}
+		if (!BCrypt.checkpw(loginTO.getPassword(), user.getPassword()))
+		{
+            throw new WebApplicationException("Incorrect password",Response.Status.UNAUTHORIZED);
+		}
+		UserToken token = userService.generateToken(user);
+		return token;
+    }
+
+    @GET
+    @Path("current")
+    @Authorized
+    public User getCurrentUser(){
+        return AuthenticationInterceptor.USER_THREAD_LOCAL.get();
+    }
+
+    @GET
+    @Path("logout")
+    @Authorized
+    public Response logout(@HeaderParam("x-api-key") String token){
+        UserToken byToken = userTokenDao.findByToken(token);
+        userTokenDao.delete(byToken);
+        return Response.ok().build();
     }
 }
