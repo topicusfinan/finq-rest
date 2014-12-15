@@ -4,6 +4,7 @@ import nl.eernie.jmoribus.configuration.Configuration;
 import nl.eernie.jmoribus.model.StepType;
 import nl.eernie.jmoribus.to.PossibleStepTO;
 import nl.finan.finq.DefaultConfiguration;
+import nl.finan.finq.configuration.FinqConfiguration;
 import nl.finan.finq.embeder.ConfigurationFactory;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class PossibleStepsResourcesTest {
 
     @Before
     public void setUp() {
-        Configuration config = new DefaultConfiguration();
+        FinqConfiguration config = new DefaultConfiguration();
         config.addSteps(Arrays.<Object>asList(new PossibleSteps()));
 
 

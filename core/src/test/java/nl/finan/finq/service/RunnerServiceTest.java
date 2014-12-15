@@ -60,7 +60,7 @@ public class RunnerServiceTest {
     @Test
     public void runStory() throws JMSException {
         Story story = mock(Story.class);
-        RunningStories run = runnerService.run(story);
+        RunningStories run = runnerService.run(story,null,null);
 
         Mockito.verify(runningStoriesDao).persist(run);
         Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
@@ -71,7 +71,7 @@ public class RunnerServiceTest {
     @Test
     public void runBundle() throws JMSException {
         Book book = mock(Book.class);
-        RunningStories run = runnerService.run(book);
+        RunningStories run = runnerService.run(book,null,null);
 
         Mockito.verify(runningStoriesDao).persist(run);
         Assert.assertEquals(LogStatus.RUNNING, run.getStatus());

@@ -1,19 +1,17 @@
 package nl.finan.finq.dao.impl;
 
-import static nl.finan.finq.dao.impl.NamedParameter.np;
-
-import java.util.List;
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.entities.User;
+import nl.finan.finq.entities.User_;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
-import nl.finan.finq.dao.UserDao;
-import nl.finan.finq.entities.User;
-import nl.finan.finq.entities.User_;
-
-import org.apache.commons.lang3.StringUtils;
+import static nl.finan.finq.dao.impl.NamedParameter.np;
 
 @Stateless
 public class UserDaoImpl extends DaoJPAImpl<User> implements UserDao
@@ -54,7 +52,7 @@ public class UserDaoImpl extends DaoJPAImpl<User> implements UserDao
 	@Override
 	public User findByEmail(String email)
 	{
-		return find(User.USER_SELECT_BY_EMAIL, np("emailß", email));
+		return find(User.USER_SELECT_BY_EMAIL, np("email", email));
 	}
 
 	@Override

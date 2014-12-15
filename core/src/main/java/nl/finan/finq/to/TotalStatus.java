@@ -53,6 +53,10 @@ public class TotalStatus {
         return completeDate;
     }
 
+    public Environment getEnvironment() {
+        return environment;
+    }
+
     private class StoryTO {
 
         private Long id;

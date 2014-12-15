@@ -4,10 +4,7 @@ import nl.finan.finq.dao.RunningStoriesDao;
 import nl.finan.finq.dao.StoryDao;
 import nl.finan.finq.embeder.Queues;
 import nl.finan.finq.embeder.RunMessage;
-import nl.finan.finq.entities.Book;
-import nl.finan.finq.entities.LogStatus;
-import nl.finan.finq.entities.RunningStories;
-import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,18 +33,20 @@ public class RunnerService {
     @Resource(mappedName = Queues.RUN_STORY_QUEUE)
     private Queue queue;
 
-    public RunningStories run(Story story) {
-        return run(Arrays.asList(story));
+    public RunningStories run(Story story, User user, Environment environment) {
+        return run(Arrays.asList(story), user, environment);
     }
 
-    public RunningStories run(Book book) {
-        return run(book.getStories());
+    public RunningStories run(Book book, User user, Environment environment) {
+        return run(book.getStories(), user, environment);
     }
 
-    public RunningStories run(List<Story> stories) {
+    public RunningStories run(List<Story> stories, User user, Environment environment) {
         RunningStories runningStories = new RunningStories();
         runningStories.setStatus(LogStatus.RUNNING);
         runningStories.setStartDate(new Date());
+        runningStories.setStartedBy(user);
+        runningStories.setEnvironment(environment);
         runningStoriesDao.persist(runningStories);
 
         acknowledgeQueue(stories, runningStories);

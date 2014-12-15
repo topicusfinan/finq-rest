@@ -1,6 +1,5 @@
 package nl.finan.finq.configuration;
 
-import nl.eernie.jmoribus.configuration.Configuration;
 import nl.eernie.jmoribus.reporter.Reporter;
 import nl.finan.finq.embeder.ConfigurationFactory;
 import nl.finan.finq.steps.Step;
@@ -16,8 +15,8 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
     private Reporter reporter;
 
     @Override
-    public Configuration getConfiguration() {
-        Configuration configuration = new JmoribusConfiguration();
+    public FinqConfiguration getConfiguration() {
+        FinqConfiguration configuration = new JmoribusConfiguration();
         configuration.addSteps(Arrays.<Object>asList(new Step()));
         configuration.addReporter(reporter);
         return configuration;

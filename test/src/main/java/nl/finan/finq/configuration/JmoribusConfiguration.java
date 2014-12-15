@@ -1,6 +1,5 @@
 package nl.finan.finq.configuration;
 
-import nl.eernie.jmoribus.configuration.Configuration;
 import nl.eernie.jmoribus.context.ContextProvider;
 import nl.eernie.jmoribus.context.DefaultContextProvider;
 import nl.eernie.jmoribus.reporter.ConcurrentReporter;
@@ -10,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JmoribusConfiguration implements Configuration {
+public class JmoribusConfiguration extends FinqConfiguration {
 
     private ConcurrentReporter concurrentReporter = new ConcurrentReporter();
     private ContextProvider contextProvider = new DefaultContextProvider();
