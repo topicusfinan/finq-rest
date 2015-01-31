@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "FINQ_STEP")
@@ -13,14 +17,12 @@ public class Step extends GenericEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "SCENARIO_ID")
     @JsonBackReference
-    private Scenario scenario;
+    private StepContainer stepContainer;
 
     @Column(name = "TITLE", nullable = false)
     @LazyCollection(LazyCollectionOption.FALSE)
     private String title;
 
-    @Transient
-    private String template;
 
     public Step() {
     }
@@ -29,17 +31,12 @@ public class Step extends GenericEntity {
         this.title = title;
     }
 
-    public Step(String title, String template) {
-        this.title = title;
-        this.template = template;
+    public StepContainer getStepContainer() {
+        return stepContainer;
     }
 
-    public Scenario getScenario() {
-        return scenario;
-    }
-
-    public void setScenario(Scenario scenario) {
-        this.scenario = scenario;
+    public void setStepContainer(StepContainer stepContainer) {
+        this.stepContainer = stepContainer;
     }
 
     public String getTitle() {
@@ -48,14 +45,6 @@ public class Step extends GenericEntity {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
     }
 
     public String toStory() {

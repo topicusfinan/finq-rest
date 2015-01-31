@@ -28,7 +28,7 @@ public class StoryService {
                 nl.finan.finq.entities.Step stepEntity = new nl.finan.finq.entities.Step();
                 String key = step.getStepType().name();
                 stepEntity.setTitle(key.substring(0, 1).toUpperCase() + key.substring(1).toLowerCase() + " " + step.getCombinedStepLines());
-                stepEntity.setScenario(scenarioEntity);
+                stepEntity.setStepContainer(scenarioEntity);
                 scenarioEntity.getSteps().add(stepEntity);
             }
 
@@ -49,7 +49,7 @@ public class StoryService {
 
     private void addParentsToChilds(nl.finan.finq.entities.Scenario scenario) {
         for (nl.finan.finq.entities.Step step : scenario.getSteps()) {
-            step.setScenario(scenario);
+            step.setStepContainer(scenario);
         }
     }
 }

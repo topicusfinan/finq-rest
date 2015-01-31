@@ -1,6 +1,27 @@
 package nl.finan.finq.rest;
 
-import java.net.URI;
+import nl.finan.finq.dao.ApplicationDao;
+import nl.finan.finq.dao.BookDao;
+import nl.finan.finq.dao.EnvironmentDao;
+import nl.finan.finq.dao.PrologueDao;
+import nl.finan.finq.dao.ScenarioDao;
+import nl.finan.finq.dao.SetDao;
+import nl.finan.finq.dao.StepDao;
+import nl.finan.finq.dao.StoryDao;
+import nl.finan.finq.dao.TagDao;
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.entities.Application;
+import nl.finan.finq.entities.Book;
+import nl.finan.finq.entities.Environment;
+import nl.finan.finq.entities.Prologue;
+import nl.finan.finq.entities.Scenario;
+import nl.finan.finq.entities.Set;
+import nl.finan.finq.entities.Step;
+import nl.finan.finq.entities.StepContainer;
+import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.Tag;
+import nl.finan.finq.service.UserService;
+import nl.finan.finq.to.UserTO;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -8,11 +29,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
-import nl.finan.finq.dao.*;
-import nl.finan.finq.entities.*;
-import nl.finan.finq.service.UserService;
-import nl.finan.finq.to.UserTO;
+import java.net.URI;
 
 @Path("testdata")
 @Stateless
@@ -23,6 +40,9 @@ public class TestData {
 
     @EJB
     private BookDao projectDao;
+
+    @EJB
+    private PrologueDao prologueDao;
 
     @EJB
     private ScenarioDao scenarioDao;
@@ -66,6 +86,7 @@ public class TestData {
 				addTags(s);
 				addSets(s);
 				b.getStories().add(s);
+                addPrologue(s);
 
 				for (int x = 0; x < 2; x++)
 				{
@@ -114,6 +135,15 @@ public class TestData {
         return Response.temporaryRedirect(URI.create("books")).build();
     }
 
+    private void addPrologue(Story story) {
+        Prologue prologue = new Prologue();
+        prologue.setStory(story);
+        prologueDao.persist(prologue);
+        addStep(prologue, "Given this is a given step");
+        addStep(prologue, "When a When step has been run");
+        addStep(prologue, "Then a result must been shown");
+    }
+
     private void addTags(Story s) {
         Tag tag = new Tag();
         tag.setaKey("test");
@@ -131,9 +161,9 @@ public class TestData {
         setDao.persist(set);
     }
 
-    private void addStep(Scenario sc, String s) {
+    private void addStep(StepContainer sc, String s) {
         Step step = new Step();
-        step.setScenario(sc);
+        step.setStepContainer(sc);
         step.setTitle(s);
         sc.getSteps().add(step);
         stepDao.persist(step);

@@ -55,7 +55,7 @@ public class StoryServicesTest {
 
         Scenario scenario = storyEntity.getScenarios().get(0);
         Assert.assertSame(storyEntity, scenario.getStory());
-        Assert.assertSame(scenario, scenario.getSteps().get(0).getScenario());
+        Assert.assertSame(scenario, scenario.getSteps().get(0).getStepContainer());
     }
 
 

@@ -2,25 +2,19 @@ package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "FINQ_SCENARIO")
-public class Scenario extends StepContainer {
+@Table(name = "FINQ_PROLOGUE")
+public class Prologue extends StepContainer {
 
-    @ManyToOne(optional = false)
+    @OneToOne
     @JoinColumn(name = "STORY_ID", nullable = false)
     @JsonBackReference
     private Story story;
-
-    @Column(name = "TITLE")
-    private String title;
-
 
     public Story getStory() {
         return story;
@@ -30,18 +24,9 @@ public class Scenario extends StepContainer {
         this.story = story;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String toStory() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Scenario: ");
-        builder.append(getTitle());
+        builder.append("Prologue:");
         for (Step step : getSteps()) {
             builder.append(System.lineSeparator());
             builder.append(step.toStory());

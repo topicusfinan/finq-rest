@@ -4,7 +4,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +28,9 @@ public class Story extends GenericEntity {
 
     @Column(name = "TITLE")
     private String title;
+
+    @OneToOne(mappedBy = "story")
+    private Prologue prologue;
 
     @OneToMany(mappedBy = "story", cascade = javax.persistence.CascadeType.PERSIST)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -47,6 +58,14 @@ public class Story extends GenericEntity {
 
     public void setTitle(String name) {
         this.title = name;
+    }
+
+    public Prologue getPrologue() {
+        return prologue;
+    }
+
+    public void setPrologue(Prologue prologue) {
+        this.prologue = prologue;
     }
 
     public List<Scenario> getScenarios() {
@@ -79,6 +98,9 @@ public class Story extends GenericEntity {
     public String toStory() {
         StringBuilder builder = new StringBuilder();
         builder.append("Feature: ").append(title);
+        if (prologue != null) {
+            builder.append(prologue.toStory());
+        }
         for (Scenario scenario : getScenarios()) {
             builder.append(System.lineSeparator());
             builder.append(scenario.toStory());
