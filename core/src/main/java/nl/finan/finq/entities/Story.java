@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +30,7 @@ public class Story extends GenericEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @OneToOne(mappedBy = "story")
+    @OneToOne(mappedBy = "story",cascade = CascadeType.PERSIST)
     private Prologue prologue;
 
     @OneToMany(mappedBy = "story", cascade = javax.persistence.CascadeType.PERSIST)
