@@ -6,7 +6,6 @@ import nl.finan.finq.entities.Scenario;
 import javax.ejb.Stateless;
 
 @Stateless
-public class ScenarioDaoImpl extends DaoJPAImpl<Scenario> implements
-    ScenarioDao {
+public class ScenarioDaoImpl extends DaoJPAImpl<Scenario> implements ScenarioDao {
 
 }

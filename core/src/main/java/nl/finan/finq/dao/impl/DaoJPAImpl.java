@@ -153,27 +153,24 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
     }
 
 
-    protected abstract class GenericQuery
+    protected class GenericQuery
     {
 
         protected CriteriaBuilder builder;
-
-        protected abstract Predicate buildWhere(CriteriaBuilder builder, Root<T> root);
 
         protected void buildOrderBy(CriteriaBuilder builder, Root<T> root, List<Order> orderBy)
         {
         }
 
-        public List<T> select()
-        {
-            return buildInternal().getResultList();
+        public List<T> select(WhereBuilder<T> whereBuilder){
+            return buildInternal(whereBuilder).getResultList();
         }
 
-        public T singleResult()
+        public T singleResult(WhereBuilder<T> whereBuilder)
         {
             try
             {
-                return buildInternal().getSingleResult();
+                return buildInternal(whereBuilder).getSingleResult();
             }
             catch (NoResultException e)
             {
@@ -181,21 +178,21 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
             }
         }
 
-        public List<T> pageSelect(int pageNr, int pageSize)
+        public List<T> pageSelect(WhereBuilder<T> whereBuilder,int pageNr, int pageSize)
         {
             pageNr = Math.max(1, pageNr);
             int startItem = (pageNr - 1) * pageSize;
-            return buildInternal().setFirstResult(startItem).setMaxResults(pageSize).getResultList();
+            return buildInternal(whereBuilder).setFirstResult(startItem).setMaxResults(pageSize).getResultList();
         }
 
-        public Long count()
+        public Long count(WhereBuilder<T> whereBuilder)
         {
             builder = em.getCriteriaBuilder();
             CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
             Root<T> root = criteria.from(persistentClass);
             criteria.select(builder.count(root));
 
-            Expression<Boolean> where = buildWhere(builder, root);
+            Expression<Boolean> where = whereBuilder.buildWhere(builder, root);
             if (where != null)
             {
                 criteria.where(where);
@@ -203,13 +200,13 @@ public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T> {
             return em.createQuery(criteria).getSingleResult();
         }
 
-        private TypedQuery<T> buildInternal()
+        private TypedQuery<T> buildInternal(WhereBuilder<T> whereBuilder)
         {
             builder = em.getCriteriaBuilder();
             CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
             Root<T> root = criteria.from(persistentClass);
 
-            Expression<Boolean> where = buildWhere(builder, root);
+            Expression<Boolean> where = whereBuilder.buildWhere(builder, root);
             if (where != null)
             {
                 criteria.where(where);
