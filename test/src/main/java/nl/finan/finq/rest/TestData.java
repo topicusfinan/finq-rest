@@ -1,6 +1,24 @@
 package nl.finan.finq.rest;
 
-import java.net.URI;
+import nl.finan.finq.common.to.UserTO;
+import nl.finan.finq.dao.ApplicationDao;
+import nl.finan.finq.dao.BookDao;
+import nl.finan.finq.dao.EnvironmentDao;
+import nl.finan.finq.dao.ScenarioDao;
+import nl.finan.finq.dao.SetDao;
+import nl.finan.finq.dao.StepDao;
+import nl.finan.finq.dao.StoryDao;
+import nl.finan.finq.dao.TagDao;
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.entities.Application;
+import nl.finan.finq.entities.Book;
+import nl.finan.finq.entities.Environment;
+import nl.finan.finq.entities.Scenario;
+import nl.finan.finq.entities.Set;
+import nl.finan.finq.entities.Step;
+import nl.finan.finq.entities.Story;
+import nl.finan.finq.entities.Tag;
+import nl.finan.finq.service.UserService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -8,11 +26,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
-import nl.finan.finq.dao.*;
-import nl.finan.finq.entities.*;
-import nl.finan.finq.service.UserService;
-import nl.finan.finq.to.UserTO;
+import java.net.URI;
 
 @Path("testdata")
 @Stateless
