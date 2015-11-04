@@ -6,4 +6,4 @@ env:
   - secure: CCNDd/Pw+nJBKtivLaEZozGSDtWxFkavgHcnN6Jbhp0tyzEOqb6ZHs+6PlTtpPGlfyDGmw6GjaPDYSS5kd4tiDbjUF13ul/BB1SGFu+CAP3B/5xMmGglUvn4zqdWWsGm5NjMRb8NmIBDwR7iKn4mvEg8p4cWLcJugVZ36a2Z3q4=
 
 after_success:
-- mvn clean test jacoco:report coveralls:report
+- mvn clean jacoco:prepare-agent test jacoco:report coveralls:report
