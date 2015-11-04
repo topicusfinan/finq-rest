@@ -6,5 +6,5 @@ import nl.finan.finq.entities.Set;
 import javax.ejb.Stateless;
 
 @Stateless
-public class SetDaoImpl extends DaoJPAImpl<Set> implements SetDao {
-}
+public class SetDaoImpl extends DaoJPAImpl<Set> implements SetDao
+{}

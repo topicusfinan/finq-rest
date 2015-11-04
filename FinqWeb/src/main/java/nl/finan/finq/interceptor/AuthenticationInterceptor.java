@@ -1,6 +1,10 @@
 package nl.finan.finq.interceptor;
 
-import java.io.IOException;
+import nl.finan.finq.annotation.Authorized;
+import nl.finan.finq.dao.UserDao;
+import nl.finan.finq.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -8,13 +12,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
-import nl.finan.finq.annotation.Authorized;
-import nl.finan.finq.dao.UserDao;
-import nl.finan.finq.entities.User;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 @Authorized
 @Provider

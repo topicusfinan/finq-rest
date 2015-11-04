@@ -16,13 +16,15 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Stateless
-public class SetResources {
+public class SetResources
+{
 
-    @EJB
-    private SetDao setDao;
+	@EJB
+	private SetDao setDao;
 
-    @GET
-    public List<Set> getSets() {
-        return setDao.listAll();
-    }
+	@GET
+	public List<Set> getSets()
+	{
+		return setDao.listAll();
+	}
 }

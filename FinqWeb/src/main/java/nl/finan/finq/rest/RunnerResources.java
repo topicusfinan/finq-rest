@@ -1,6 +1,5 @@
 package nl.finan.finq.rest;
 
-
 import nl.finan.finq.annotation.Authorized;
 import nl.finan.finq.common.to.TotalStatus;
 import nl.finan.finq.dao.EnvironmentDao;
@@ -42,39 +41,42 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
-public class RunnerResources {
+public class RunnerResources
+{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RunnerResources.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RunnerResources.class);
 
-    @EJB
-    private StoryDao storyDao;
+	@EJB
+	private StoryDao storyDao;
 
-    @EJB
-    private RunningStoriesDao runningStoriesDao;
+	@EJB
+	private RunningStoriesDao runningStoriesDao;
 
-    @EJB
-    private RunnerService runnerService;
+	@EJB
+	private RunnerService runnerService;
 
 	@EJB
 	private EnvironmentDao environmentDao;
 
-    @POST
-    @Path("/stories")
-    @Transactional
+	@POST
+	@Path("/stories")
+	@Transactional
 	@Authorized
 	public RunningStories runStory(RunTO run) throws NamingException
 	{
-        LOGGER.debug("Receiving post request with run {}", run);
+		LOGGER.debug("Receiving post request with run {}", run);
 		User user = AuthenticationInterceptor.USER_THREAD_LOCAL.get();
 
-        List<Story> stories = new ArrayList<>();
-        for (StoryTO storyTO : run.getStories()) {
-            Story story = storyDao.find(storyTO.getId());
-            if (story == null) {
+		List<Story> stories = new ArrayList<>();
+		for (StoryTO storyTO : run.getStories())
+		{
+			Story story = storyDao.find(storyTO.getId());
+			if (story == null)
+			{
 				throw new WebApplicationException("Story was not found", Status.NOT_FOUND);
-            }
-            stories.add(story);
-        }
+			}
+			stories.add(story);
+		}
 
 		Environment environment = environmentDao.find(run.getEnvironmentId());
 		if (environment == null)
@@ -82,30 +84,31 @@ public class RunnerResources {
 			throw new WebApplicationException("Environment was not found", Status.NOT_FOUND);
 		}
 
-        return runnerService.run(stories,user,environment);
-    }
+		return runnerService.run(stories, user, environment);
+	}
 
-    @GET
-    public Page<TotalStatus> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses,
-                                        @QueryParam("since") Date since, @QueryParam("until") Date until,
-                                        @QueryParam("page") @DefaultValue("0") Integer page,
-                                        @QueryParam("size") @DefaultValue("20") Integer size) {
+	@GET
+	public Page<TotalStatus> getRuns(@Context UriInfo uriInfo, @QueryParam("status") List<String> statuses, @QueryParam("since") Date since, @QueryParam("until") Date until, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("size") @DefaultValue("20") Integer size)
+	{
 
-        List<LogStatus> logStatuses = null;
-        if (statuses != null && !statuses.isEmpty()) {
-            logStatuses = new ArrayList<>();
-            for (String status : statuses) {
-                logStatuses.add(LogStatus.valueOf(status));
-            }
-        }
-        Long count = runningStoriesDao.countByDateAndStatuses(logStatuses, since, until);
-        List<RunningStories> resultList = runningStoriesDao.findByDateAndStatuses(logStatuses, since, until, page, size);
-        List<TotalStatus> statusList = new ArrayList<>();
-        for (RunningStories runningStories : resultList) {
-            statusList.add(new TotalStatus(runningStories));
-        }
+		List<LogStatus> logStatuses = null;
+		if (statuses != null && !statuses.isEmpty())
+		{
+			logStatuses = new ArrayList<>();
+			for (String status : statuses)
+			{
+				logStatuses.add(LogStatus.valueOf(status));
+			}
+		}
+		Long count = runningStoriesDao.countByDateAndStatuses(logStatuses, since, until);
+		List<RunningStories> resultList = runningStoriesDao.findByDateAndStatuses(logStatuses, since, until, page, size);
+		List<TotalStatus> statusList = new ArrayList<>();
+		for (RunningStories runningStories : resultList)
+		{
+			statusList.add(new TotalStatus(runningStories));
+		}
 
-        return new Page<>(statusList, count, page, size, uriInfo);
-    }
+		return new Page<>(statusList, count, page, size, uriInfo);
+	}
 
 }

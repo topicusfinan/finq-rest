@@ -5,15 +5,15 @@ import nl.finan.finq.common.to.EnvironmentTO;
 
 public abstract class FinqConfiguration implements Configuration
 {
-    private EnvironmentTO environment;
+	private EnvironmentTO environment;
 
-    public EnvironmentTO getEnvironment()
-    {
-        return environment;
-    }
+	public EnvironmentTO getEnvironment()
+	{
+		return environment;
+	}
 
-    public void setEnvironment(EnvironmentTO environment)
-    {
-        this.environment = environment;
-    }
+	public void setEnvironment(EnvironmentTO environment)
+	{
+		this.environment = environment;
+	}
 }

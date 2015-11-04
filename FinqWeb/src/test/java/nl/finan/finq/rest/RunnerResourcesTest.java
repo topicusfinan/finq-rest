@@ -27,56 +27,57 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-public class RunnerResourcesTest {
+public class RunnerResourcesTest
+{
 
-    @Mock
-    private StoryDao storyDao;
+	@Mock
+	private StoryDao storyDao;
 
-    @Mock
-    private BookDao bookDao;
+	@Mock
+	private BookDao bookDao;
 
-    @Mock
-    private ScenarioDao scenarioDao;
+	@Mock
+	private ScenarioDao scenarioDao;
 
-    @Mock
-    private RunningStoriesDao runningStoriesDao;
+	@Mock
+	private RunningStoriesDao runningStoriesDao;
 
-    @Mock
-    private RunnerService runnerService;
+	@Mock
+	private RunnerService runnerService;
 
-    @InjectMocks
-    private RunnerResources runnerResources;
+	@InjectMocks
+	private RunnerResources runnerResources;
 
-    @Test
-    public void testGetRuns() throws URISyntaxException {
+	@Test
+	public void testGetRuns() throws URISyntaxException
+	{
 
-        Date date = new Date();
-        when(runningStoriesDao.countByDateAndStatuses(Mockito.anyListOf(LogStatus.class),Mockito.any(Date.class),Mockito.any(Date.class))).thenReturn(1l);
-        RunningStories runningStories = new RunningStories();
-        runningStories.setStatus(LogStatus.RUNNING);
-        when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING),date,date, 0, 1)).thenReturn(Arrays.asList(runningStories));
+		Date date = new Date();
+		when(runningStoriesDao.countByDateAndStatuses(Mockito.anyListOf(LogStatus.class), Mockito.any(Date.class), Mockito.any(Date.class))).thenReturn(1l);
+		RunningStories runningStories = new RunningStories();
+		runningStories.setStatus(LogStatus.RUNNING);
+		when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING), date, date, 0, 1)).thenReturn(Arrays.asList(runningStories));
 
-        Page<TotalStatus> running = runnerResources.getRuns(null, Arrays.asList("RUNNING"),date,date, 0, 1);
-        Assert.assertEquals(Long.valueOf(1), running.getTotalCount());
-        Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
-        Assert.assertEquals(Integer.valueOf(0), running.getPage());
+		Page<TotalStatus> running = runnerResources.getRuns(null, Arrays.asList("RUNNING"), date, date, 0, 1);
+		Assert.assertEquals(Long.valueOf(1), running.getTotalCount());
+		Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
+		Assert.assertEquals(Integer.valueOf(0), running.getPage());
 
-        UriInfo uriInfo = mock(UriInfo.class);
-        UriBuilder uriBuilder = mock(UriBuilder.class);
-        URI uri = new URI("http://test");
-        when(uriInfo.getRequestUriBuilder()).thenReturn(uriBuilder);
-        when(uriBuilder.replaceQueryParam(Mockito.anyString(), Mockito.anyString())).thenReturn(uriBuilder);
-        when(uriBuilder.build()).thenReturn(uri);
+		UriInfo uriInfo = mock(UriInfo.class);
+		UriBuilder uriBuilder = mock(UriBuilder.class);
+		URI uri = new URI("http://test");
+		when(uriInfo.getRequestUriBuilder()).thenReturn(uriBuilder);
+		when(uriBuilder.replaceQueryParam(Mockito.anyString(), Mockito.anyString())).thenReturn(uriBuilder);
+		when(uriBuilder.build()).thenReturn(uri);
 
-        when(runningStoriesDao.countByDateAndStatuses(Mockito.anyListOf(LogStatus.class),Mockito.any(Date.class),Mockito.any(Date.class))).thenReturn(3l);
-        when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING),date,date, 1, 1)).thenReturn(Arrays.asList(new RunningStories()));
+		when(runningStoriesDao.countByDateAndStatuses(Mockito.anyListOf(LogStatus.class), Mockito.any(Date.class), Mockito.any(Date.class))).thenReturn(3l);
+		when(runningStoriesDao.findByDateAndStatuses(Arrays.asList(LogStatus.RUNNING), date, date, 1, 1)).thenReturn(Arrays.asList(new RunningStories()));
 
+		running = runnerResources.getRuns(uriInfo, null, date, date, 1, 1);
+		Assert.assertEquals(Long.valueOf(3), running.getTotalCount());
+		Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
+		Assert.assertEquals(Integer.valueOf(1), running.getPage());
+		Assert.assertEquals(2, running.get_link().size());
 
-        running = runnerResources.getRuns(uriInfo, null, date, date, 1, 1);
-        Assert.assertEquals(Long.valueOf(3), running.getTotalCount());
-        Assert.assertEquals(Integer.valueOf(1), running.getPageSize());
-        Assert.assertEquals(Integer.valueOf(1), running.getPage());
-        Assert.assertEquals(2, running.get_link().size());
-
-    }
+	}
 }

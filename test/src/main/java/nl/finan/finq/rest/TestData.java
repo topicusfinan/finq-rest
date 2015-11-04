@@ -30,31 +30,32 @@ import java.net.URI;
 
 @Path("testdata")
 @Stateless
-public class TestData {
+public class TestData
+{
 
-    @EJB
-    private StoryDao storyDao;
+	@EJB
+	private StoryDao storyDao;
 
-    @EJB
-    private BookDao projectDao;
+	@EJB
+	private BookDao projectDao;
 
-    @EJB
-    private ScenarioDao scenarioDao;
+	@EJB
+	private ScenarioDao scenarioDao;
 
-    @EJB
-    private StepDao stepDao;
+	@EJB
+	private StepDao stepDao;
 
-    @EJB
-    private ApplicationDao applicationDao;
+	@EJB
+	private ApplicationDao applicationDao;
 
-    @EJB
-    private SetDao setDao;
+	@EJB
+	private SetDao setDao;
 
-    @EJB
-    private TagDao tagDao;
+	@EJB
+	private TagDao tagDao;
 
-    @EJB
-    private EnvironmentDao environmentDao;
+	@EJB
+	private EnvironmentDao environmentDao;
 
 	@EJB
 	private UserDao userDao;
@@ -62,9 +63,10 @@ public class TestData {
 	@EJB
 	private UserService userService;
 
-    @GET
-    @Transactional
-    public Response generateTestDate() {
+	@GET
+	@Transactional
+	public Response generateTestDate()
+	{
 		if (projectDao.listAll().isEmpty())
 		{
 			Book b = new Book();
@@ -92,28 +94,30 @@ public class TestData {
 					addStep(sc, "When a When step has been run");
 					addStep(sc, "Then a result must been shown");
 				}
-            }
-        }
+			}
+		}
 
-        if (applicationDao.listAll().isEmpty()) {
-            Application application = new Application();
+		if (applicationDao.listAll().isEmpty())
+		{
+			Application application = new Application();
 			application.setAuthenticate(true);
-            application.setSubject("Book store");
-            application.setTitle("Finq app");
-            applicationDao.persist(application);
-        }
+			application.setSubject("Book store");
+			application.setTitle("Finq app");
+			applicationDao.persist(application);
+		}
 
-        if (environmentDao.listAll().isEmpty()) {
-            Environment environment = new Environment();
-            environment.setName("Stalone");
-            environment.setAddress("http://stalone.local");
-            environmentDao.persist(environment);
+		if (environmentDao.listAll().isEmpty())
+		{
+			Environment environment = new Environment();
+			environment.setName("Stalone");
+			environment.setAddress("http://stalone.local");
+			environmentDao.persist(environment);
 
-            Environment mattdamon = new Environment();
-            mattdamon.setAddress("http://mattdamon.local");
-            mattdamon.setName("MattDamon");
-            environmentDao.persist(mattdamon);
-        }
+			Environment mattdamon = new Environment();
+			mattdamon.setAddress("http://mattdamon.local");
+			mattdamon.setName("MattDamon");
+			environmentDao.persist(mattdamon);
+		}
 
 		if (userDao.listAll().isEmpty())
 		{
@@ -125,31 +129,34 @@ public class TestData {
 			userService.createUser(user);
 		}
 
-        return Response.temporaryRedirect(URI.create("books")).build();
-    }
+		return Response.temporaryRedirect(URI.create("books")).build();
+	}
 
-    private void addTags(Story s) {
-        Tag tag = new Tag();
-        tag.setaKey("test");
-        tag.setaValue("Test");
-        tag.getStories().add(s);
-        s.getTags().add(tag);
-        tagDao.persist(tag);
-    }
+	private void addTags(Story s)
+	{
+		Tag tag = new Tag();
+		tag.setaKey("test");
+		tag.setaValue("Test");
+		tag.getStories().add(s);
+		s.getTags().add(tag);
+		tagDao.persist(tag);
+	}
 
-    private void addSets(Story s) {
-        Set set = new Set();
-        set.setName("Regressie");
-        set.getStories().add(s);
-        s.getSets().add(set);
-        setDao.persist(set);
-    }
+	private void addSets(Story s)
+	{
+		Set set = new Set();
+		set.setName("Regressie");
+		set.getStories().add(s);
+		s.getSets().add(set);
+		setDao.persist(set);
+	}
 
-    private void addStep(Scenario sc, String s) {
-        Step step = new Step();
-        step.setScenario(sc);
-        step.setTitle(s);
-        sc.getSteps().add(step);
-        stepDao.persist(step);
-    }
+	private void addStep(Scenario sc, String s)
+	{
+		Step step = new Step();
+		step.setScenario(sc);
+		step.setTitle(s);
+		sc.getSteps().add(step);
+		stepDao.persist(step);
+	}
 }

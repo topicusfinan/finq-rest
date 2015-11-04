@@ -3,8 +3,8 @@ package nl.finan.finq.rest;
 import nl.eernie.jmoribus.model.StepType;
 import nl.eernie.jmoribus.to.PossibleStepTO;
 import nl.finan.finq.DefaultConfiguration;
-import nl.finan.finq.common.configuration.FinqConfiguration;
 import nl.finan.finq.common.configuration.ConfigurationFactory;
+import nl.finan.finq.common.configuration.FinqConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,33 +19,34 @@ import java.util.List;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-public class PossibleStepsResourcesTest {
+public class PossibleStepsResourcesTest
+{
 
-    @Mock
-    private ConfigurationFactory configurationFactory;
+	@Mock
+	private ConfigurationFactory configurationFactory;
 
-    @InjectMocks
-    private PossibleStepsResources possibleStepsResources;
+	@InjectMocks
+	private PossibleStepsResources possibleStepsResources;
 
-    @Before
-    public void setUp() {
-        FinqConfiguration config = new DefaultConfiguration();
-        config.addSteps(Arrays.<Object>asList(new PossibleSteps()));
+	@Before
+	public void setUp()
+	{
+		FinqConfiguration config = new DefaultConfiguration();
+		config.addSteps(Arrays.<Object>asList(new PossibleSteps()));
 
+		when(configurationFactory.getConfiguration()).thenReturn(config);
+	}
 
-        when(configurationFactory.getConfiguration()).thenReturn(config);
-    }
+	@Test
+	public void testGetPossibleSteps()
+	{
+		List<PossibleStepTO> possibleSteps = possibleStepsResources.getPossibleSteps();
 
-    @Test
-    public void testGetPossibleSteps() {
-        List<PossibleStepTO> possibleSteps = possibleStepsResources.getPossibleSteps();
+		Assert.assertEquals(1, possibleSteps.size());
+		Assert.assertEquals(StepType.WHEN, possibleSteps.get(0).getStepType());
+		Assert.assertEquals("Test", possibleSteps.get(0).getCategories()[0]);
+		Assert.assertEquals("this is a step", possibleSteps.get(0).getStep());
 
-        Assert.assertEquals(1, possibleSteps.size());
-        Assert.assertEquals(StepType.WHEN, possibleSteps.get(0).getStepType());
-        Assert.assertEquals("Test", possibleSteps.get(0).getCategories()[0]);
-        Assert.assertEquals("this is a step", possibleSteps.get(0).getStep());
-
-
-    }
+	}
 
 }

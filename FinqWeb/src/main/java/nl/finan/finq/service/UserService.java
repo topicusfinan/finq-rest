@@ -1,6 +1,5 @@
 package nl.finan.finq.service;
 
-
 import nl.finan.finq.common.converter.UserConverter;
 import nl.finan.finq.common.to.UserTO;
 import nl.finan.finq.dao.UserDao;
@@ -18,32 +17,32 @@ import java.util.UUID;
 public class UserService
 {
 
-    @EJB
-    private UserDao userDao;
+	@EJB
+	private UserDao userDao;
 
-    @EJB
-    private UserTokenDao userTokenDao;
+	@EJB
+	private UserTokenDao userTokenDao;
 
-    public User createUser(UserTO userTO)
-    {
-        User user = UserConverter.convert(userTO);
-        user.setPassword(hashPassword(user.getPassword()));
-        userDao.persist(user);
-        return user;
-    }
+	public User createUser(UserTO userTO)
+	{
+		User user = UserConverter.convert(userTO);
+		user.setPassword(hashPassword(user.getPassword()));
+		userDao.persist(user);
+		return user;
+	}
 
-    public UserToken generateToken(User user)
-    {
-        UserToken token = new UserToken();
-        token.setUser(user);
-        token.setToken(UUID.randomUUID().toString());
-        token.setCreationDate(new Date());
-        userTokenDao.persist(token);
-        return token;
-    }
+	public UserToken generateToken(User user)
+	{
+		UserToken token = new UserToken();
+		token.setUser(user);
+		token.setToken(UUID.randomUUID().toString());
+		token.setCreationDate(new Date());
+		userTokenDao.persist(token);
+		return token;
+	}
 
-    private String hashPassword(String password)
-    {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
+	private String hashPassword(String password)
+	{
+		return BCrypt.hashpw(password, BCrypt.gensalt());
+	}
 }

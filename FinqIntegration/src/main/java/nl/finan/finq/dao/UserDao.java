@@ -1,10 +1,9 @@
 package nl.finan.finq.dao;
 
-import java.util.List;
+import nl.finan.finq.entities.User;
 
 import javax.ejb.Local;
-
-import nl.finan.finq.entities.User;
+import java.util.List;
 
 @Local
 public interface UserDao extends Dao<User>

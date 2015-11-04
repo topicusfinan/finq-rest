@@ -5,8 +5,19 @@ import nl.finan.finq.entities.GenericEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -14,237 +25,237 @@ import java.util.List;
 
 public abstract class DaoJPAImpl<T extends GenericEntity> implements Dao<T>
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DaoJPAImpl.class);
-    private static final String QUERY_LISTALL = "SELECT o FROM %s o";
-    private static final String QUERY_COUNTALL = "select count(o) from %s o";
-    private final Class<T> persistentClass;
-    @PersistenceContext
-    private EntityManager em;
+	private static final Logger LOGGER = LoggerFactory.getLogger(DaoJPAImpl.class);
+	private static final String QUERY_LISTALL = "SELECT o FROM %s o";
+	private static final String QUERY_COUNTALL = "select count(o) from %s o";
+	private final Class<T> persistentClass;
+	@PersistenceContext
+	private EntityManager em;
 
-    @SuppressWarnings("unchecked")
-    public DaoJPAImpl()
-    {
-        this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
+	@SuppressWarnings("unchecked")
+	public DaoJPAImpl()
+	{
+		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
 
-    public Class<T> getPersistentClass()
-    {
-        return persistentClass;
-    }
+	public Class<T> getPersistentClass()
+	{
+		return persistentClass;
+	}
 
-    public void persist(T instance)
-    {
-        try
-        {
-            em.persist(instance);
-        }
-        catch (PersistenceException e)
-        {
-            LOGGER.error("It was not possible to persist Entity Class: " + getPersistentClass(), e);
-            throw e;
-        }
-    }
+	public void persist(T instance)
+	{
+		try
+		{
+			em.persist(instance);
+		}
+		catch (PersistenceException e)
+		{
+			LOGGER.error("It was not possible to persist Entity Class: " + getPersistentClass(), e);
+			throw e;
+		}
+	}
 
-    public void refresh(T instance)
-    {
-        em.refresh(instance);
-    }
+	public void refresh(T instance)
+	{
+		em.refresh(instance);
+	}
 
-    public void delete(T instance)
-    {
-        try
-        {
-            em.remove(instance);
-        }
-        catch (PersistenceException e)
-        {
-            LOGGER.error("It was not possible to remove Entity Class/ID: " + getPersistentClass() + " / " + instance.getId(), e);
-            throw e;
-        }
-    }
+	public void delete(T instance)
+	{
+		try
+		{
+			em.remove(instance);
+		}
+		catch (PersistenceException e)
+		{
+			LOGGER.error("It was not possible to remove Entity Class/ID: " + getPersistentClass() + " / " + instance.getId(), e);
+			throw e;
+		}
+	}
 
-    public T find(Serializable id)
-    {
-        LOGGER.debug(">>> executing query (find by id) {}", getPersistentClass());
-        return em.find(getPersistentClass(), id);
-    }
+	public T find(Serializable id)
+	{
+		LOGGER.debug(">>> executing query (find by id) {}", getPersistentClass());
+		return em.find(getPersistentClass(), id);
+	}
 
-    @SuppressWarnings("unchecked")
-    public T find(String namedQuery, NamedParameter... parameters)
-    {
-        LOGGER.debug(">>> executing query (find) {}", namedQuery);
-        T retrievedEntity = null;
+	@SuppressWarnings("unchecked")
+	public T find(String namedQuery, NamedParameter... parameters)
+	{
+		LOGGER.debug(">>> executing query (find) {}", namedQuery);
+		T retrievedEntity = null;
 
-        try
-        {
-            retrievedEntity = (T) createNamedQuery(namedQuery, parameters).getSingleResult();
-        }
-        catch (NoResultException e)
-        {
-            LOGGER.debug("It was not possible to find any {} with SQL parameter(s): {}", getPersistentClass(), parameters);
-        }
-        catch (NonUniqueResultException e)
-        {
-            LOGGER.error("More than one result was found for " + getPersistentClass() + " with SQL parameter(s): " + parameters, e);
-            throw e;
-        }
+		try
+		{
+			retrievedEntity = (T) createNamedQuery(namedQuery, parameters).getSingleResult();
+		}
+		catch (NoResultException e)
+		{
+			LOGGER.debug("It was not possible to find any {} with SQL parameter(s): {}", getPersistentClass(), parameters);
+		}
+		catch (NonUniqueResultException e)
+		{
+			LOGGER.error("More than one result was found for " + getPersistentClass() + " with SQL parameter(s): " + parameters, e);
+			throw e;
+		}
 
-        return retrievedEntity;
-    }
+		return retrievedEntity;
+	}
 
-    public List<T> list(String query, NamedParameter... parameters)
-    {
-        LOGGER.debug(">>> executing query (list) {}", query);
+	public List<T> list(String query, NamedParameter... parameters)
+	{
+		LOGGER.debug(">>> executing query (list) {}", query);
 
-        @SuppressWarnings("unchecked")
-        List<T> retrievedList = createNamedQuery(query, parameters).getResultList();
+		@SuppressWarnings("unchecked")
+		List<T> retrievedList = createNamedQuery(query, parameters).getResultList();
 
-        return retrievedList == null ? new ArrayList<T>() : retrievedList;
-    }
+		return retrievedList == null ? new ArrayList<T>() : retrievedList;
+	}
 
-    public Long count(String query, NamedParameter... parameters)
-    {
-        LOGGER.debug(">>> executing query (count) {}", query);
+	public Long count(String query, NamedParameter... parameters)
+	{
+		LOGGER.debug(">>> executing query (count) {}", query);
 
-        Long count = (Long) createNamedQuery(query, parameters).getSingleResult();
+		Long count = (Long) createNamedQuery(query, parameters).getSingleResult();
 
-        return count == null ? Long.valueOf(0L) : count;
-    }
+		return count == null ? Long.valueOf(0L) : count;
+	}
 
-    public List<T> list(String query, int page, int size, NamedParameter... parameters)
-    {
-        LOGGER.debug(">>> executing query (list, paginated) {}", query);
+	public List<T> list(String query, int page, int size, NamedParameter... parameters)
+	{
+		LOGGER.debug(">>> executing query (list, paginated) {}", query);
 
-        @SuppressWarnings("unchecked")
-        List<T> retrievedList = createNamedQuery(query, parameters).setFirstResult(page * size).setMaxResults(size).getResultList();
+		@SuppressWarnings("unchecked")
+		List<T> retrievedList = createNamedQuery(query, parameters).setFirstResult(page * size).setMaxResults(size).getResultList();
 
-        return retrievedList == null ? new ArrayList<T>() : retrievedList;
-    }
+		return retrievedList == null ? new ArrayList<T>() : retrievedList;
+	}
 
-    public List<T> listAll()
-    {
-        return listAll(null, null);
-    }
+	public List<T> listAll()
+	{
+		return listAll(null, null);
+	}
 
-    @Override
-    public List<T> listAll(Integer page, Integer size)
-    {
-        Query query = em.createQuery(String.format(QUERY_LISTALL, getPersistentClass().getSimpleName()), getPersistentClass());
+	@Override
+	public List<T> listAll(Integer page, Integer size)
+	{
+		Query query = em.createQuery(String.format(QUERY_LISTALL, getPersistentClass().getSimpleName()), getPersistentClass());
 
-        if (page != null && size != null)
-        {
-            query.setFirstResult(page * size);
-            query.setMaxResults(size);
-        }
+		if (page != null && size != null)
+		{
+			query.setFirstResult(page * size);
+			query.setMaxResults(size);
+		}
 
-        @SuppressWarnings("unchecked")
-        List<T> resultList = query.getResultList();
+		@SuppressWarnings("unchecked")
+		List<T> resultList = query.getResultList();
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    @Override
-    public Long countAll()
-    {
-        Query query = em.createQuery(String.format(QUERY_COUNTALL, getPersistentClass().getSimpleName()), Long.class);
+	@Override
+	public Long countAll()
+	{
+		Query query = em.createQuery(String.format(QUERY_COUNTALL, getPersistentClass().getSimpleName()), Long.class);
 
-        @SuppressWarnings("unchecked")
-        Long result = (Long) query.getSingleResult();
+		@SuppressWarnings("unchecked")
+		Long result = (Long) query.getSingleResult();
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Utility method to create an instance of JPA query and set named parameters.
-     *
-     * @param query      The query name to be created from JPA context
-     * @param parameters The parameters to be set on query
-     * @return JPA query instance for <code>query</code> named query
-     */
-    private Query createNamedQuery(String query, NamedParameter... parameters)
-    {
-        Query q = em.createNamedQuery(query);
+	/**
+	 * Utility method to create an instance of JPA query and set named parameters.
+	 *
+	 * @param query      The query name to be created from JPA context
+	 * @param parameters The parameters to be set on query
+	 * @return JPA query instance for <code>query</code> named query
+	 */
+	private Query createNamedQuery(String query, NamedParameter... parameters)
+	{
+		Query q = em.createNamedQuery(query);
 
-        for (NamedParameter np : parameters)
-        {
-            q.setParameter(np.getName(), np.getValue());
-        }
+		for (NamedParameter np : parameters)
+		{
+			q.setParameter(np.getName(), np.getValue());
+		}
 
-        return q;
-    }
+		return q;
+	}
 
-    public T getReference(Long id)
-    {
-        return em.getReference(getPersistentClass(), id);
-    }
+	public T getReference(Long id)
+	{
+		return em.getReference(getPersistentClass(), id);
+	}
 
-    protected abstract class GenericQuery
-    {
+	protected abstract class GenericQuery
+	{
 
-        protected CriteriaBuilder builder;
+		protected CriteriaBuilder builder;
 
-        protected abstract Predicate buildWhere(CriteriaBuilder builder, Root<T> root);
+		protected abstract Predicate buildWhere(CriteriaBuilder builder, Root<T> root);
 
-        protected void buildOrderBy(CriteriaBuilder builder, Root<T> root, List<Order> orderBy)
-        {
-        }
+		protected void buildOrderBy(CriteriaBuilder builder, Root<T> root, List<Order> orderBy)
+		{
+		}
 
-        public List<T> select()
-        {
-            return buildInternal().getResultList();
-        }
+		public List<T> select()
+		{
+			return buildInternal().getResultList();
+		}
 
-        public T singleResult()
-        {
-            try
-            {
-                return buildInternal().getSingleResult();
-            }
-            catch (NoResultException e)
-            {
-                return null;
-            }
-        }
+		public T singleResult()
+		{
+			try
+			{
+				return buildInternal().getSingleResult();
+			}
+			catch (NoResultException e)
+			{
+				return null;
+			}
+		}
 
-        public List<T> pageSelect(int pageNr, int pageSize)
-        {
-            pageNr = Math.max(1, pageNr);
-            int startItem = (pageNr - 1) * pageSize;
-            return buildInternal().setFirstResult(startItem).setMaxResults(pageSize).getResultList();
-        }
+		public List<T> pageSelect(int pageNr, int pageSize)
+		{
+			pageNr = Math.max(1, pageNr);
+			int startItem = (pageNr - 1) * pageSize;
+			return buildInternal().setFirstResult(startItem).setMaxResults(pageSize).getResultList();
+		}
 
-        public Long count()
-        {
-            builder = em.getCriteriaBuilder();
-            CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-            Root<T> root = criteria.from(persistentClass);
-            criteria.select(builder.count(root));
+		public Long count()
+		{
+			builder = em.getCriteriaBuilder();
+			CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+			Root<T> root = criteria.from(persistentClass);
+			criteria.select(builder.count(root));
 
-            Expression<Boolean> where = buildWhere(builder, root);
-            if (where != null)
-            {
-                criteria.where(where);
-            }
-            return em.createQuery(criteria).getSingleResult();
-        }
+			Expression<Boolean> where = buildWhere(builder, root);
+			if (where != null)
+			{
+				criteria.where(where);
+			}
+			return em.createQuery(criteria).getSingleResult();
+		}
 
-        private TypedQuery<T> buildInternal()
-        {
-            builder = em.getCriteriaBuilder();
-            CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
-            Root<T> root = criteria.from(persistentClass);
+		private TypedQuery<T> buildInternal()
+		{
+			builder = em.getCriteriaBuilder();
+			CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
+			Root<T> root = criteria.from(persistentClass);
 
-            Expression<Boolean> where = buildWhere(builder, root);
-            if (where != null)
-            {
-                criteria.where(where);
-            }
+			Expression<Boolean> where = buildWhere(builder, root);
+			if (where != null)
+			{
+				criteria.where(where);
+			}
 
-            final List<Order> orderBy = new ArrayList<Order>();
-            buildOrderBy(builder, root, orderBy);
-            criteria.orderBy(orderBy);
+			final List<Order> orderBy = new ArrayList<Order>();
+			buildOrderBy(builder, root, orderBy);
+			criteria.orderBy(orderBy);
 
-            return em.createQuery(criteria);
-        }
-    }
+			return em.createQuery(criteria);
+		}
+	}
 }

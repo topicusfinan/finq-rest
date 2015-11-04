@@ -6,17 +6,17 @@ import nl.finan.finq.entities.User;
 public final class UserConverter
 {
 
-    private UserConverter()
-    {
-    }
+	private UserConverter()
+	{
+	}
 
-    public static User convert(UserTO userTO)
-    {
-        User user = new User();
-        user.setFirstName(userTO.getFirstname());
-        user.setLastName(userTO.getLastname());
-        user.setEmail(userTO.getEmail());
-        user.setPassword(userTO.getPassword());
-        return user;
-    }
+	public static User convert(UserTO userTO)
+	{
+		User user = new User();
+		user.setFirstName(userTO.getFirstname());
+		user.setLastName(userTO.getLastname());
+		user.setEmail(userTO.getEmail());
+		user.setPassword(userTO.getPassword());
+		return user;
+	}
 }

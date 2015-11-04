@@ -18,16 +18,18 @@ import java.util.List;
 @Stateless
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class PossibleStepsResources {
+public class PossibleStepsResources
+{
 
-    @EJB
-    private ConfigurationFactory configurationFactory;
+	@EJB
+	private ConfigurationFactory configurationFactory;
 
-    @GET
-    public List<PossibleStepTO> getPossibleSteps() {
-        Configuration config = configurationFactory.getConfiguration();
-        JMoribus jMoribus = new JMoribus(config);
-        return jMoribus.getPossibleSteps();
-    }
+	@GET
+	public List<PossibleStepTO> getPossibleSteps()
+	{
+		Configuration config = configurationFactory.getConfiguration();
+		JMoribus jMoribus = new JMoribus(config);
+		return jMoribus.getPossibleSteps();
+	}
 
 }

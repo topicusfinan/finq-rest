@@ -6,5 +6,5 @@ import nl.finan.finq.entities.StoryLog;
 import javax.ejb.Stateless;
 
 @Stateless
-public class StoryLogDaoImpl extends DaoJPAImpl<StoryLog> implements StoryLogDao {
-}
+public class StoryLogDaoImpl extends DaoJPAImpl<StoryLog> implements StoryLogDao
+{}

@@ -37,81 +37,82 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class RunnerServiceTest
 {
 
-    @Mock
-    private StoryDao storyDao;
+	@Mock
+	private StoryDao storyDao;
 
-    @Mock
-    private RunningStoriesDao runningStoriesDao;
+	@Mock
+	private RunningStoriesDao runningStoriesDao;
 
-    @Mock
-    private ManagedExecutorService managedExecutorService;
+	@Mock
+	private ManagedExecutorService managedExecutorService;
 
-    @Mock
-    private Queue queue;
+	@Mock
+	private Queue queue;
 
-    @Mock
-    private ConnectionFactory connectionFactory;
+	@Mock
+	private ConnectionFactory connectionFactory;
 
-    @InjectMocks
-    private RunnerService runnerService;
+	@InjectMocks
+	private RunnerService runnerService;
 
-    private ObjectMessage message;
-    private MessageProducer producer;
+	private ObjectMessage message;
+	private MessageProducer producer;
 
-    @Before
-    public void before() throws JMSException
-    {
-        message = mock(ObjectMessage.class);
-        Connection connection = mock(Connection.class);
-        Session session = mock(Session.class);
-        producer = mock(MessageProducer.class);
-        when(connectionFactory.createConnection()).thenReturn(connection);
-        when(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(session);
-        when(session.createProducer(queue)).thenReturn(producer);
-        when(session.createObjectMessage()).thenReturn(message);
-    }
+	@Before
+	public void before() throws JMSException
+	{
+		message = mock(ObjectMessage.class);
+		Connection connection = mock(Connection.class);
+		Session session = mock(Session.class);
+		producer = mock(MessageProducer.class);
+		when(connectionFactory.createConnection()).thenReturn(connection);
+		when(connection.createSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(session);
+		when(session.createProducer(queue)).thenReturn(producer);
+		when(session.createObjectMessage()).thenReturn(message);
+	}
 
-    @Test
-    public void runStory() throws JMSException
-    {
-        Story story = mock(Story.class);
-        User user = mock(User.class);
-        Environment environment = mock(Environment.class);
-        doAnswer(new SetIdAnwser()).when(runningStoriesDao).persist(any(RunningStories.class));
+	@Test
+	public void runStory() throws JMSException
+	{
+		Story story = mock(Story.class);
+		User user = mock(User.class);
+		Environment environment = mock(Environment.class);
+		doAnswer(new SetIdAnwser()).when(runningStoriesDao).persist(any(RunningStories.class));
 
-        RunningStories run = runnerService.run(story, user, environment);
+		RunningStories run = runnerService.run(story, user, environment);
 
-        Mockito.verify(runningStoriesDao).persist(run);
-        run.setId(1l);
-        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
+		Mockito.verify(runningStoriesDao).persist(run);
+		run.setId(1l);
+		Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
 
-        Mockito.verify(producer).send(message);
-    }
+		Mockito.verify(producer).send(message);
+	}
 
-    @Test
-    public void runBundle() throws JMSException
-    {
-        Book book = mock(Book.class);
-        User user = mock(User.class);
-        Environment environment = mock(Environment.class);
-        doAnswer(new SetIdAnwser()).when(runningStoriesDao).persist(any(RunningStories.class));
+	@Test
+	public void runBundle() throws JMSException
+	{
+		Book book = mock(Book.class);
+		User user = mock(User.class);
+		Environment environment = mock(Environment.class);
+		doAnswer(new SetIdAnwser()).when(runningStoriesDao).persist(any(RunningStories.class));
 
-        RunningStories run = runnerService.run(book, user, environment);
+		RunningStories run = runnerService.run(book, user, environment);
 
-        Mockito.verify(runningStoriesDao).persist(run);
-        Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
+		Mockito.verify(runningStoriesDao).persist(run);
+		Assert.assertEquals(LogStatus.RUNNING, run.getStatus());
 
-        Mockito.verify(producer).send(message);
-    }
+		Mockito.verify(producer).send(message);
+	}
 
-    class SetIdAnwser implements Answer<Void>{
+	class SetIdAnwser implements Answer<Void>
+	{
 
-        @Override
-        public Void answer(InvocationOnMock invocationOnMock) throws Throwable
-        {
-            RunningStories run = (RunningStories) invocationOnMock.getArguments()[0];
-            run.setId(1l);
-            return null;
-        }
-    }
+		@Override
+		public Void answer(InvocationOnMock invocationOnMock) throws Throwable
+		{
+			RunningStories run = (RunningStories) invocationOnMock.getArguments()[0];
+			run.setId(1l);
+			return null;
+		}
+	}
 }

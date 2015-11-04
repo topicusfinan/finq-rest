@@ -6,5 +6,5 @@ import nl.finan.finq.entities.Step;
 import javax.ejb.Stateless;
 
 @Stateless
-public class StepDaoImpl extends DaoJPAImpl<Step> implements StepDao {
-}
+public class StepDaoImpl extends DaoJPAImpl<Step> implements StepDao
+{}

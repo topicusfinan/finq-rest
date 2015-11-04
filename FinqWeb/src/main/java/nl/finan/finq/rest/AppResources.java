@@ -16,18 +16,21 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Stateless
-public class AppResources {
+public class AppResources
+{
 
-    @EJB
-    private ApplicationDao applicationDao;
+	@EJB
+	private ApplicationDao applicationDao;
 
-    @GET
-    public Application getApp() {
-        List<Application> applications = applicationDao.listAll();
-        if (applications.isEmpty()) {
-            return new Application();
-        }
-        return applications.get(0);
-    }
+	@GET
+	public Application getApp()
+	{
+		List<Application> applications = applicationDao.listAll();
+		if (applications.isEmpty())
+		{
+			return new Application();
+		}
+		return applications.get(0);
+	}
 
 }

@@ -5,34 +5,34 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EventType
 {
-    SUBSCRIBE("run:subscribe"),
-    UNSUBSCRIBE("run:unsubscribe"),
-    GIST("run:gist"),
-    PROGRESS("run:progress");
+	SUBSCRIBE("run:subscribe"),
+	UNSUBSCRIBE("run:unsubscribe"),
+	GIST("run:gist"),
+	PROGRESS("run:progress");
 
-    private String value;
+	private String value;
 
-    EventType(String value)
-    {
-        this.value = value;
-    }
+	EventType(String value)
+	{
+		this.value = value;
+	}
 
-    @JsonCreator
-    public static EventType forValue(String s)
-    {
-        for (EventType eventType : EventType.values())
-        {
-            if (eventType.value.equals(s))
-            {
-                return eventType;
-            }
-        }
-        throw new IllegalArgumentException("EventType " + s + " does not excist");
-    }
+	@JsonCreator
+	public static EventType forValue(String s)
+	{
+		for (EventType eventType : EventType.values())
+		{
+			if (eventType.value.equals(s))
+			{
+				return eventType;
+			}
+		}
+		throw new IllegalArgumentException("EventType " + s + " does not excist");
+	}
 
-    @JsonValue
-    public String getValue()
-    {
-        return value;
-    }
+	@JsonValue
+	public String getValue()
+	{
+		return value;
+	}
 }

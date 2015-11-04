@@ -24,41 +24,41 @@ import javax.jms.Session;
 @Stateless
 public class StatusService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatusService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StatusService.class);
 
-    @Resource(mappedName = Queues.CONNECTION_FACTORY)
-    private ConnectionFactory connectionFactory;
+	@Resource(mappedName = Queues.CONNECTION_FACTORY)
+	private ConnectionFactory connectionFactory;
 
-    @Resource(mappedName = Queues.STATUS_QUEUE)
-    private Queue queue;
+	@Resource(mappedName = Queues.STATUS_QUEUE)
+	private Queue queue;
 
-    public void sendProgress(Long reportId, ScenarioLog log)
-    {
-        acknowledgeQueue(reportId, new SendEventTO(EventType.PROGRESS, new ProgressEvent(log)));
-    }
+	public void sendProgress(Long reportId, ScenarioLog log)
+	{
+		acknowledgeQueue(reportId, new SendEventTO(EventType.PROGRESS, new ProgressEvent(log)));
+	}
 
-    public void sendProgress(Long reportId, RunningStories runningStories)
-    {
-        acknowledgeQueue(reportId, new SendEventTO(EventType.PROGRESS, new TotalStatus(runningStories)));
-    }
+	public void sendProgress(Long reportId, RunningStories runningStories)
+	{
+		acknowledgeQueue(reportId, new SendEventTO(EventType.PROGRESS, new TotalStatus(runningStories)));
+	}
 
-    public void acknowledgeQueue(Long reportId, SendEventTO eventTO)
-    {
-        StatusMessage statusMessage = new StatusMessage(reportId, eventTO);
-        try
-        {
-            try (Connection connection = connectionFactory.createConnection();
-                 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                 MessageProducer producer = session.createProducer(queue))
-            {
-                ObjectMessage message = session.createObjectMessage();
-                message.setObject(statusMessage);
-                producer.send(message);
-            }
-        }
-        catch (JMSException e)
-        {
-            LOGGER.warn(e.getMessage());
-        }
-    }
+	public void acknowledgeQueue(Long reportId, SendEventTO eventTO)
+	{
+		StatusMessage statusMessage = new StatusMessage(reportId, eventTO);
+		try
+		{
+			try (Connection connection = connectionFactory.createConnection();
+				 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+				 MessageProducer producer = session.createProducer(queue))
+			{
+				ObjectMessage message = session.createObjectMessage();
+				message.setObject(statusMessage);
+				producer.send(message);
+			}
+		}
+		catch (JMSException e)
+		{
+			LOGGER.warn(e.getMessage());
+		}
+	}
 }

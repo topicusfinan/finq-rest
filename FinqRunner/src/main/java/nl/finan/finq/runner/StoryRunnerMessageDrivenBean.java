@@ -14,44 +14,41 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import java.io.Serializable;
 
-@MessageDriven(activationConfig = {
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = Queues.RUN_STORY_QUEUE),
-    @ActivationConfigProperty(propertyName = "maxSession", propertyValue = "20")})
+@MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"), @ActivationConfigProperty(propertyName = "destination", propertyValue = Queues.RUN_STORY_QUEUE), @ActivationConfigProperty(propertyName = "maxSession", propertyValue = "20") })
 public class StoryRunnerMessageDrivenBean implements MessageListener
 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StoryRunnerMessageDrivenBean.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StoryRunnerMessageDrivenBean.class);
 
-    @EJB
-    private StoryRunner storyRunner;
+	@EJB
+	private StoryRunner storyRunner;
 
-    @Override
-    public void onMessage(Message message)
-    {
-        try
-        {
-            if (message instanceof ObjectMessage)
-            {
-                ObjectMessage objectMessage = (ObjectMessage) message;
-                Serializable object = objectMessage.getObject();
-                if (object instanceof RunMessage)
-                {
-                    storyRunner.run((RunMessage) object);
-                }
-                else
-                {
-                    LOGGER.warn("Object " + object.getClass().getSimpleName() + " is not an instance of " + RunMessage.class.getSimpleName());
-                }
-            }
-            else
-            {
-                LOGGER.warn("Message " + message.getClass().getSimpleName() + " is not an instance of " + ObjectMessage.class.getSimpleName());
-            }
-        }
-        catch (JMSException e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
+	@Override
+	public void onMessage(Message message)
+	{
+		try
+		{
+			if (message instanceof ObjectMessage)
+			{
+				ObjectMessage objectMessage = (ObjectMessage) message;
+				Serializable object = objectMessage.getObject();
+				if (object instanceof RunMessage)
+				{
+					storyRunner.run((RunMessage) object);
+				}
+				else
+				{
+					LOGGER.warn("Object " + object.getClass().getSimpleName() + " is not an instance of " + RunMessage.class.getSimpleName());
+				}
+			}
+			else
+			{
+				LOGGER.warn("Message " + message.getClass().getSimpleName() + " is not an instance of " + ObjectMessage.class.getSimpleName());
+			}
+		}
+		catch (JMSException e)
+		{
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
 }

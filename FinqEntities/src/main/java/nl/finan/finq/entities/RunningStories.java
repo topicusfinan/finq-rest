@@ -1,86 +1,106 @@
 package nl.finan.finq.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "FINQ_RUNNING_STORIES")
-public class RunningStories extends GenericEntity {
+public class RunningStories extends GenericEntity
+{
 
-    @Enumerated(EnumType.STRING)
-    @Column
-    private LogStatus status;
+	@Enumerated(EnumType.STRING)
+	@Column
+	private LogStatus status;
 
-    @OneToMany(mappedBy = "runningStory")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<StoryLog> logs = new ArrayList<StoryLog>();
+	@OneToMany(mappedBy = "runningStory")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<StoryLog> logs = new ArrayList<StoryLog>();
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User startedBy;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID")
+	private User startedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "ENVIRONMENT_ID")
-    private Environment environment;
+	@ManyToOne
+	@JoinColumn(name = "ENVIRONMENT_ID")
+	private Environment environment;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "START_DATE")
-    @JsonProperty("startedOn")
-    private Date startDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "START_DATE")
+	@JsonProperty("startedOn")
+	private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "COMPLETE_DATE")
-    @JsonProperty("competedOn")
-    private Date completeDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "COMPLETE_DATE")
+	@JsonProperty("competedOn")
+	private Date completeDate;
 
-    public LogStatus getStatus() {
-        return status;
-    }
+	public LogStatus getStatus()
+	{
+		return status;
+	}
 
-    public void setStatus(LogStatus status) {
-        this.status = status;
-    }
+	public void setStatus(LogStatus status)
+	{
+		this.status = status;
+	}
 
-    public List<StoryLog> getLogs() {
-        return logs;
-    }
+	public List<StoryLog> getLogs()
+	{
+		return logs;
+	}
 
-    public User getStartedBy() {
-        return startedBy;
-    }
+	public User getStartedBy()
+	{
+		return startedBy;
+	}
 
-    public void setStartedBy(User startedBy) {
-        this.startedBy = startedBy;
-    }
+	public void setStartedBy(User startedBy)
+	{
+		this.startedBy = startedBy;
+	}
 
-    public Environment getEnvironment() {
-        return environment;
-    }
+	public Environment getEnvironment()
+	{
+		return environment;
+	}
 
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
+	public void setEnvironment(Environment environment)
+	{
+		this.environment = environment;
+	}
 
-    public Date getStartDate() {
-        return startDate;
-    }
+	public Date getStartDate()
+	{
+		return startDate;
+	}
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
 
-    public Date getCompleteDate() {
-        return completeDate;
-    }
+	public Date getCompleteDate()
+	{
+		return completeDate;
+	}
 
-    public void setCompleteDate(Date completeDate) {
-        this.completeDate = completeDate;
-    }
+	public void setCompleteDate(Date completeDate)
+	{
+		this.completeDate = completeDate;
+	}
 }

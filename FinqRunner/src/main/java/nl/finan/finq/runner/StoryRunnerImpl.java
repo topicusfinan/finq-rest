@@ -19,39 +19,39 @@ import java.util.Map;
 @Stateless
 public class StoryRunnerImpl implements StoryRunner
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StoryRunnerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StoryRunnerImpl.class);
 
-    @EJB
-    private ConfigurationFactory configurationFactory;
+	@EJB
+	private ConfigurationFactory configurationFactory;
 
-    @EJB
-    private WebStoryReporter webStoryReporter;
+	@EJB
+	private WebStoryReporter webStoryReporter;
 
-    @Override
-    public void run(RunMessage object)
-    {
-        List<ParseableStory> parseableStories = new ArrayList<>(object.getStories().size());
-        for (Map.Entry<String, String> story : object.getStories().entrySet())
-        {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(story.getValue().getBytes());
-            ParseableStory parseableStory = new ParseableStory(byteArrayInputStream, story.getKey());
-            parseableStories.add(parseableStory);
-        }
+	@Override
+	public void run(RunMessage object)
+	{
+		List<ParseableStory> parseableStories = new ArrayList<>(object.getStories().size());
+		for (Map.Entry<String, String> story : object.getStories().entrySet())
+		{
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(story.getValue().getBytes());
+			ParseableStory parseableStory = new ParseableStory(byteArrayInputStream, story.getKey());
+			parseableStories.add(parseableStory);
+		}
 
-        List<nl.eernie.jmoribus.model.Story> stories = StoryParser.parseStories(parseableStories);
-        FinqConfiguration configuration = configurationFactory.getConfiguration();
-        configuration.setEnvironment(object.getEnvironment());
-        JMoribus jMoribus = new JMoribus(configuration);
+		List<nl.eernie.jmoribus.model.Story> stories = StoryParser.parseStories(parseableStories);
+		FinqConfiguration configuration = configurationFactory.getConfiguration();
+		configuration.setEnvironment(object.getEnvironment());
+		JMoribus jMoribus = new JMoribus(configuration);
 
-        try
-        {
-            jMoribus.runStories(stories);
-            webStoryReporter.afterSuccessRun(object.getRunningProcessId());
-        }
-        catch (Exception e)
-        {
-            LOGGER.error("exception while running stories [{}]", e.getMessage());
-            webStoryReporter.afterErrorRun(object.getRunningProcessId());
-        }
-    }
+		try
+		{
+			jMoribus.runStories(stories);
+			webStoryReporter.afterSuccessRun(object.getRunningProcessId());
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("exception while running stories [{}]", e.getMessage());
+			webStoryReporter.afterErrorRun(object.getRunningProcessId());
+		}
+	}
 }

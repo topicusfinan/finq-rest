@@ -29,80 +29,79 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class ReportServiceTest
 {
 
+	@Mock
+	private StoryLogDao storyLogDao;
 
-    @Mock
-    private StoryLogDao storyLogDao;
+	@Mock
+	private ScenarioLogDao scenarioLogDao;
 
-    @Mock
-    private ScenarioLogDao scenarioLogDao;
+	@Mock
+	private StepLogDao stepLogDao;
 
-    @Mock
-    private StepLogDao stepLogDao;
+	@InjectMocks
+	private ReportService reportService;
 
-    @InjectMocks
-    private ReportService reportService;
+	@Test
+	public void testCreateStoryLog()
+	{
+		Story story = PowerMockito.mock(Story.class);
+		RunningStories runningStories = PowerMockito.mock(RunningStories.class);
 
-    @Test
-    public void testCreateStoryLog()
-    {
-        Story story = PowerMockito.mock(Story.class);
-        RunningStories runningStories = PowerMockito.mock(RunningStories.class);
+		StoryLog storyLog = reportService.createStoryLog(story, runningStories);
 
-        StoryLog storyLog = reportService.createStoryLog(story, runningStories);
+		Mockito.verify(storyLogDao).persist(storyLog);
+		Assert.assertSame(story, storyLog.getStory());
+		Assert.assertSame(runningStories, storyLog.getRunningStory());
+		Assert.assertEquals(LogStatus.RUNNING, storyLog.getStatus());
+	}
 
-        Mockito.verify(storyLogDao).persist(storyLog);
-        Assert.assertSame(story, storyLog.getStory());
-        Assert.assertSame(runningStories, storyLog.getRunningStory());
-        Assert.assertEquals(LogStatus.RUNNING, storyLog.getStatus());
-    }
+	@Test
+	public void testCreateScenarioLog()
+	{
+		Scenario scenario = PowerMockito.mock(Scenario.class);
+		StoryLog storyLog = PowerMockito.mock(StoryLog.class);
 
-    @Test
-    public void testCreateScenarioLog()
-    {
-        Scenario scenario = PowerMockito.mock(Scenario.class);
-        StoryLog storyLog = PowerMockito.mock(StoryLog.class);
+		ScenarioLog scenarioLog = reportService.createScenarioLog(scenario, storyLog);
 
-        ScenarioLog scenarioLog = reportService.createScenarioLog(scenario, storyLog);
+		Mockito.verify(scenarioLogDao).persist(scenarioLog);
+		Assert.assertSame(scenario, scenarioLog.getScenario());
+		Assert.assertSame(storyLog, scenarioLog.getStoryLog());
+		Assert.assertEquals(LogStatus.RUNNING, scenarioLog.getStatus());
+	}
 
-        Mockito.verify(scenarioLogDao).persist(scenarioLog);
-        Assert.assertSame(scenario, scenarioLog.getScenario());
-        Assert.assertSame(storyLog, scenarioLog.getStoryLog());
-        Assert.assertEquals(LogStatus.RUNNING, scenarioLog.getStatus());
-    }
+	@Test
+	public void testCreateStepLog()
+	{
+		Step step = new Step("Test step");
+		ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
 
-    @Test
-    public void testCreateStepLog()
-    {
-        Step step = new Step("Test step");
-        ScenarioLog scenarioLog = PowerMockito.mock(ScenarioLog.class);
+		StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SKIPPED);
 
-        StepLog stepLog = reportService.createStepLog(step, scenarioLog, LogStatus.SKIPPED);
+		Mockito.verify(stepLogDao).persist(stepLog);
+		Assert.assertEquals(step.getTitle(), stepLog.getStep().getTitle());
+		Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
+		Assert.assertEquals(LogStatus.SKIPPED, stepLog.getStatus());
+	}
 
-        Mockito.verify(stepLogDao).persist(stepLog);
-        Assert.assertEquals(step.getTitle(), stepLog.getStep().getTitle());
-        Assert.assertSame(scenarioLog, stepLog.getScenarioLog());
-        Assert.assertEquals(LogStatus.SKIPPED, stepLog.getStatus());
-    }
+	@Test
+	public void testFindStoryLog()
+	{
+		StoryLog storyLog = new StoryLog();
+		when(storyLogDao.find(any(Serializable.class))).thenReturn(storyLog);
 
-    @Test
-    public void testFindStoryLog()
-    {
-        StoryLog storyLog = new StoryLog();
-        when(storyLogDao.find(any(Serializable.class))).thenReturn(storyLog);
+		StoryLog log = reportService.findStoryLog(100L);
 
-        StoryLog log = reportService.findStoryLog(100L);
+		Assert.assertSame(storyLog, log);
+	}
 
-        Assert.assertSame(storyLog, log);
-    }
+	@Test
+	public void testFindScenarioLog()
+	{
+		ScenarioLog scenarioLog = new ScenarioLog();
+		when(scenarioLogDao.find(any(Serializable.class))).thenReturn(scenarioLog);
 
-    @Test
-    public void testFindScenarioLog()
-    {
-        ScenarioLog scenarioLog = new ScenarioLog();
-        when(scenarioLogDao.find(any(Serializable.class))).thenReturn(scenarioLog);
+		ScenarioLog log = reportService.findScenarioLog(100L);
 
-        ScenarioLog log = reportService.findScenarioLog(100L);
-
-        Assert.assertSame(scenarioLog, log);
-    }
+		Assert.assertSame(scenarioLog, log);
+	}
 }

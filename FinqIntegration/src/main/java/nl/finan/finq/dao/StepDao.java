@@ -5,5 +5,5 @@ import nl.finan.finq.entities.Step;
 import javax.ejb.Local;
 
 @Local
-public interface StepDao extends Dao<Step> {
-}
+public interface StepDao extends Dao<Step>
+{}

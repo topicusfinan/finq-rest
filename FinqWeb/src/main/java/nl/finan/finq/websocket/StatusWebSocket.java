@@ -25,92 +25,92 @@ import java.io.Writer;
 public class StatusWebSocket
 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StatusWebSocket.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StatusWebSocket.class);
 
-    @EJB
-    private RunningStoriesDao runningStoriesDao;
+	@EJB
+	private RunningStoriesDao runningStoriesDao;
 
-    @EJB
-    private OpenConnections openConnections;
+	@EJB
+	private OpenConnections openConnections;
 
-    @OnMessage
-    public void message(Session session, ReceivingEventTO event) throws IOException
-    {
-        switch (event.getEvent())
-        {
-        case SUBSCRIBE:
-            subscribe(session, event.getData().getRun());
-            break;
-        case UNSUBSCRIBE:
-            unsubscribe(session, event.getData().getRun());
-            break;
-        default:
-            throw new IllegalArgumentException();
-        }
-    }
+	@OnMessage
+	public void message(Session session, ReceivingEventTO event) throws IOException
+	{
+		switch (event.getEvent())
+		{
+		case SUBSCRIBE:
+			subscribe(session, event.getData().getRun());
+			break;
+		case UNSUBSCRIBE:
+			unsubscribe(session, event.getData().getRun());
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
 
-    @OnClose
-    public void close(Session session)
-    {
-        openConnections.removeSession(session);
-    }
+	@OnClose
+	public void close(Session session)
+	{
+		openConnections.removeSession(session);
+	}
 
-    public void sendStatus(RunningStories runningStories)
-    {
-        if (openConnections.containsKey(runningStories.getId()))
-        {
-            for (Session session : openConnections.get(runningStories.getId()))
-            {
-                session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
-            }
-        }
-    }
+	public void sendStatus(RunningStories runningStories)
+	{
+		if (openConnections.containsKey(runningStories.getId()))
+		{
+			for (Session session : openConnections.get(runningStories.getId()))
+			{
+				session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
+			}
+		}
+	}
 
-    public void sendProgress(Long reportId, SendEventTO sendEventTO)
-    {
-        if (openConnections.containsKey(reportId))
-        {
-            for (Session session : openConnections.get(reportId))
-            {
-                session.getAsyncRemote().sendText(toJson(sendEventTO));
-            }
-        }
-    }
+	public void sendProgress(Long reportId, SendEventTO sendEventTO)
+	{
+		if (openConnections.containsKey(reportId))
+		{
+			for (Session session : openConnections.get(reportId))
+			{
+				session.getAsyncRemote().sendText(toJson(sendEventTO));
+			}
+		}
+	}
 
-    private void unsubscribe(Session session, Long reportId)
-    {
-        openConnections.removeFromConnectionMap(reportId, session);
-    }
+	private void unsubscribe(Session session, Long reportId)
+	{
+		openConnections.removeFromConnectionMap(reportId, session);
+	}
 
-    private void subscribe(Session session, Long reportId)
-    {
-        RunningStories runningStories = runningStoriesDao.find(reportId);
-        if (runningStories != null)
-        {
-            openConnections.add(reportId, session);
-            session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
-        }
-        else
-        {
-            session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
-        }
-    }
+	private void subscribe(Session session, Long reportId)
+	{
+		RunningStories runningStories = runningStoriesDao.find(reportId);
+		if (runningStories != null)
+		{
+			openConnections.add(reportId, session);
+			session.getAsyncRemote().sendText(toJson(new SendEventTO(EventType.GIST, new TotalStatus(runningStories))));
+		}
+		else
+		{
+			session.getAsyncRemote().sendText("Could not find the report you're subscribing too.");
+		}
+	}
 
-    private String toJson(Object object)
-    {
-        try
-        {
-            ObjectMapper mapper = new ObjectMapper();
+	private String toJson(Object object)
+	{
+		try
+		{
+			ObjectMapper mapper = new ObjectMapper();
 
-            Writer writer = new StringWriter();
-            mapper.writeValue(writer, object);
+			Writer writer = new StringWriter();
+			mapper.writeValue(writer, object);
 
-            return writer.toString();
-        }
-        catch (IOException e)
-        {
-            LOGGER.error("Something went wrong serializing the object, returning null", e);
-        }
-        return null;
-    }
+			return writer.toString();
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Something went wrong serializing the object, returning null", e);
+		}
+		return null;
+	}
 }

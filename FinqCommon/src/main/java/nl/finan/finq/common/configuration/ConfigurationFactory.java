@@ -3,7 +3,8 @@ package nl.finan.finq.common.configuration;
 import javax.ejb.Local;
 
 @Local
-public interface ConfigurationFactory {
+public interface ConfigurationFactory
+{
 
-    FinqConfiguration getConfiguration();
+	FinqConfiguration getConfiguration();
 }

@@ -2,38 +2,48 @@ package nl.finan.finq.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "FINQ_SET")
-public class Set extends GenericEntity {
+public class Set extends GenericEntity
+{
 
-    @Column(name = "NAME")
-    private String name;
+	@Column(name = "NAME")
+	private String name;
 
-    @ManyToMany
-    @JoinTable(
-        name = "FINQ_STORY_SET",
-        joinColumns = {@JoinColumn(name = "SET_ID", referencedColumnName = "ID")},
-        inverseJoinColumns = {@JoinColumn(name = "STORY_ID", referencedColumnName = "ID")})
-    @JsonBackReference
-    private List<Story> stories = new ArrayList<>();
+	@ManyToMany
+	@JoinTable(
+			name = "FINQ_STORY_SET",
+			joinColumns = { @JoinColumn(name = "SET_ID", referencedColumnName = "ID") },
+			inverseJoinColumns = { @JoinColumn(name = "STORY_ID", referencedColumnName = "ID") })
+	@JsonBackReference
+	private List<Story> stories = new ArrayList<>();
 
-    public String getName() {
-        return name;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-    public List<Story> getStories() {
-        return stories;
-    }
+	public List<Story> getStories()
+	{
+		return stories;
+	}
 
-    public void setStories(List<Story> stories) {
-        this.stories = stories;
-    }
+	public void setStories(List<Story> stories)
+	{
+		this.stories = stories;
+	}
 }

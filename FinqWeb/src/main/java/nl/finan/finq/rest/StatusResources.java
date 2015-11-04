@@ -14,17 +14,19 @@ import javax.ws.rs.core.MediaType;
 
 @Path(PathConstants.STATUS)
 @Stateless
-public class StatusResources {
+public class StatusResources
+{
 
-    @EJB
-    private RunningStoriesDao runningStoriesDao;
+	@EJB
+	private RunningStoriesDao runningStoriesDao;
 
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public RunningStories getStatus(@PathParam("id") Long statusId) {
-        RunningStories runningStories = runningStoriesDao.find(statusId);
-        return runningStories;
-    }
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public RunningStories getStatus(@PathParam("id") Long statusId)
+	{
+		RunningStories runningStories = runningStoriesDao.find(statusId);
+		return runningStories;
+	}
 }

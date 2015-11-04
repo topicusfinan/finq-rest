@@ -12,15 +12,15 @@ import java.util.Collections;
 @Stateless
 public class ConfigurationFactoryImpl implements ConfigurationFactory
 {
-    @EJB
-    private WebStoryReporter reporter;
+	@EJB
+	private WebStoryReporter reporter;
 
-    @Override
-    public FinqConfiguration getConfiguration()
-    {
-        FinqConfiguration configuration = new JmoribusConfiguration();
-        configuration.addSteps(Collections.<Object>singletonList(new Step()));
-        configuration.addReporter(reporter);
-        return configuration;
-    }
+	@Override
+	public FinqConfiguration getConfiguration()
+	{
+		FinqConfiguration configuration = new JmoribusConfiguration();
+		configuration.addSteps(Collections.<Object>singletonList(new Step()));
+		configuration.addReporter(reporter);
+		return configuration;
+	}
 }

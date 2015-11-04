@@ -8,8 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 @Local
-public interface RunningStoriesDao extends Dao<RunningStories> {
-    List<RunningStories> findByDateAndStatuses(List<LogStatus> statuses, Date since, Date until, Integer page, Integer size);
+public interface RunningStoriesDao extends Dao<RunningStories>
+{
+	List<RunningStories> findByDateAndStatuses(List<LogStatus> statuses, Date since, Date until, Integer page, Integer size);
 
-    Long countByDateAndStatuses(List<LogStatus> logStatuses, Date since, Date until);
+	Long countByDateAndStatuses(List<LogStatus> logStatuses, Date since, Date until);
 }

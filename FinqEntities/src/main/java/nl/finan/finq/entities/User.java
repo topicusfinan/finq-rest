@@ -1,14 +1,19 @@
 package nl.finan.finq.entities;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 @Entity
 @Table(name = "FINQ_USER", indexes = { @Index(columnList = "email", unique = true) })
-@NamedQueries({ @NamedQuery(name = User.USER_SELECT_BY_EMAIL, query = "select u from User u where u.email = :email"),
-    @NamedQuery(name = User.QUERY_BY_TOKEN, query = "select t.user from UserToken t where t.token = :token") })
+@NamedQueries({ @NamedQuery(name = User.USER_SELECT_BY_EMAIL, query = "select u from User u where u.email = :email"), @NamedQuery(name = User.QUERY_BY_TOKEN, query = "select t.user from UserToken t where t.token = :token") })
 public class User extends GenericEntity
 {
 

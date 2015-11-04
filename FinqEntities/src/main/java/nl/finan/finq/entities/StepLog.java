@@ -9,30 +9,35 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "FINQ_LOG_STEP")
-public class StepLog extends Log {
+public class StepLog extends Log
+{
 
-    @ManyToOne
-    @JoinColumn
-    @JsonBackReference
-    private ScenarioLog scenarioLog;
+	@ManyToOne
+	@JoinColumn
+	@JsonBackReference
+	private ScenarioLog scenarioLog;
 
-    @JoinColumn
-    @ManyToOne
-    private Step step;
+	@JoinColumn
+	@ManyToOne
+	private Step step;
 
-    public ScenarioLog getScenarioLog() {
-        return scenarioLog;
-    }
+	public ScenarioLog getScenarioLog()
+	{
+		return scenarioLog;
+	}
 
-    public void setScenarioLog(ScenarioLog scenarioLog) {
-        this.scenarioLog = scenarioLog;
-    }
+	public void setScenarioLog(ScenarioLog scenarioLog)
+	{
+		this.scenarioLog = scenarioLog;
+	}
 
-    public Step getStep() {
-        return step;
-    }
+	public Step getStep()
+	{
+		return step;
+	}
 
-    public void setStep(Step step) {
-        this.step = step;
-    }
+	public void setStep(Step step)
+	{
+		this.step = step;
+	}
 }
