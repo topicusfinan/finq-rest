@@ -74,9 +74,9 @@
                         <maxmem>256m</maxmem>
                         <aggregate>true</aggregate>
                         <instrumentation>
-                            <excludes>
-                                <exclude>nl.finan.finq.entities.*_.class</exclude>
-                            </excludes>
+                            <ignores>
+                                <ingore>nl.finan.finq.entities.*_.class</ingore>
+                            </ignores>
                         </instrumentation>
                     </configuration>
                 </plugin>
