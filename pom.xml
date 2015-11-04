@@ -47,6 +47,9 @@
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>4.0.0</version>
+                    <configuration>
+
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -69,6 +72,12 @@
                         <check/>
                         <format>xml</format>
                         <maxmem>256m</maxmem>
+                        <aggregate>true</aggregate>
+                        <instrumentation>
+                            <excludes>
+                                <exclude>nl.finan.finq.entities.*_.class</exclude>
+                            </excludes>
+                        </instrumentation>
                     </configuration>
                 </plugin>
             </plugins>
