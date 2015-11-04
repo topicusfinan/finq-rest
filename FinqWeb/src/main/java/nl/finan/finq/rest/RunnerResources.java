@@ -82,9 +82,7 @@ public class RunnerResources {
 			throw new WebApplicationException("Environment was not found", Status.NOT_FOUND);
 		}
 
-        RunningStories runningStories = runnerService.run(stories,user,environment);
-
-		return runningStories;
+        return runnerService.run(stories,user,environment);
     }
 
     @GET

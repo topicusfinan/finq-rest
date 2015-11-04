@@ -23,7 +23,8 @@ import java.util.List;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-public class WebStoryReporterTest {
+public class WebStoryReporterImplTest
+{
 
     @Mock
     private RunningStoriesDao runningStoriesDao;
@@ -38,7 +39,7 @@ public class WebStoryReporterTest {
     private StatusService statusWebSocket;
 
     @InjectMocks
-    private WebStoryReporter webStoryReporter;
+    private WebStoryReporterImpl webStoryReporter;
 
 
     @Test

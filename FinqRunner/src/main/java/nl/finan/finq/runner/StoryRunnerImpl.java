@@ -6,8 +6,6 @@ import nl.eernie.jmoribus.parser.StoryParser;
 import nl.finan.finq.common.configuration.ConfigurationFactory;
 import nl.finan.finq.common.configuration.FinqConfiguration;
 import nl.finan.finq.common.jms.RunMessage;
-import nl.finan.finq.dao.RunningStoriesDao;
-import nl.finan.finq.entities.LogStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +23,6 @@ public class StoryRunnerImpl implements StoryRunner
 
     @EJB
     private ConfigurationFactory configurationFactory;
-
 
     @EJB
     private WebStoryReporter webStoryReporter;

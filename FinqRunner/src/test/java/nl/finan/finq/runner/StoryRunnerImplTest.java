@@ -27,7 +27,7 @@ public class StoryRunnerImplTest
     private ConfigurationFactory configurationFactory;
 
     @Mock
-    private WebStoryReporter webStoryReporter;
+    private WebStoryReporterImpl webStoryReporter;
 
     @InjectMocks
     private StoryRunnerImpl statefulStoryRunner;

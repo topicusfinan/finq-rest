@@ -5,8 +5,25 @@
     <persistence-unit name="finqPU">
         <jta-data-source>java:/jdbc/finq</jta-data-source>
 
+        <class>nl.finan.finq.entities.Application</class>
+        <class>nl.finan.finq.entities.Book</class>
+        <class>nl.finan.finq.entities.Environment</class>
+        <class>nl.finan.finq.entities.GenericEntity</class>
+        <class>nl.finan.finq.entities.Log</class>
+        <class>nl.finan.finq.entities.LogStatus</class>
+        <class>nl.finan.finq.entities.RunningStories</class>
+        <class>nl.finan.finq.entities.Scenario</class>
+        <class>nl.finan.finq.entities.ScenarioLog</class>
+        <class>nl.finan.finq.entities.Set</class>
+        <class>nl.finan.finq.entities.Step</class>
+        <class>nl.finan.finq.entities.StepLog</class>
+        <class>nl.finan.finq.entities.Story</class>
+        <class>nl.finan.finq.entities.StoryLog</class>
+        <class>nl.finan.finq.entities.Tag</class>
+        <class>nl.finan.finq.entities.User</class>
+        <class>nl.finan.finq.entities.UserToken</class>
+
         <properties>
-            <property name="hibernate.archive.autodetection" value="class, hbm"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
 

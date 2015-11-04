@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
+        <hibernate.version>4.3.5.Final</hibernate.version>
     </properties>
 
     <modules>
@@ -31,6 +32,15 @@
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
+                        <compilerArguments>
+                            <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+                        </compilerArguments>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <configuration>
+                        <ejbVersion>3.1</ejbVersion>
                     </configuration>
                 </plugin>
             </plugins>
@@ -79,7 +89,13 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
-                <version>4.3.5.Final</version>
+                <version>${hibernate.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-jpamodelgen</artifactId>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
